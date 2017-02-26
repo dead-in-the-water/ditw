@@ -1,27 +1,12 @@
 {
-  "name": "redux-webpack-es6-boilerplate",
-  "description": "A starter project for modern React apps with Redux",
-  "version": "1.1.1",
+  "name": "ditw",
+  "description": "Dead in the water game",
+  "version": "0.1.0",
   "author": "Nick S. Plekhanov <nickatgit@yandex.com>",
   "license": "MIT",
-  "keywords": [
-    "react",
-    "redux",
-    "es6",
-    "hmr",
-    "hot",
-    "babel",
-    "webpack",
-    "sentry",
-    "architecture",
-    "webpack-dev-middleware",
-    "webpack-hot-middleware",
-    "boilerplate",
-    "starter"
-  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/nicksp/redux-webpack-es6-boilerplate.git"
+    "url": "https://github.com/dead-in-the-water/ditw.git"
   },
   "bugs": "https://github.com/nicksp/redux-webpack-es6-boilerplate/issues",
   "scripts": {
@@ -96,6 +81,7 @@
     "classnames": "2.2.5",
     "express": "4.14.0",
     "lodash": "4.15.0",
+    "material-ui": "^0.17.0",
     "raven-js": "3.6.1",
     "react": "15.3.1",
     "react-dom": "15.3.1",
@@ -103,6 +89,7 @@
     "react-redux": "4.4.5",
     "react-router": "2.7.0",
     "react-router-redux": "4.0.5",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "3.5.2",
     "redux-logger": "2.6.1",
     "redux-promise": "0.5.3",
