@@ -1,6 +1,9 @@
 import { combineReducers } from 'redux'
 import { routerReducer as routing } from 'react-router-redux'
 
+import players, { NAME as playersName } from 'features/players';
+
 export default combineReducers({
-  routing
+  routing,
+  [playersName]: players
 })
