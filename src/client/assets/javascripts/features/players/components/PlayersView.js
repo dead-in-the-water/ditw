@@ -14,7 +14,7 @@ export default class PlayersView extends Component {
     return (
       <div>
         <PlayersLayout {...this.props} />
-        <Link to="/">Back to main</Link>
+        <Link to="HomePageView">Back to main</Link>
       </div>
     );
   }
