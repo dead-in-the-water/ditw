@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"avg",
+				"avgPosition"
+			],
+			[
 				"imp",
 				"import\t x from 'x'"
 			],
@@ -35,6 +39,41 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/client/assets/javascripts/features/HomePage/components/index.js",
+			"settings":
+			{
+				"buffer_size": 186,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/client/assets/javascripts/features/HomePage/components/homePage.js",
+			"settings":
+			{
+				"buffer_size": 388,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/client/assets/javascripts/features/profile/components/profile.js",
+			"settings":
+			{
+				"buffer_size": 385,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/client/assets/javascripts/features/players/components/PlayersView.js",
+			"settings":
+			{
+				"buffer_size": 570,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -86,12 +125,48 @@
 	"expanded_folders":
 	[
 		"/Users/mgleavitt/dev/ditw",
-		"/Users/mgleavitt/dev/ditw/src"
+		"/Users/mgleavitt/dev/ditw/src",
+		"/Users/mgleavitt/dev/ditw/src/client",
+		"/Users/mgleavitt/dev/ditw/src/client/assets",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/app",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/profile",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/profile/components"
 	],
 	"file_history":
 	[
-		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/app/reducer.js",
 		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/app/routes.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/HomePage/components/profile.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/PlayerListItem/PlayerListItem.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/PlayersLayout.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/AddPlayerInput/AddPlayerInput.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/players.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/PlayerList/PlayerList.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/models/players.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/PlayerListItem/PlayerListItem.scss",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/PlayerListApp.scss",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/app/Root.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/app/reducer.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/index.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/PlayersView.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/profile/components/index.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/profile/components/profile.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/PlayerList/index.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/AddPlayerInput/AddPlayerInput.scss",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/AddPlayerInput/index.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/PlayerListItem/index.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players/components/PlayerList/PlayerList.scss",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/app/index.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/profile/components/ProfileView.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/index.html",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/components/ProfileView.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/components/MainView.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/components/NotFound.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/app/App.js",
+		"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/app/config.js",
 		"/Users/mgleavitt/Downloads/Ex_Files_React_EssT/Ch02/02_06/start/src/index.js",
 		"/Users/mgleavitt/Downloads/Ex_Files_React_EssT/Ch02/02_05/start/webpack.config.js",
 		"/Users/mgleavitt/Downloads/Ex_Files_React_EssT/Ch02/02_04/start/dist/index.html",
@@ -131,9 +206,13 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
+			"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts/features/players",
+			"/Users/mgleavitt/dev/ditw/src/client/assets/javascripts",
+			"/Users/mgleavitt/dev/ditw/src/client",
+			"/Users/mgleavitt/dev/ditw"
 		]
 	},
 	"find_state":
@@ -141,13 +220,35 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"24px",
+			"rapper",
+			"onTouchTap",
+			"player",
+			",\n",
+			"Player",
+			"Friend",
+			"PlayersView",
+			"Friend",
+			"friend",
+			"FRIEND",
+			"friend",
+			"Friend",
+			"friends",
+			"react-dom",
+			"material"
 		],
 		"highlight": true,
 		"in_selection": false,
-		"preserve_case": false,
+		"preserve_case": true,
 		"regex": false,
 		"replace_history":
 		[
+			"player",
+			"Player",
+			"PLAYER",
+			"player",
+			"Player",
+			"players"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -164,8 +265,122 @@
 	"groups":
 	[
 		{
+			"selected": 3,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/client/assets/javascripts/features/HomePage/components/index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 186,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								184,
+								184
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/client/assets/javascripts/features/HomePage/components/homePage.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 388,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								77,
+								41
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/client/assets/javascripts/features/profile/components/profile.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 385,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								330,
+								367
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/client/assets/javascripts/features/players/components/PlayersView.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 570,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								544,
+								544
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -208,7 +423,7 @@
 	"project": "",
 	"replace":
 	{
-		"height": 42.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":

@@ -24,10 +24,16 @@ export default class PlayerListItem extends Component {
   };
 
   render() {
+    const myBtnStyle = {
+      color: 'black',
+      width: '48px',
+      height: '48px'
+    }
+
     return (
       <ListItem 
         primaryText={this.props.lastName +  ', ' + this.props.firstName}
-        leftIcon={<IconButton ><ActionHome /></IconButton>}
+        leftIcon={<IconButton iconStyle={myBtnStyle}><ActionHome /></IconButton>}
       />
     );
   }
