@@ -13,7 +13,7 @@ import SignOnPage from 'features/signOnPage/components/signOnPage';
 export default (
   <Route path='/' component={App}>
   	<IndexRoute component={SignOnPage} />
-  	<Route path='HomePageView' component={HomePageView} />
+  	<Route path='SignOnPage' component={SignOnPage} />
   	<Route path='HomePageView' component={HomePageView} />
   	<Route path='ProfileView' component={ProfileView} />
   	<Route path='PlayersView' component={PlayersView} />

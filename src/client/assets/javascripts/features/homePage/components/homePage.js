@@ -61,7 +61,7 @@ export default class HomePageView extends Component {
 					<li><Link to="ProfileView">Edit profile</Link></li>
 					<li><Link to="PlayersView">Edit players</Link></li>
 					<li><Link to="NewGameView">New game</Link></li>
-					<li><Link to="/">Sign out</Link></li>
+					<li><Link to="SignOnPage">Sign out</Link></li>
 				</ul>
 			</div>
 	     </div>

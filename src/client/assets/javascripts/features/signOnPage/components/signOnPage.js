@@ -8,19 +8,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Avatar from 'material-ui/Avatar';
 import ActionHome from 'material-ui/svg-icons/action/home';
 
-export default class SignOnPage extends Component {
-	handleClick = function() {
-		alert('TouchTap happened');
-	}
+import googleSignOnButton from '../images/btn_google_signin_dark_pressed_web.png'
+import './SignOnPage.scss'
 
+export default class SignOnPage extends Component {
 	render () {
 		return(
-			<div>				
-				<br/>
-			    <RaisedButton 
-			    	label="Sign on with Google"
-			    	primary={true}
-			    />
+			<div>	
+				<img className='sign-in-button-1' src={googleSignOnButton} onClick={alert('TouchTap happened')}/>
 			    <br />
 			    <Link to="HomePageView">Back door</Link>
 			</div>
