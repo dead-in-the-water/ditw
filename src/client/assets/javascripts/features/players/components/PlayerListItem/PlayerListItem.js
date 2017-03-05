@@ -6,7 +6,6 @@ import Subheader from 'material-ui/Subheader';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import IconButton from 'material-ui/IconButton';
-import ActionHome from 'material-ui/svg-icons/action/home';
 
 import './PlayerListItem.scss';
 
@@ -33,7 +32,11 @@ export default class PlayerListItem extends Component {
     return (
       <ListItem 
         primaryText={this.props.lastName +  ', ' + this.props.firstName}
-        leftIcon={<IconButton iconStyle={myBtnStyle}><ActionHome /></IconButton>}
+        leftIcon={
+                    <FloatingActionButton iconStyle={myBtnStyle}>
+                      <ContentAdd />
+                    </FloatingActionButton>
+        }
       />
     );
   }
