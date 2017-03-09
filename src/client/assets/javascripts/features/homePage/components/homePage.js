@@ -2,61 +2,63 @@ import React, { Component } from 'react'
 import { Link } from 'react-router'
 
 import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import RaisedButton from 'material-ui/RaisedButton';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import IconButton from 'material-ui/IconButton';
+import Divider from 'material-ui/Divider';
+import Download from 'material-ui/svg-icons/file/file-download';
+import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
+import HamburgerMenuIcon from 'material-ui/svg-icons/navigation/menu';
+import ProfileIcon from 'material-ui/svg-icons/social/person';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+
+import './homePage.scss';
 
 export default class HomePageView extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      	value: 3
-    };
-  }
-
-  handleChange = (event, index, value) => this.setState({value});
 
   render() {
-    return (
-    	<div>
+	return (
+		<div className='homePageMainDiv'>
+			<div className='homePageMenu'>
+				<IconMenu
+					iconButtonElement={<IconButton><HamburgerMenuIcon /></IconButton>}
+					anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+					targetOrigin={{horizontal: 'left', vertical: 'top'}}
+				>
+				<MenuItem
+				  primaryText="New game"
+				/>
+				<MenuItem
+				  primaryText="Restore game"
+				/>
+				<Divider />
+				<MenuItem
+				  primaryText="Clubs"
+				  rightIcon={<ArrowDropRight />}
+				  menuItems={[
+					<MenuItem primaryText="Change current club" />,
+					<Divider />,
+					<MenuItem primaryText="Manage clubs" />,
+					]}
+				/>
+				</IconMenu>
 
-	      <Toolbar>
-	        <ToolbarGroup firstChild={true}>
-	          <DropDownMenu value={this.state.value} onChange={this.handleChange}>
-	            <MenuItem value={1} primaryText="All Broadcasts" />
-	            <MenuItem value={2} primaryText="All Voice" />
-	            <MenuItem value={3} primaryText="All Text" />
-	            <MenuItem value={4} primaryText="Complete Voice" />
-	            <MenuItem value={5} primaryText="Complete Text" />
-	            <MenuItem value={6} primaryText="Active Voice" />
-	            <MenuItem value={7} primaryText="Active Text" />
-	          </DropDownMenu>
-	        </ToolbarGroup>
-	        <ToolbarGroup>
-	          <ToolbarTitle text="Options" />
-	          <FontIcon className="muidocs-icon-custom-sort" />
-	          <ToolbarSeparator />
-	          <RaisedButton label="Create Broadcast" primary={true} />
-	          <IconMenu
-	            iconButtonElement={
-	              <IconButton touch={true}>
-	                <NavigationExpandMoreIcon />
-	              </IconButton>
-	            }
-	          >
-	            <MenuItem primaryText="Download" />
-	            <MenuItem primaryText="More Info" />
-	          </IconMenu>
-	        </ToolbarGroup>
-	      </Toolbar>
+				<div className='rightFloater'>
+					<IconMenu
+						iconButtonElement={<IconButton><ProfileIcon /></IconButton>}
+						anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+						targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
+					>
+						<MenuItem primaryText="Edit profile" />
+						<Divider />
+						<MenuItem primaryText="Sign out" />
+					</IconMenu>
+				</div>
+				<br />
+			</div>
 
-	      <br />
-			<div className="container text-center">
-				<h1>This is the new home page</h1>
+			<div className='bottomAbsolute'>
+				<br />
+				<h1>This is one of the newest home page</h1>
 				<ul>
 					<li><Link to="ProfileView">Edit profile</Link></li>
 					<li><Link to="PlayersView">Edit players</Link></li>
@@ -64,7 +66,7 @@ export default class HomePageView extends Component {
 					<li><Link to="SignOnPage">Sign out</Link></li>
 				</ul>
 			</div>
-	     </div>
-    );
+		</div>
+	);
   }
 }

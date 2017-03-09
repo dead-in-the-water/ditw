@@ -19,47 +19,54 @@ export const NAME = 'players';
 // Define the initial state for `players` module
 
 const initialState: State = {
-  players: [0, 1, 2, 3, 4],
   playersById: [
     {
       id: 0,
-      lastName: 'B.I.G.',
-      firstName: 'Notorious',
-      avgScore: 41.3,
-      avgPosition: 1.7,
-      gamesPlayed: 213
+      lastName: 'Finkelstein',
+      firstName: 'Elaine',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0
     },
     {
       id: 1,
-      lastName: 'Shakur',
-      firstName: 'Tupac',
-      avgScore: 37.1,
-      avgPosition: 2.1,
-      gamesPlayed: 117
+      lastName: 'Leavitt',
+      firstName: 'Stacy',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0
     },
     {
       id: 2,
-      lastName: 'Dre',
-      firstName: 'Dr.',
-      avgScore: 37.1,
-      avgPosition: 2.1,
-      gamesPlayed: 117
+      lastName: 'Elster',
+      firstName: 'Beth',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0
     },
     {
       id: 3,
-      lastName: 'Pun',
-      firstName: 'Big',
-      avgScore: 44.2,
-      avgPosition: 1.3,
-      gamesPlayed: 197
+      lastName: 'Finkelstein',
+      firstName: 'Jack',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0
     },
     {
       id: 4,
-      lastName: 'Rakim',
-      firstName: '',
-      avgScore: 34.9,
-      avgPosition: 3.2,
-      gamesPlayed: 38
+      lastName: 'Leavitt',
+      firstName: 'Rachel',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0
+    },
+    {
+      id: 5,
+      lastName: 'Elster',
+      firstName: 'Jeremy',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0
     }
   ]
 };
