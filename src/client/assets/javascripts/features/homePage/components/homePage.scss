@@ -1,8 +1,8 @@
 .homePageMenu {
-  float: left;
-  width: 500px;
-  background-color: #CCCCCC;
-  border: 1px solid #E3E3E3;
+	float: left;
+	width: 500px;
+	background-color: #CCCCCC;
+	border: 1px solid #E3E3E3;
 }
 
 .rightFloater {
@@ -14,6 +14,17 @@
 }
 
 .bottomAbsolute {
+	position: absolute;
+	bottom: 0;
+}
+
+.homePageContainer {
+	width: 500px;
+	height: 700px;
+}
+
+.fullWidthBottomAbsolute {
+	width: 500px;
 	position: absolute;
 	bottom: 0;
 }
