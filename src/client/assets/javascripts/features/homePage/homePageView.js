@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
+import { Navigation } from 'react-router'
 
 import AppBar from 'material-ui/AppBar';
 import IconMenu from 'material-ui/IconMenu';
 import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import HamburgerMenuIcon from 'material-ui/svg-icons/navigation/menu';
 import ProfileIcon from 'material-ui/svg-icons/social/person';
@@ -19,104 +21,53 @@ import RestoreGameIcon from 'material-ui/svg-icons/file/cloud-download';
 import AdministrationIcon from 'material-ui/svg-icons/action/supervisor-account';
 import NewGameIcon from 'material-ui/svg-icons/content/add-box';
 
-import './homePage.scss';
+import './homePageView.scss';
 
-import imgDeadInTheWater from '../images/dead-in-the-water.jpg'
+import imgDeadInTheWater from './images/dead-in-the-water.jpg';
+import googleSignOnButton from './images/btn_google_signin_dark_pressed_web.png';
 
-/*function _handleTouchTap() {
-	alert('onTouchTap triggered on the title component');
-}*/
-
-const styles = {
+const appBarStyles = {
 	title: {
-		cursor: 'pointer',
+		cursor: 'pointer'
 	}
 };
 
-const MNU_NEW_GAME = 1;
-const MNU_SAVE_GAME = 2;
-const MNU_LOAD_GAME = 3;
-const MNU_ADMIN = 4;
-const MNU_EDIT_PROFILE = 5;
-const MNU_CHG_CLUB = 6;
-const MNU_HELP = 7;
-const MNU_SIGNOUT = 8;
-
-
 export default class HomePageView extends Component {
-
-	_handleTouchTap(menuCode) {
-		switch (menuCode) {
-			case MNU_NEW_GAME: {
-				console.log("  New game is requested");
-				return;
-			}
-			case MNU_SAVE_GAME: {
-				console.log("  Save game requested");
-				return;
-			}
-			case MNU_LOAD_GAME: {
-				console.log("  Load game requested");
-				return;
-			}
-			case MNU_ADMIN: {
-				console.log("  Administration requested");
-				return;
-			}
-			case MNU_EDIT_PROFILE: {
-				console.log("  Profile editing requested");
-				return;
-			}
-			case MNU_CHG_CLUB: {
-				console.log("  Club change requested");
-				return;
-			}
-			case MNU_HELP: {
-				console.log("  Help requested");
-				return;
-			}
-			case MNU_SIGNOUT: {
-				console.log("  Sign out requested");
-				return;
-			}
-			default: {
-				console.log("  Don't know what that was!")
-			}
-		}
-	}
 
 	render() {
 		return (
 			<div className="homePageContainer">
 				<AppBar
-					title={<span style={styles.title}>Dead In The Water</span>}
+					title={<span style={appBarStyles.title}>Dead In The Water</span>}
 					iconElementLeft={
-						<IconMenu
-							iconButtonElement={<IconButton><HamburgerMenuIcon /></IconButton>}
+						<IconMenu 
+							iconButtonElement={<IconButton>
+													<HamburgerMenuIcon color='white' />
+												</IconButton>}
 							anchorOrigin={{horizontal: 'left', vertical: 'top'}}
 							targetOrigin={{horizontal: 'left', vertical: 'top'}}
 						>
 							<MenuItem 
 								primaryText="New game" 
 								leftIcon={<NewGameIcon />} 
-								onTouchTap={() => this._handleTouchTap(MNU_NEW_GAME)}
+								onTouchTap={() => this.props.history.push('/NewGameView')}
 							/>
 							<MenuItem 
 								primaryText="Save game" 
 								leftIcon={<SaveGameIcon />} 
-								onTouchTap={() => this._handleTouchTap(MNU_SAVE_GAME)}
+								onTouchTap={() => this.props.history.push('/SaveGameView')}
 							/>
 							<Divider />
 							<MenuItem 
 								primaryText="Load saved game" 
 								leftIcon={<RestoreGameIcon />} 
-								onTouchTap={() => this._handleTouchTap(MNU_LOAD_GAME)}
+								onTouchTap={() => this.props.history.push('/LoadGameView')}
 							/>
 							<Divider />
 							<MenuItem 
 								primaryText="Administration" 
 								leftIcon={<AdministrationIcon />}
-								onTouchTap={() => this._handleTouchTap(MNU_ADMIN)}
+								onTouchTap={() => this.props.history.push('/AdminView')}
 							/>
 						</IconMenu>
 					}
@@ -129,24 +80,24 @@ export default class HomePageView extends Component {
 							<MenuItem 
 								primaryText="Edit profile" 
 								leftIcon={<EditIcon />}
-								onTouchTap={() => this._handleTouchTap(MNU_EDIT_PROFILE)}
+								onTouchTap={() => this.props.history.push('/ProfileView')}
 							/>
 							<MenuItem 
 								primaryText="Change current club"
 								leftIcon={<ClubIcon />}
-								onTouchTap={() => this._handleTouchTap(MNU_CHG_CLUB)}
+								onTouchTap={() => this.props.history.push('/ChangeClubView')}
 							/>
 							<Divider />
 							<MenuItem 
 								primaryText="Help" 
 								leftIcon={<HelpIcon />}
-								onTouchTap={() => this._handleTouchTap(MNU_HELP)}
+								onTouchTap={() => this.props.history.push('/HelpView')}
 							/>
 							<Divider />
 							<MenuItem 
 								primaryText="Sign out" 
 								leftIcon={<SignoutIcon />}
-								onTouchTap={() => this._handleTouchTap(MNU_SIGNOUT)}
+								onTouchTap={() => this.props.history.push('/SignOutView')}
 							/>
 						</IconMenu>
 					}
@@ -154,8 +105,14 @@ export default class HomePageView extends Component {
 				<div className='homePageContainer'>
 					<img src={imgDeadInTheWater} 
 						alt="Supposed to be picture of sinking ship" 
-						width="500px"
+						width="100%"
 					/>
+					<div>
+						<img className='sign-in-button-1' src={googleSignOnButton} />
+						<RaisedButton label="Toggle state" primary={true} onTouchTap={() => 
+							console.log("!!this.state = " + !!this.state)
+						} />
+					</div>
 				</div>
 			</div>
 		);
