@@ -45,16 +45,8 @@ export default class HomePageView extends Component {
     clearLoggedIn: PropTypes.func.isRequired,
   }
 */
-  constructor (props) {
-    super(props)
-    this.state = {
-      loggedIn: false
-    }
-  }
 
   render () {
-  	console.log('this.props.actions:' + this.props.actions)
-
     return (
       <div className='home-page-container'>
         <AppBar
@@ -70,27 +62,23 @@ export default class HomePageView extends Component {
               <MenuItem
                 primaryText='New game'
                 leftIcon={<NewGameIcon />}
-                disabled={!this.state.loggedIn}
                 onTouchTap={() => this.props.history.push('/NewGameView')}
 							/>
               <MenuItem
                 primaryText='Save game'
                 leftIcon={<SaveGameIcon />}
-                disabled={!this.state.loggedIn}
                 onTouchTap={() => this.props.history.push('/SaveGameView')}
 							/>
               <Divider />
               <MenuItem
                 primaryText='Load saved game'
                 leftIcon={<RestoreGameIcon />}
-                disabled={!this.state.loggedIn}
                 onTouchTap={() => this.props.history.push('/LoadGameView')}
 							/>
               <Divider />
               <MenuItem
                 primaryText='Administration'
                 leftIcon={<AdministrationIcon />}
-                disabled={!this.state.loggedIn}
                 onTouchTap={() => this.props.history.push('/AdminView')}
 							/>
             </IconMenu>
@@ -104,13 +92,11 @@ export default class HomePageView extends Component {
               <MenuItem
                 primaryText='Edit profile'
                 leftIcon={<EditIcon />}
-                disabled={!this.state.loggedIn}
                 onTouchTap={() => this.props.history.push('/ProfileView')}
 							/>
               <MenuItem
                 primaryText='Change current club'
                 leftIcon={<ClubIcon />}
-                disabled={!this.state.loggedIn}
                 onTouchTap={() => this.props.history.push('/ChangeClubView')}
 							/>
               <Divider />
@@ -123,8 +109,7 @@ export default class HomePageView extends Component {
               <MenuItem
                 primaryText='Sign out'
                 leftIcon={<SignoutIcon />}
-                disabled={!this.state.loggedIn}
-                onTouchTap={() => this.props.history.push('/SignOutView')}
+                onTouchTap={() => this.props.actions.clearLoggedIn()}
 							/>
             </IconMenu>
 					}
@@ -133,7 +118,7 @@ export default class HomePageView extends Component {
           <img className='home-page-signon-button'
             src={googleSignOnButton}
             alt='Google signin buttom'
-            onTouchTap={() => this.props.setLoggedIn()}
+            onTouchTap={() => this.props.actions.setLoggedIn()}
 					/>
         </div>
       </div>

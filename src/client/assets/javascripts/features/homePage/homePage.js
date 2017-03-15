@@ -18,7 +18,7 @@ export const NAME = 'loggedIn'
 // Define the initial state for `friends` module
 
 const initialStatus: UserStatus = {
-  loggedIn: true
+  loggedIn: false
 }
 
 // Reducer
