@@ -2,5 +2,8 @@
 // This is the exposed surface where modules can interface with each other.
 
 export {
-  default
-} from './homePage';
+  default,
+  actionCreators,
+  selector,
+  NAME
+} from './homePage'

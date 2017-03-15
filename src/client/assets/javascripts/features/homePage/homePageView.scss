@@ -1,4 +1,26 @@
-.homePageContainer {
-	width: 100%;
-	height: 100%;
+.home-page-container {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+}
+
+.home-page-container .image {
+	display: flex;
+	flex: 1;
+	justify-content: center;
+	background-image: url("./images/dead-in-the-water.jpg");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+
+.home-page-signon-button {
+	display: block;
+	margin: auto;
+	width: 80%;
+	max-width: 300px;
+	height: auto;
+	cursor: pointer;
 }

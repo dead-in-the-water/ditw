@@ -5,7 +5,8 @@ type PlayerById = {
   avgScore: number,
   avgPosition: number,
   gamesPlayed: number,
-  birthDate: number
+  birthDate: number,
+  inThisGame: boolean
 };
 
 // This is the model of our module state

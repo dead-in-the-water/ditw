@@ -1,16 +1,16 @@
 // @flow
 
-import { createStructuredSelector } from 'reselect';
-import assign from 'lodash/assign';
+import { createStructuredSelector } from 'reselect'
+import assign from 'lodash/assign'
 
-import { State } from 'models/players';
+import { State } from 'models/players'
 
 // Action Types
 
 // Define types in the form of 'npm-module-or-myapp/feature-name/ACTION_TYPE_NAME'
-const ADD_PLAYER = 'redux-app/players/ADD_PLAYER';
-const STAR_PLAYER = 'redux-app/players/STAR_PLAYER';
-const DELETE_PLAYER = 'redux-app/players/DELETE_PLAYER';
+const NEW_PLAYER = 'redux-app/players/NEW_PLAYER'
+const ADD_PLAYER_TO_GAME = 'redux-app/players/ADD_PLAYER_TO_GAME'
+const DELETE_PLAYER = 'redux-app/players/DELETE_PLAYER'
 
 // This will be used in our root reducer and selectors
 
@@ -26,7 +26,8 @@ const initialState: State = {
       firstName: 'Elaine',
       avgScore: 0,
       avgPosition: 0,
-      gamesPlayed: 0
+      gamesPlayed: 0,
+      inThisGame: false
     },
     {
       id: 1,
@@ -34,7 +35,8 @@ const initialState: State = {
       firstName: 'Stacy',
       avgScore: 0,
       avgPosition: 0,
-      gamesPlayed: 0
+      gamesPlayed: 0,
+      inThisGame: false
     },
     {
       id: 2,
@@ -42,7 +44,8 @@ const initialState: State = {
       firstName: 'Beth',
       avgScore: 0,
       avgPosition: 0,
-      gamesPlayed: 0
+      gamesPlayed: 0,
+      inThisGame: false
     },
     {
       id: 3,
@@ -50,7 +53,8 @@ const initialState: State = {
       firstName: 'Jack',
       avgScore: 0,
       avgPosition: 0,
-      gamesPlayed: 0
+      gamesPlayed: 0,
+      inThisGame: false
     },
     {
       id: 4,
@@ -58,7 +62,8 @@ const initialState: State = {
       firstName: 'Rachel',
       avgScore: 0,
       avgPosition: 0,
-      gamesPlayed: 0
+      gamesPlayed: 0,
+      inThisGame: false
     },
     {
       id: 5,
@@ -66,10 +71,47 @@ const initialState: State = {
       firstName: 'Jeremy',
       avgScore: 0,
       avgPosition: 0,
-      gamesPlayed: 0
+      gamesPlayed: 0,
+      inThisGame: false
+    },
+    {
+      id: 6,
+      lastName: 'Leavitt',
+      firstName: 'Daniel',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0,
+      inThisGame: false
+    },
+    {
+      id: 7,
+      lastName: 'Finkelstein',
+      firstName: 'Mike',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0,
+      inThisGame: false
+    },
+    {
+      id: 7,
+      lastName: 'Leavitt',
+      firstName: 'Ron',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0,
+      inThisGame: false
+    },
+    {
+      id: 8,
+      lastName: 'Elster',
+      firstName: 'Joel',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0,
+      inThisGame: false
     }
   ]
-};
+}
 
 // Reducer
 
@@ -87,7 +129,7 @@ const initialState: State = {
 
 export default function reducer(state: State = initialState, action: any = {}): State {
   switch (action.type) {
-    case ADD_PLAYER: {
+    case NEW_PLAYER: {
       const len = state.players.length ? state.players.length : 1;
       const newId = (state.players[len - 1] + 1) || 0;
       return {
@@ -100,7 +142,7 @@ export default function reducer(state: State = initialState, action: any = {}): 
             name: action.name
           }
         ]
-      };
+      }
     }
 
     case DELETE_PLAYER:
@@ -108,9 +150,9 @@ export default function reducer(state: State = initialState, action: any = {}): 
         ...state,
         players: state.players.filter((id) => id !== action.id),
         playersById: state.playersById.filter((player) => player.id !== action.id)
-      };
+      }
 
-    case STAR_PLAYER:
+    case ADD_PLAYER_TO_GAME:
       return {
         ...state,
         playersById: state.playersById.map((player) => {
@@ -120,9 +162,9 @@ export default function reducer(state: State = initialState, action: any = {}): 
 
           return assign({}, player, {
             starred: !player.starred
-          });
+          })
         })
-      };
+      }
 
     default:
       return state;
@@ -131,17 +173,17 @@ export default function reducer(state: State = initialState, action: any = {}): 
 
 // Action Creators
 
-function addPlayer(name: string) {
+function newPlayer(name: string) {
   return {
-    type: ADD_PLAYER,
+    type: NEW_PLAYER,
     name
-  };
+  }
 }
 
 // or in a form of arrow function
 
-// const addPlayer = (name: string) => ({
-//   type: ADD_PLAYER,
+// const newPlayer = (name: string) => ({
+//   type: NEW_PLAYER,
 //   name
 // });
 
@@ -149,14 +191,14 @@ function deletePlayer(id: number) {
   return {
     type: DELETE_PLAYER,
     id
-  };
+  }
 }
 
-function starPlayer(id: number) {
+function addpLayertoGame(id: number) {
   return {
-    type: STAR_PLAYER,
+    type: ADD_PLAYER_TO_GAME,
     id
-  };
+  }
 }
 
 // Selectors
@@ -165,10 +207,10 @@ const players = (state) => state[NAME];
 
 export const selector = createStructuredSelector({
   players
-});
+})
 
 export const actionCreators = {
-  addPlayer,
+  newPlayer,
   deletePlayer,
-  starPlayer
-};
+  addpLayertoGame
+}
