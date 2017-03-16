@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import './AddPlayerInput.scss';
+//import './AddPlayerInput.scss';
 
 export default class AddPlayerInput extends Component {
   static propTypes = {

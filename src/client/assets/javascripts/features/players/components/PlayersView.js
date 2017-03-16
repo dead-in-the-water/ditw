@@ -14,7 +14,7 @@ import PlayersLayout from './PlayersLayout';
 export default class PlayersView extends Component {
   render() {
     return (
-      <div>
+      <div className='players-view'>
         <PlayersLayout {...this.props} />
 				<RaisedButton 
 					label="Cancel" 

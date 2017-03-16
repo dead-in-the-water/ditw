@@ -14,31 +14,29 @@ export default class PlayerTable extends Component {
   renderList() {
 		return this.props.players.map((Player, i) =>
 		  (
-			<PlayerTableItem
-			  key={i}
-			  id={Player.id}
-			  lastName={Player.lastName}
-			  firstName={Player.firstName}
-			  avgScore={Player.avgScore}
-			  avgPosition={Player.avgPosition}
-			  gamesPlayed={Player.gamesPlayed}
-			  inThisGame={Player.inThisGame}
-			  {...this.props.actions} />
+				<PlayerTableItem
+				  key={i}
+				  id={Player.id}
+				  name={Player.firstName + ' ' + Player.lastName}
+				  gamesPlayed={Player.gamesPlayed}
+				  inThisGame={Player.inThisGame}
+				  {...this.props.actions} 
+				/>
 		  )
 		)
   }
 
   render() {
 		return (
-		  <Table multiSelectable={true}>
-				<TableHeader displaySelectAll={false}>
-				  <TableRow>
+		  <Table className='player-table'>
+				<TableHeader className='player-table-header'>
+				  <TableRow className='player-table-header-row'>
+						<TableHeaderColumn>Player Number</TableHeaderColumn>
 						<TableHeaderColumn>Name</TableHeaderColumn>
-						<TableHeaderColumn>Avg. score</TableHeaderColumn>
 						<TableHeaderColumn>Games played</TableHeaderColumn>
 				  </TableRow>
 				</TableHeader>
-			<TableBody>
+			<TableBody className='player-table-body'>
 			  {this.renderList()}
 			</TableBody>
 		  </Table>

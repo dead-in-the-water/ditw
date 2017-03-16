@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 
 import AddPlayerInput from './AddPlayerInput'
 import PlayerTable from './PlayerTable'
-import './PlayerTableApp.scss'
+//import './PlayerTableApp.scss'
 
 export default class PlayersLayout extends Component {
   static propTypes = {
@@ -14,7 +14,7 @@ export default class PlayersLayout extends Component {
     const { players: { playersById }, actions } = this.props
 
     return (
-      <div className="playerListApp">
+      <div className='container text-center'>
         <h1>Available Players List</h1>
         <PlayerTable players={playersById} actions={actions} />
       </div>

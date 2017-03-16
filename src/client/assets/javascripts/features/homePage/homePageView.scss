@@ -16,8 +16,17 @@
 	background-size: cover;
 }
 
-.home-page-signon-button {
+.home-page-signon-button-visible {
 	display: block;
+	margin: auto;
+	width: 80%;
+	max-width: 300px;
+	height: auto;
+	cursor: pointer;
+}
+
+.home-page-signon-button-invisible {
+	display: none;
 	margin: auto;
 	width: 80%;
 	max-width: 300px;

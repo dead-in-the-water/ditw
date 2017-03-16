@@ -10,7 +10,7 @@ import IconButton from 'material-ui/IconButton'
 import './PlayerTableItem.scss'
 
 export default class PlayerTableItem extends Component {
-  static propTypes = {
+/*  static propTypes = {
 		id: PropTypes.number.isRequired,
 		lastName: PropTypes.string.isRequired,
 		firstName: PropTypes.string.isRequired,
@@ -19,15 +19,14 @@ export default class PlayerTableItem extends Component {
 		gamesPlayed: PropTypes.number,
 		inThisGame: PropTypes.bool
   };
-
-  render() {
-
-		return (
-			<TableRow>
-				<TableRowColumn>{this.props.firstName + ' ' + this.props.lastName}</TableRowColumn>
-				<TableRowColumn>{this.props.avgScore}</TableRowColumn>
-				<TableRowColumn>{this.props.gamesPlayed}</TableRowColumn>
-			</TableRow>
-		)
+*/
+  render () {
+    return (
+      <TableRow className='player-table-row'>
+        <TableRowColumn>{this.props.id}</TableRowColumn>
+        <TableRowColumn>{this.props.name}</TableRowColumn>
+        <TableRowColumn>{this.props.gamesPlayed}</TableRowColumn>
+      </TableRow>
+    )
   }
 }

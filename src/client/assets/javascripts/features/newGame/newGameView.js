@@ -11,7 +11,7 @@ export default class NewGameView extends Component {
     return (
       <div className='container text-center'>
         <h1>This is where game setup starts</h1>
-        <Table multiSelectable>
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHeaderColumn>ID</TableHeaderColumn>
@@ -53,13 +53,13 @@ export default class NewGameView extends Component {
           secondary
           style={style}
           onTouchTap={() => this.props.history.push('/PlayersView')}
-					/>
+          />
         <RaisedButton
           label='Done'
           primary
           style={style}
           onTouchTap={() => this.props.history.push('/HomePageView')}
-					/>
+          />
       </div>
     )
   }
