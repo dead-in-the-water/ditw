@@ -1,31 +1,14 @@
 .player-table {
-	allRowsSelected: false;
-	fixedFooter: true;
-	fixedHeader: true;
-	height: 'inherit';
-	multiSelectable: true;
-	selectable: true;	
 }
 
 .player-table-header {
-	adjustForCheckbox: true;
-	displaySelectAll: false;
-	enableSelectAll: false;
 }
 
 .player-table-header-row {
-	displayBorder: true;
-	hoverable: false;
-	hovered: false;
-	selectable: false;
-	selected: false;
-	striped: false;
 }
 
 .player-table-body {
-	deselectOnClickaway: true;
-	displayRowCheckbox: true;
-	preScanRows: true;
-	showRowHover: true;
-	stripedRows: false;
+}
+
+.player-table-row {
 }
