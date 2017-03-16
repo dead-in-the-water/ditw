@@ -93,7 +93,7 @@ const initialState: State = {
       inThisGame: false
     },
     {
-      id: 7,
+      id: 8,
       lastName: 'Leavitt',
       firstName: 'Ron',
       avgScore: 0,
@@ -102,7 +102,7 @@ const initialState: State = {
       inThisGame: false
     },
     {
-      id: 8,
+      id: 9,
       lastName: 'Elster',
       firstName: 'Joel',
       avgScore: 0,

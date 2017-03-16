@@ -15,7 +15,6 @@ export default class PlayersLayout extends Component {
 
     return (
       <div className='container text-center'>
-        <h1>Available Players List</h1>
         <PlayerTable players={playersById} actions={actions} />
       </div>
     ) 

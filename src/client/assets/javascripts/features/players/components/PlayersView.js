@@ -10,8 +10,11 @@ import PlayersLayout from './PlayersLayout';
 @connect(selector, (dispatch) => ({
   actions: bindActionCreators(playersActions, dispatch)
 }))
-
 export default class PlayersView extends Component {
+  _handleDoneButton(keys) {
+  	console.log('Done button clicked')
+  }
+
   render() {
     return (
       <div className='players-view'>

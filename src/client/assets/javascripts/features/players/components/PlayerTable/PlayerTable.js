@@ -11,13 +11,20 @@ export default class PlayerTable extends Component {
 	players: PropTypes.array.isRequired
   }
 
+  _handleRowSelection(keys) {
+  	console.log(keys.length + ' players selected')
+
+  	keys.map((key) => (
+  		console.log('  Player '+ key + ' -> ' + this.props.players[key].firstName)
+  	))
+
+  }
+
   renderList() {
 		return this.props.players.map((Player, i) =>
 		  (
-	    <TableRow className='player-table-row'>
-        <TableRowColumn>{Player.id}</TableRowColumn>
+	    <TableRow key={Player.id} className='player-table-row'>
         <TableRowColumn>{Player.firstName + ' ' + Player.lastName}</TableRowColumn>
-        <TableRowColumn>{Player.gamesPlayed}</TableRowColumn>
       </TableRow>
 		  )
 		)
@@ -25,12 +32,18 @@ export default class PlayerTable extends Component {
 
   render() {
 		return (
-		  <Table className='player-table' multiSelectable={true}>
-				<TableHeader className='player-table-header' displaySelectAll={false}>
+		  <Table 
+		  	className='player-table' 
+		  	multiSelectable={true}
+				onRowSelection={(key) => this._handleRowSelection(key)}
+		  >
+				<TableHeader 
+					className='player-table-header' 
+					displaySelectAll={false}
+					adjustForCheckbox={false}
+				>
 				  <TableRow className='player-table-header-row'>
-						<TableHeaderColumn>Player Number</TableHeaderColumn>
-						<TableHeaderColumn>Name</TableHeaderColumn>
-						<TableHeaderColumn>Games played</TableHeaderColumn>
+						<TableHeaderColumn><h1>Available Players</h1></TableHeaderColumn>
 				  </TableRow>
 				</TableHeader>
 			<TableBody className='player-table-body'>

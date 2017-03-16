@@ -7,6 +7,18 @@ const style = {
 }
 
 export default class NewGameView extends Component {
+  renderList () {
+    return this.props.players.map((Player, i) =>
+				(
+  <TableRow key={Player.id} className='player-table-row'>
+    <TableRowColumn>{Player.id}</TableRowColumn>
+    <TableRowColumn>{Player.firstName + ' ' + Player.lastName}</TableRowColumn>
+    <TableRowColumn>{Player.gamesPlayed}</TableRowColumn>
+  </TableRow>
+				)
+			)
+  }
+
   render () {
     return (
       <div className='container text-center'>
@@ -47,19 +59,19 @@ export default class NewGameView extends Component {
           primary={false}
           style={style}
           onTouchTap={() => this.props.history.push('/HomePageView')}
-        />
+				/>
         <RaisedButton
           label='Add players'
           secondary
           style={style}
           onTouchTap={() => this.props.history.push('/PlayersView')}
-          />
+					/>
         <RaisedButton
           label='Done'
           primary
           style={style}
           onTouchTap={() => this.props.history.push('/HomePageView')}
-          />
+					/>
       </div>
     )
   }
