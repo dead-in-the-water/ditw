@@ -26,6 +26,60 @@ export default class PlayerTable extends Component {
 		)
   }
 
+renderList1() {
+	return (
+		  <TableRow>
+		    <TableRowColumn>1</TableRowColumn>
+		    <TableRowColumn>John Adams</TableRowColumn>
+		    <TableRowColumn>3</TableRowColumn>
+		  </TableRow>
+	)
+}
+
+renderList2() {
+	return (
+		  <TableRow>
+		    <TableRowColumn>2</TableRowColumn>
+		    <TableRowColumn>Thomas Jefferson</TableRowColumn>
+		    <TableRowColumn>300</TableRowColumn>
+		  </TableRow>
+	)
+}
+
+renderList3() {
+	return (this.renderList1() + this.renderList2())
+}
+
+renderList4() {
+	return (
+			<div>
+			  <TableRow>
+			    <TableRowColumn>1</TableRowColumn>
+			    <TableRowColumn>John Adams</TableRowColumn>
+			    <TableRowColumn>3</TableRowColumn>
+			  </TableRow>
+			  <TableRow>
+			    <TableRowColumn>2</TableRowColumn>
+			    <TableRowColumn>Thomas Jefferson</TableRowColumn>
+			    <TableRowColumn>300</TableRowColumn>
+			  </TableRow>
+		  </div>
+	)
+}
+
+renderList5() {
+	return (
+				<PlayerTableItem
+				  key='0'
+				  id='1'
+				  name='Benjamin Franklin'
+				  gamesPlayed='122'
+				  inThisGame='false'
+				  {...this.props.actions} 
+				/>
+	)
+}
+
   render() {
 		return (
 		  <Table className='player-table'>
@@ -37,7 +91,7 @@ export default class PlayerTable extends Component {
 				  </TableRow>
 				</TableHeader>
 			<TableBody className='player-table-body'>
-			  {this.renderList()}
+			  {this.renderList4()}
 			</TableBody>
 		  </Table>
 		)
