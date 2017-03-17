@@ -28,14 +28,14 @@ export default function reducer(userStatus: UserStatus = initialStatus, action: 
     case SET_LOGGED_IN: {
       return {
         ...userStatus,
-        loggedIn: true,
+        loggedIn: true
       }
     }
 
     case CLEAR_LOGGED_IN:
       return {
         ...userStatus,
-        loggedIn: false,
+        loggedIn: false
       }
 
     default:
