@@ -11,6 +11,7 @@ import { State } from 'models/players'
 const ADD_PLAYER_TO_GAME = 'redux-app/players/ADD_PLAYER_TO_GAME'
 const REMOVE_PLAYER_FROM_GAME = 'redux-app/players/REMOVE_PLAYER_FROM_GAME'
 const REMOVE_ALL_PLAYERS_FROM_GAME = 'redux-app/players/REMOVE_ALL_PLAYERS_FROM_GAME'
+const CHANGE_PLAYER_ORDINAL_POSITION = 'redux-app/players/CHANGE_PLAYER_ORDINAL_POSITION'
 
 // This will be used in our root reducer and selectors
 
@@ -19,7 +20,6 @@ export const NAME = 'players';
 // Define the initial state for `players` module
 
 const initialState: State = {
-	players: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 	playersById: [
 		{
 			id: 0,
@@ -28,7 +28,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		},
 		{
 			id: 1,
@@ -37,7 +38,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		},
 		{
 			id: 2,
@@ -46,7 +48,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		},
 		{
 			id: 3,
@@ -55,7 +58,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		},
 		{
 			id: 4,
@@ -64,7 +68,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		},
 		{
 			id: 5,
@@ -73,7 +78,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		},
 		{
 			id: 6,
@@ -82,7 +88,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		},
 		{
 			id: 7,
@@ -91,7 +98,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		},
 		{
 			id: 8,
@@ -100,7 +108,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		},
 		{
 			id: 9,
@@ -109,7 +118,8 @@ const initialState: State = {
 			avgScore: 0,
 			avgPosition: 0,
 			gamesPlayed: 0,
-			inThisGame: false
+			inThisGame: false,
+			ordinalPosition: -1
 		}
 	]
 }
@@ -139,7 +149,8 @@ export default function reducer(state: State = initialState, action: any = {}): 
 					}
 					return {
 						...player,
-						inThisGame: true
+						inThisGame: true,
+						ordinalPosition: 25
 					}
 				})
 			}
@@ -153,7 +164,8 @@ export default function reducer(state: State = initialState, action: any = {}): 
 					}
 					return {
 						...player,
-						inThisGame: false
+						inThisGame: false,
+						ordinalPosition: -1
 					}
 				})
 			}
@@ -167,7 +179,24 @@ export default function reducer(state: State = initialState, action: any = {}): 
 					}
 					return {
 						...player,
-						inThisGame: false
+						inThisGame: false,
+						ordinalPosition: -1
+					}
+				})
+			}
+
+		case CHANGE_PLAYER_ORDINAL_POSITION:
+			return {
+				...state,
+				playersById: state.playersById.map((player) => {
+					if (player.id !== action.id) {
+						return player
+					}
+
+
+					return {
+						...player,
+						ordinalPosition: false
 					}
 				})
 			}
@@ -179,20 +208,6 @@ export default function reducer(state: State = initialState, action: any = {}): 
 
 // Action Creators
 
-function newPlayer(name: string) {
-	return {
-		type: NEW_PLAYER,
-		name
-	}
-}
-
-// or in a form of arrow function
-
-// const newPlayer = (name: string) => ({
-//   type: NEW_PLAYER,
-//   name
-// });
-
 function addPlayerToGame(id: number) {
 	return {
 		type: ADD_PLAYER_TO_GAME,
@@ -201,7 +216,6 @@ function addPlayerToGame(id: number) {
 }
 
 function removePlayerFromGame(id: number) {
-	console.log('Request to remove player ' + id + ' from game')
 	return {
 		type: REMOVE_PLAYER_FROM_GAME,
 		id
@@ -209,9 +223,16 @@ function removePlayerFromGame(id: number) {
 }
 
 function removeAllPlayersFromGame() {
-	console.log('Request to remove all players from game')
 	return {
-		type: REMOVE_ALL_PLAYERS_FROM_GAME,
+		type: REMOVE_ALL_PLAYERS_FROM_GAME
+	}
+}
+
+function changePlayerOrdinalPosition(id: number, newOrdPos: number) {
+	return {
+		type: CHANGE_PLAYER_ORDINAL_POSITION,
+		id,
+		newOrdPos
 	}
 }
 
@@ -226,5 +247,6 @@ export const selector = createStructuredSelector({
 export const actionCreators = {
 	addPlayerToGame,
 	removePlayerFromGame,
-	removeAllPlayersFromGame
+	removeAllPlayersFromGame,
+	changePlayerOrdinalPosition
 }

@@ -6,11 +6,11 @@ type PlayerById = {
   avgPosition: number,
   gamesPlayed: number,
   birthDate: number,
-  inThisGame: boolean
+  inThisGame: boolean,
+  ordinalPosition: number
 };
 
 // This is the model of our module state
 export type State = {
-  players: number[],
   playersById: Array<PlayerById>
 };

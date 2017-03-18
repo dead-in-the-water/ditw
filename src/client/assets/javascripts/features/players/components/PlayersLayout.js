@@ -28,28 +28,35 @@ class PlayerTable extends Component {
   players: PropTypes.array.isRequired
   }
 
+  // Called from onRowSelect
+  // On entry: keys is integer[] containing keys of all currently selected rows/players
+  // Note: There is no explicit function for row deselect, so it all has to be handled
+  // here
   _handleRowSelection(keys) {
-    // TODO: Convert to method chaining
-    // brute force!
-    // Go thru full player list
-    for (var i = 0; i < this.props.players.length; i++) {
-      // If current player id isn't in list of selected rows
-      if (keys.indexOf(i) === -1) {
-        // AND was previously selected
-        if (this.props.players[i].inThisGame) {
-          // Remove it from game
-          this.props.actions.removePlayerFromGame(i)
+    // Creates an array of ids that need to be added to game
+    var needToBeAdded = keys.filter((key) => (this.props.players[key].inThisGame === false))
+    // Create local array of players currently marked as inThisGame
+    var currentInGamePlayers = this.props.players.filter((player) => (player.inThisGame))
+
+    // Build array of players that are marked inThisGame but are not included in the passed keys array
+    // (which means they've been deselected
+    var needToBeRemoved = []
+    for (var i = 0; i < currentInGamePlayers.length; i++) {
+      var found = false
+      for (var j = 0; j < keys.length; j++) {
+        if (currentInGamePlayers[i].id === keys[j]) {
+          found = true
+          break;
         }
       }
-      // The id = i IS in the list of selected players in Table
-      else {
-        // AND it wasn't already flagged as in the game
-        if (!this.props.players[i].inThisGame) {
-          // Flag it now
-          this.props.actions.addPlayerToGame(i)
-        }
+      if (!found) {
+        needToBeRemoved.push(currentInGamePlayers[i])
       }
     }
+
+    // Now execute the adds & removals
+    needToBeAdded.map((key) => (this.props.actions.addPlayerToGame(key)))
+    needToBeRemoved.map((player) => (this.props.actions.removePlayerFromGame(player.id)))
   }
 
   renderList() {

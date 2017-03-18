@@ -16,22 +16,11 @@ export default class PlayersView extends Component {
     this.props.history.push('/NewGameView')
   }
 
-  _handleCancelButton() {
-    console.log('Done button clicked')
-    this.props.actions.removeAllPlayersFromGame()
-    this.props.history.push('/NewGameView')
-  }
-
   // TODO: Cancel needs to clear all inThisGame flags
   render() {
     return (
-      <div className='players-view'>
+      <div className='container text-center'>
         <PlayersLayout {...this.props} />
-        <RaisedButton 
-          label="Cancel" 
-          secondary={true} 
-          onTouchTap={() => this._handleCancelButton()}
-        />
         <RaisedButton 
           label="Done" 
           primary={true} 
