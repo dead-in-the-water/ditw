@@ -28,10 +28,10 @@ class PlayerTable extends Component {
   players: PropTypes.array.isRequired
   }
 
-  // Called from onRowSelect
-  // On entry: keys is integer[] containing keys of all currently selected rows/players
-  // Note: There is no explicit function for row deselect, so it all has to be handled
-  // here
+  /* Called from onRowSelect
+  ** On entry: keys is integer[] containing keys of all currently selected rows/players
+  ** Note: There is no explicit function for row deselect, so it all has to be handled here
+  */  
   _handleRowSelection(keys) {
     // Creates an array of ids that need to be added to game
     var needToBeAdded = keys.filter((key) => (this.props.players[key].inThisGame === false))
@@ -39,7 +39,7 @@ class PlayerTable extends Component {
     var currentInGamePlayers = this.props.players.filter((player) => (player.inThisGame))
 
     // Build array of players that are marked inThisGame but are not included in the passed keys array
-    // (which means they've been deselected
+    // (which means they've been deselected)
     var needToBeRemoved = []
     for (var i = 0; i < currentInGamePlayers.length; i++) {
       var found = false
@@ -57,6 +57,13 @@ class PlayerTable extends Component {
     // Now execute the adds & removals
     needToBeAdded.map((key) => (this.props.actions.addPlayerToGame(key)))
     needToBeRemoved.map((player) => (this.props.actions.removePlayerFromGame(player.id)))
+
+    // Try to get the Table to reflect the changes
+
+    // console.log('++++++ Trying to clean up table')
+    // this.forceUpdate()
+    // this.render()
+    // console.log('++++++ Done trying')
   }
 
   renderList() {
@@ -70,6 +77,10 @@ class PlayerTable extends Component {
   }
 
   render() {
+
+    console.log('====== In render')
+    this.props.players.map((player) => (console.log('  player id: ' + player.id + ': ' + player.firstName + ', ordinal: ' + player.ordinalPosition)))
+
     return (
       <Table 
         className='player-table' 

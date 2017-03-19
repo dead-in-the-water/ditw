@@ -13,6 +13,8 @@ const REMOVE_PLAYER_FROM_GAME = 'redux-app/players/REMOVE_PLAYER_FROM_GAME'
 const REMOVE_ALL_PLAYERS_FROM_GAME = 'redux-app/players/REMOVE_ALL_PLAYERS_FROM_GAME'
 const CHANGE_PLAYER_ORDINAL_POSITION = 'redux-app/players/CHANGE_PLAYER_ORDINAL_POSITION'
 
+const INVALID_ORDINAL_POSITION = Number.MAX_SAFE_INTEGER
+
 // This will be used in our root reducer and selectors
 
 export const NAME = 'players';
@@ -29,7 +31,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
 			id: 1,
@@ -39,7 +41,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
 			id: 2,
@@ -49,7 +51,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
 			id: 3,
@@ -59,7 +61,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
 			id: 4,
@@ -69,7 +71,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
 			id: 5,
@@ -79,7 +81,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
 			id: 6,
@@ -89,7 +91,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
 			id: 7,
@@ -99,7 +101,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
 			id: 8,
@@ -109,7 +111,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
 			id: 9,
@@ -119,7 +121,7 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: -1
+			ordinalPosition: INVALID_ORDINAL_POSITION
 		}
 	]
 }
@@ -143,31 +145,31 @@ export default function reducer(state: State = initialState, action: any = {}): 
 		case ADD_PLAYER_TO_GAME:
 			return {
 				...state,
-				playersById: state.playersById.map((player) => {
+				playersById: sortPlayersByOrdinal(state.playersById.map((player) => {
 					if (player.id !== action.id) {
 						return player
 					}
 					return {
 						...player,
 						inThisGame: true,
-						ordinalPosition: 25
+						ordinalPosition: getNextOrdinal(state.playersById)
 					}
-				})
+				}))
 			}
 
 		case REMOVE_PLAYER_FROM_GAME:
 			return {
 				...state,
-				playersById: state.playersById.map((player) => {
+				playersById: sortPlayersByOrdinal(state.playersById.map((player) => {
 					if (player.id !== action.id) {
 						return player
 					}
 					return {
 						...player,
 						inThisGame: false,
-						ordinalPosition: -1
+						ordinalPosition: INVALID_ORDINAL_POSITION
 					}
-				})
+				}))
 			}
 
 		case REMOVE_ALL_PLAYERS_FROM_GAME:
@@ -180,7 +182,7 @@ export default function reducer(state: State = initialState, action: any = {}): 
 					return {
 						...player,
 						inThisGame: false,
-						ordinalPosition: -1
+						ordinalPosition: INVALID_ORDINAL_POSITION
 					}
 				})
 			}
@@ -192,11 +194,9 @@ export default function reducer(state: State = initialState, action: any = {}): 
 					if (player.id !== action.id) {
 						return player
 					}
-
-
 					return {
 						...player,
-						ordinalPosition: false
+						ordinalPosition: action.newOrdPos
 					}
 				})
 			}
@@ -204,6 +204,48 @@ export default function reducer(state: State = initialState, action: any = {}): 
 		default:
 			return state;
 	}
+}
+
+// Support functions
+
+// Return the next available ordinal position, ignoring any & all gaps
+function getNextOrdinal(players) {
+	var nextOrd = -1
+
+	// If there aren't any players, nothing to do
+	if (players.length > 0 ) {
+		for (var i = 0; i < players.length; i++) {
+			if ((players[i].ordinalPosition !== INVALID_ORDINAL_POSITION) && (players[i].ordinalPosition > nextOrd)) {
+				nextOrd = players[i].ordinalPosition
+			}
+		}
+	}
+	
+	return ++nextOrd
+}
+
+// Returns a new playersById sorted by ordinal position and cleaned up by cleanUpOrdinalPosition
+function sortPlayersByOrdinal(players) {
+	
+/*	var sortedPlayers = players.slice().sort((a, b) => (a.ordinalPosition - b.ordinalPosition))
+
+	console.log('====== In sortPlayersByOrdinal. sortedPlayers has ' + sortedPlayers.length + ' entries')
+	sortedPlayers.map((player, i) => ( console.log('  ' + i + ': ' + player.id + ' : ' + player.firstName + ' : ' + player.ordinalPosition)))
+*/
+	return(cleanUpOrdinalPosition(players.slice().sort((a, b) => (a.ordinalPosition - b.ordinalPosition))))
+}
+
+// Returns a new playersById with the ordinal positions cleaned up/compacted
+function cleanUpOrdinalPosition(players) {
+	return players
+
+/*	return players.map((player, i) => (
+		player.ordinalPosition === INVALID_ORDINAL_POSITION ? player : {
+			...player,
+			ordinalPosition: i + 1
+		}
+	))
+*/	
 }
 
 // Action Creators
