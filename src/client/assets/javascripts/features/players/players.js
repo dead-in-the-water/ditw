@@ -24,7 +24,7 @@ export const NAME = 'players';
 const initialState: State = {
 	playersById: [
 		{
-			id: 0,
+			id: 10,
 			lastName: 'Finkelstein',
 			firstName: 'Elaine',
 			avgScore: 0,
@@ -34,7 +34,7 @@ const initialState: State = {
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
-			id: 1,
+			id: 11,
 			lastName: 'Leavitt',
 			firstName: 'Stacy',
 			avgScore: 0,
@@ -44,7 +44,7 @@ const initialState: State = {
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
-			id: 2,
+			id: 12,
 			lastName: 'Elster',
 			firstName: 'Beth',
 			avgScore: 0,
@@ -54,7 +54,7 @@ const initialState: State = {
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
-			id: 3,
+			id: 13,
 			lastName: 'Finkelstein',
 			firstName: 'Jack',
 			avgScore: 0,
@@ -64,7 +64,7 @@ const initialState: State = {
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
-			id: 4,
+			id: 14,
 			lastName: 'Leavitt',
 			firstName: 'Rachel',
 			avgScore: 0,
@@ -74,7 +74,7 @@ const initialState: State = {
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
-			id: 5,
+			id: 15,
 			lastName: 'Elster',
 			firstName: 'Jeremy',
 			avgScore: 0,
@@ -84,7 +84,7 @@ const initialState: State = {
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
-			id: 6,
+			id: 16,
 			lastName: 'Leavitt',
 			firstName: 'Daniel',
 			avgScore: 0,
@@ -94,7 +94,7 @@ const initialState: State = {
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
-			id: 7,
+			id: 17,
 			lastName: 'Finkelstein',
 			firstName: 'Mike',
 			avgScore: 0,
@@ -104,7 +104,7 @@ const initialState: State = {
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
-			id: 8,
+			id: 18,
 			lastName: 'Leavitt',
 			firstName: 'Ron',
 			avgScore: 0,
@@ -114,7 +114,7 @@ const initialState: State = {
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		},
 		{
-			id: 9,
+			id: 19,
 			lastName: 'Elster',
 			firstName: 'Joel',
 			avgScore: 0,
