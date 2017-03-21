@@ -1,8 +1,7 @@
 // @flow
 
 import { createStructuredSelector } from 'reselect'
-import assign from 'lodash/assign'
-
+import { assign, _sortBy } from 'lodash'
 import { State } from 'models/players'
 
 // Action Types
@@ -12,8 +11,12 @@ const ADD_PLAYER_TO_GAME = 'redux-app/players/ADD_PLAYER_TO_GAME'
 const REMOVE_PLAYER_FROM_GAME = 'redux-app/players/REMOVE_PLAYER_FROM_GAME'
 const REMOVE_ALL_PLAYERS_FROM_GAME = 'redux-app/players/REMOVE_ALL_PLAYERS_FROM_GAME'
 const CHANGE_PLAYER_ORDINAL_POSITION = 'redux-app/players/CHANGE_PLAYER_ORDINAL_POSITION'
+const SORT_PLAYERS = 'redux-app/players/SORT_PLAYERS'
 
-const INVALID_ORDINAL_POSITION = Number.MAX_SAFE_INTEGER
+export const INVALID_ORDINAL_POSITION = Number.MAX_SAFE_INTEGER
+export const SORT_KEY_BY_ID = 0
+export const SORT_KEY_BY_ORDINAL = 1
+export const SORT_KEY_BY_NAME = 2
 
 // This will be used in our root reducer and selectors
 
@@ -145,7 +148,7 @@ export default function reducer(state: State = initialState, action: any = {}): 
 		case ADD_PLAYER_TO_GAME:
 			return {
 				...state,
-				playersById: sortPlayersByOrdinal(state.playersById.map((player) => {
+				playersById: state.playersById.map((player) => {
 					if (player.id !== action.id) {
 						return player
 					}
@@ -154,13 +157,13 @@ export default function reducer(state: State = initialState, action: any = {}): 
 						inThisGame: true,
 						ordinalPosition: getNextOrdinal(state.playersById)
 					}
-				}))
+				})
 			}
 
 		case REMOVE_PLAYER_FROM_GAME:
 			return {
 				...state,
-				playersById: sortPlayersByOrdinal(state.playersById.map((player) => {
+				playersById: state.playersById.map((player) => {
 					if (player.id !== action.id) {
 						return player
 					}
@@ -169,7 +172,7 @@ export default function reducer(state: State = initialState, action: any = {}): 
 						inThisGame: false,
 						ordinalPosition: INVALID_ORDINAL_POSITION
 					}
-				}))
+				})
 			}
 
 		case REMOVE_ALL_PLAYERS_FROM_GAME:
@@ -201,8 +204,34 @@ export default function reducer(state: State = initialState, action: any = {}): 
 				})
 			}
 
+		case SORT_PLAYERS:
+
+				if (action.sortKey === SORT_KEY_BY_ID) {
+					return {
+					...state,
+						playersById: _.sortBy(state.playersById, [function(player) { return player.id }]) 
+					}
+				}
+
+				if (action.sortKey === SORT_KEY_BY_ORDINAL) {
+					return {
+						...state,
+						playersById: _.sortBy(state.playersById, [function(player) { return player.ordinalPosition }])
+					}
+				}
+
+				if (action.sortKey === SORT_KEY_BY_NAME) {
+					return {
+						...state,
+						playersById: _.sortBy(state.playersById, [function(player) { return player.lastName.concat(player.firstName) }])
+					}
+				}
+
+				return state
+
 		default:
-			return state;
+		
+			return state
 	}
 }
 
@@ -222,30 +251,6 @@ function getNextOrdinal(players) {
 	}
 	
 	return ++nextOrd
-}
-
-// Returns a new playersById sorted by ordinal position and cleaned up by cleanUpOrdinalPosition
-function sortPlayersByOrdinal(players) {
-	
-/*	var sortedPlayers = players.slice().sort((a, b) => (a.ordinalPosition - b.ordinalPosition))
-
-	console.log('====== In sortPlayersByOrdinal. sortedPlayers has ' + sortedPlayers.length + ' entries')
-	sortedPlayers.map((player, i) => ( console.log('  ' + i + ': ' + player.id + ' : ' + player.firstName + ' : ' + player.ordinalPosition)))
-*/
-	return(cleanUpOrdinalPosition(players.slice().sort((a, b) => (a.ordinalPosition - b.ordinalPosition))))
-}
-
-// Returns a new playersById with the ordinal positions cleaned up/compacted
-function cleanUpOrdinalPosition(players) {
-	return players
-
-/*	return players.map((player, i) => (
-		player.ordinalPosition === INVALID_ORDINAL_POSITION ? player : {
-			...player,
-			ordinalPosition: i + 1
-		}
-	))
-*/	
 }
 
 // Action Creators
@@ -278,6 +283,14 @@ function changePlayerOrdinalPosition(id: number, newOrdPos: number) {
 	}
 }
 
+function sortPlayers(sortKey) {
+	console.log('====== In sortPlayers, sortKey = ' + sortKey)
+	return {
+		type: SORT_PLAYERS,
+		sortKey
+	}
+}
+
 // Selectors
 
 const players = (state) => state[NAME];
@@ -290,5 +303,6 @@ export const actionCreators = {
 	addPlayerToGame,
 	removePlayerFromGame,
 	removeAllPlayersFromGame,
-	changePlayerOrdinalPosition
+	changePlayerOrdinalPosition,
+	sortPlayers
 }

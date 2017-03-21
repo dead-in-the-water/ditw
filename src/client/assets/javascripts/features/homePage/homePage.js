@@ -8,8 +8,8 @@ import { UserStatus } from 'models/userStatus'
 // Action Types
 
 // Define types in the form of 'npm-module-or-myapp/feature-name/ACTION_TYPE_NAME'
-const SET_LOGGED_IN = 'redux-app/friends/SET_LOGGED_IN'
-const CLEAR_LOGGED_IN = 'redux-app/friends/CLEAR_LOGGED_IN'
+const SET_LOGGED_IN = 'redux-app/user/SET_LOGGED_IN'
+const CLEAR_LOGGED_IN = 'redux-app/user/CLEAR_LOGGED_IN'
 
 // This will be used in our root reducer and selectors
 

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 
-import { actionCreators as playersActions, selector } from '../'
+import { actionCreators as playersActions, selector } from '../players'
 import PlayersLayout from './PlayersLayout';
 
 @connect(selector, (dispatch) => ({

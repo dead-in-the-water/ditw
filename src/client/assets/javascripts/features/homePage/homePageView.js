@@ -46,7 +46,7 @@ export default class HomePageView extends Component {
   }
 */
 
-  render () {  	
+  render () {   
     return (
       <div className='home-page-container'>
         <AppBar
@@ -58,77 +58,77 @@ export default class HomePageView extends Component {
               </IconButton>}
               anchorOrigin={{horizontal: 'left', vertical: 'top'}}
               targetOrigin={{horizontal: 'left', vertical: 'top'}}
-						>
+            >
               <MenuItem
                 primaryText='New game'
                 leftIcon={<NewGameIcon />}
                 onTouchTap={() => this.props.history.push('/NewGameView')}
                 disabled={!this.props.loggedInStatus.loggedIn}
-							/>
+              />
               <MenuItem
                 primaryText='Save game'
                 leftIcon={<SaveGameIcon />}
                 onTouchTap={() => this.props.history.push('/SaveGameView')}
                 disabled={!this.props.loggedInStatus.loggedIn}
-							/>
+              />
               <Divider />
               <MenuItem
                 primaryText='Load saved game'
                 leftIcon={<RestoreGameIcon />}
                 onTouchTap={() => this.props.history.push('/LoadGameView')}
                 disabled={!this.props.loggedInStatus.loggedIn}
-							/>
+              />
               <Divider />
               <MenuItem
                 primaryText='Administration'
                 leftIcon={<AdministrationIcon />}
                 onTouchTap={() => this.props.history.push('/AdminView')}
                 disabled={!this.props.loggedInStatus.loggedIn}
-							/>
+              />
             </IconMenu>
-					}
+          }
           iconElementRight={
             <IconMenu
               iconButtonElement={<IconButton><ProfileIcon /></IconButton>}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
-						>
+            >
               <MenuItem
                 primaryText='Edit profile'
                 leftIcon={<EditIcon />}
                 onTouchTap={() => this.props.history.push('/ProfileView')}
                 disabled={!this.props.loggedInStatus.loggedIn}
-							/>
+              />
               <MenuItem
                 primaryText='Change current club'
                 leftIcon={<ClubIcon />}
                 onTouchTap={() => this.props.history.push('/ChangeClubView')}
                 disabled={!this.props.loggedInStatus.loggedIn}
-							/>
+              />
               <Divider />
               <MenuItem
                 primaryText='Help'
                 leftIcon={<HelpIcon />}
                 onTouchTap={() => this.props.history.push('/HelpView')}
-							/>
+              />
               <Divider />
               <MenuItem
                 primaryText='Sign out'
                 leftIcon={<SignoutIcon />}
                 onTouchTap={() => this.props.actions.clearLoggedIn()}
                 disabled={!this.props.loggedInStatus.loggedIn}
-							/>
+              />
             </IconMenu>
-					}
-				/>
+          }
+        />
         <div className='image'>
           <img 
-          	className={this.props.loggedInStatus.loggedIn ? 'home-page-signon-button-invisible' : 'home-page-signon-button-visible'}
+            className={this.props.loggedInStatus.loggedIn ? 'home-page-signon-button-invisible' : 'home-page-signon-button-visible'}
             src={googleSignOnButton}
             alt='Google signin buttom'
             onTouchTap={() => this.props.actions.setLoggedIn()}
             display={this.props.loggedInStatus.loggedIn ? 'none' : 'block'}
-					/>
+          />
         </div>
       </div>
     )

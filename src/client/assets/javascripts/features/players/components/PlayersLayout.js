@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
+import {_find, _without, _difference} from 'lodash'
+import {SORT_KEY_BY_ID, SORT_KEY_BY_ORDINAL, SORT_KEY_BY_NAME} from '../players'
 
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -26,66 +28,47 @@ export default class PlayersLayout extends Component {
 
 class PlayerTable extends Component {
   static propTypes = {
-  actions: PropTypes.object.isRequired,
-  players: PropTypes.array.isRequired
+    actions: PropTypes.object.isRequired,
+    players: PropTypes.array.isRequired
   }
 
   /* Called from onRowSelect
-  ** On entry: rows is integer[] containing rows of all currently selected rows/players
+  ** On entry: rows is integer[] containing rows of all currently selected rows
   ** Note: There is no explicit function for row deselect, so it all has to be handled here
   */  
-  _handleRowSelection(rows) {
-    // Creates an array of ids that need to be added to game
-    var needToBeAdded = rows.filter((row) => (this.props.players[row].inThisGame === false))
-    // Create local array of players currently marked as inThisGame
-    var currentInGamePlayers = this.props.players.filter((player) => (player.inThisGame))
-
-    // Build array of players that are marked inThisGame but are not included in the passed rows array
-    // (which means they've been deselected)
+  _handleRowSelection(rowsSelected) {
+    // Going to brute force this for now. Scan whole player table, compare passed list of 
+    // rows selected and decide what needs to be added & removed
     var needToBeRemoved = []
-    for (var i = 0; i < currentInGamePlayers.length; i++) {
+    var needToBeAdded = []
+
+    // Scacn whole player table
+    for (var i = 0; i < this.props.players.length; i++) {
       var found = false
-      for (var j = 0; j < rows.length; j++) {
-        if (currentInGamePlayers[i].id === rows[j]) {
+      // Scan rows selected list
+      for (var j = 0; j < rowsSelected.length; j++) {
+        // If current index to player table is found in rowsSelected
+        if (i === rowsSelected[j]) {
           found = true
-          break;
+          // Check to see if already marked in game
+          if (!this.props.players[i].inThisGame) {
+            // if not, mark
+            needToBeAdded.push(this.props.players[i].id)
+          }
+          // Don't search any further if we already found a match
+          break
         }
       }
-      if (!found) {
-        needToBeRemoved.push(currentInGamePlayers[i])
+      // If current player index wasn't found in rowsSelected, see if previously marked in game
+      if (!found && this.props.players[i].inThisGame) {
+        // if so, needs to be removed
+        needToBeRemoved.push(this.props.players[i].id)
       }
     }
 
-    console.log('++++++ In _handleRowSelection')
-    console.log('!!this.props.key: ' + !!this.props.key)
-    if (needToBeAdded.length > 0) {
-      console.log('  Id\'s to be added are:')
-      needToBeAdded.map((row) => (console.log('    ' + row)))
-    } else {
-      console.log('No Id\'s to be added.')
-    }
-
-    console.log('\n')
-
-    if (needToBeRemoved.length > 0) {
-      console.log('       Id\'s to be removed are: ')
-      needToBeRemoved.map((player) => (console.log('  ' + player.id)))
-    } else {
-      console.log('No Id\'s to be removed.')
-    }
-
-
     // Now execute the adds & removals
-    needToBeAdded.map((row) => (this.props.actions.addPlayerToGame(row)))
-    needToBeRemoved.map((player) => (this.props.actions.removePlayerFromGame(player.id)))
-
-    // Try to get the Table to reflect the changes
-
-    // console.log('++++++ Trying to clean up table')
-    // this.forceUpdate()
-    // this.render()
-    // console.log('++++++ Done trying')
-    console.log('++++++ Exiting _handleRowSelection.')
+    needToBeAdded.map((id) => (this.props.actions.addPlayerToGame(id)))
+    needToBeRemoved.map((id) => (this.props.actions.removePlayerFromGame(id)))
   }
 
   render() {
@@ -93,10 +76,6 @@ class PlayerTable extends Component {
     const style = {
       margin: 12,
     };
-
-    console.log('====== In render')
-    this.props.players.map((player) => (console.log('  player id: ' + player.id + ': ' + player.firstName + ', ordinal: ' + player.ordinalPosition)))
-    console.log('======')
 
     return (
       <Table 
@@ -111,12 +90,26 @@ class PlayerTable extends Component {
         >
           <TableRow className='player-table-header-row'>
             <TableHeaderColumn><h1>Available Players</h1></TableHeaderColumn>
+          </TableRow>
+          <TableRow>
             <TableHeaderColumn>
               <RaisedButton 
-                label="Force update" 
+                label="By id" 
+                onTouchTap={() => this.props.actions.sortPlayers(SORT_KEY_BY_ID)}
+              />
+            </TableHeaderColumn>
+            <TableHeaderColumn>
+              <RaisedButton 
+                label="By ordinal" 
+                secondary={true} 
+                onTouchTap={() => this.props.actions.sortPlayers(SORT_KEY_BY_ORDINAL)}
+              />
+            </TableHeaderColumn>
+            <TableHeaderColumn>
+              <RaisedButton 
+                label="By name" 
                 primary={true} 
-                style={style} 
-                onTouchTap={() => this.forceUpdate()}              
+                onTouchTap={() => this.props.actions.sortPlayers(SORT_KEY_BY_NAME)}
               />
             </TableHeaderColumn>
           </TableRow>
