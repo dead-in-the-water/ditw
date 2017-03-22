@@ -12,13 +12,10 @@ import LoadGameView from 'features/loadGame/loadGameView'
 import AdminView from 'features/administration/adminView'
 import ChangeClubView from 'features/changeClub/changeClubView'
 import HelpView from 'features/help/helpView'
-import SignOutView from 'features/signOut/signOutView'
-import SignOnPage from 'features/signOnPage/components/signOnPage'
 
 export default (
   <Route path='/' component={App}>
     <IndexRoute component={HomePageView} />
-    <Route path='SignOnPage' component={SignOnPage} />
     <Route path='PlayersView' component={PlayersView} />
     <Route path='HomePageView' component={HomePageView} />
     <Route path='NewGameView' component={NewGameView} />
@@ -28,7 +25,6 @@ export default (
     <Route path='ProfileView' component={ProfileView} />
     <Route path='ChangeClubView' component={ChangeClubView} />
     <Route path='HelpView' component={HelpView} />
-    <Route path='SignOutView' component={SignOutView} />
     <Route path='404' component={NotFoundView} />
     <Redirect from='*' to='404' />
   </Route>
