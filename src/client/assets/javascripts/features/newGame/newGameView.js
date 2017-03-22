@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { actionCreators as playersActions, selector } from '../players'
-
-import IconButton from 'material-ui/IconButton';
-import moveUpIcon from './images/move_up.png'
-import moveDownIcon from './images/move_down.png'
 
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import RaisedButton from 'material-ui/RaisedButton'
+
+import { actionCreators as playersActions, selector } from '../players/players'
+import {SORT_KEY_BY_ID, SORT_KEY_BY_ORDINAL, SORT_KEY_BY_NAME, INVALID_ORDINAL_POSITION} from '../players/players'
+
+import dealerIcon from './images/card_dealer_luigi.png'
+import bidderIcon from './images/three_fingers.png'
+import './gameTable.scss'
 
 const style = {
 	margin: 12
@@ -20,17 +22,17 @@ const style = {
 export default class NewGameView extends Component {
 
 	_handleDoneButton() {
-		console.log('Done button clicked')
 		this.props.history.push('/NewGameView')
 	}
 
 	_handleModifyPlayerListButton() {
-		console.log('Modify player list button clicked')
+		this.props.actions.sortPlayers(SORT_KEY_BY_NAME)
+		this.props.actions.clearDealer()
+		this.props.actions.clearBidder()
 		this.props.history.push('/PlayersView')
 	}
 
 	_handleCancelButton() {
-		console.log('Cancel button clicked')
 		this.props.actions.removeAllPlayersFromGame()
 		this.props.history.push('/HomePageView')
 	}
@@ -48,19 +50,15 @@ export default class NewGameView extends Component {
 			 player.inThisGame
 		).map((player, i) =>
 			(
-			<TableRow key={i} className='player-table-row'>
-				<TableRowColumn>
-					<IconButton onTouchTap={() => this._handleUpButtons(i)}>
-						<img src={moveUpIcon} alt='move up icon' />
-					</IconButton>
-					<IconButton onTouchTap={() => this._handleDownButtons(i)}>
-						<img src={moveDownIcon} alt='move down icon' />
-					</IconButton>
+			<TableRow key={i} className='gametable-data-row'>
+				<TableRowColumn className='gametable-icon-cell'>
+					{(player.id === this.props.players.currentDealer ) ? <img src={dealerIcon} height='36px' width='auto'/> : ''}
+					{(player.id === this.props.players.currentBidder ) ? <img src={bidderIcon} height='36px' width='auto'/> : '' }
 				</TableRowColumn>
-				<TableRowColumn>{player.firstName + ' ' + player.lastName}</TableRowColumn>
-				<TableRowColumn>
-					1st dealer indicator goes here
-				</TableRowColumn>
+				<TableRowColumn className='gametable-name-cell'>{player.firstName + ' ' + player.lastName}</TableRowColumn>
+				<TableRowColumn className='gametable-bid-cell'>0</TableRowColumn>
+				<TableRowColumn className='gametable-won-cell'>0</TableRowColumn>
+				<TableRowColumn className='gametable-score-cell'>0</TableRowColumn>
 			</TableRow>
 			)
 		)
@@ -81,9 +79,11 @@ export default class NewGameView extends Component {
 							<TableHeaderColumn className='table-super-header'><h1>New Game Setup</h1></TableHeaderColumn>
 						</TableRow>
 						<TableRow className='newgame-table-header-row'>
-							<TableHeaderColumn>Move up/dn</TableHeaderColumn>
-							<TableHeaderColumn>Player</TableHeaderColumn>
-							<TableHeaderColumn>1st dealer</TableHeaderColumn>
+							<TableHeaderColumn className='gametable-icon-cell'>Role</TableHeaderColumn>
+							<TableHeaderColumn className='gametable-name-cell'>Player</TableHeaderColumn>
+							<TableHeaderColumn className='gametable-bid-cell'>Tricks bid</TableHeaderColumn>
+							<TableHeaderColumn className='gametable-won-cell'>Tricks won</TableHeaderColumn>
+							<TableHeaderColumn className='gametable-score-cell'>Score</TableHeaderColumn>
 						</TableRow>
 					</TableHeader>
 					<TableBody className='newgame-table-body' displayRowCheckbox={false}>
@@ -100,7 +100,7 @@ export default class NewGameView extends Component {
 					label={this.props.players.playersById.filter((player) => player.inThisGame).length > 0 ? 'Change players' : 'Add players'}
 					secondary
 					style={style}
-					onTouchTap={() => this.props.history.push('/PlayersView')}
+					onTouchTap={() => this._handleModifyPlayerListButton()}
 					/>
 				<RaisedButton
 					label='Play game'

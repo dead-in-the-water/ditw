@@ -1,13 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import {_find, _without, _difference} from 'lodash'
-import {SORT_KEY_BY_ID, SORT_KEY_BY_ORDINAL, SORT_KEY_BY_NAME} from '../players'
+import {SORT_KEY_BY_ID, SORT_KEY_BY_ORDINAL, SORT_KEY_BY_NAME, INVALID_ORDINAL_POSITION} from '../players'
 
 import RaisedButton from 'material-ui/RaisedButton';
 
-//import AddPlayerInput from './AddPlayerInput'
-//import PlayerTable from './PlayerTable'
-//import './PlayerTableApp.scss'
+import './PlayerTableApp.scss'
 
 export default class PlayersLayout extends Component {
   static propTypes = {
@@ -80,8 +78,9 @@ class PlayerTable extends Component {
     return (
       <Table 
         className='player-table' 
+        selectable={true}
         multiSelectable={true}
-        onRowSelection={(rowList) => this._handleRowSelection(rowList)}
+        onRowSelection={(selectedRows) => this._handleRowSelection(selectedRows)}
       >
         <TableHeader 
           className='player-table-header' 
@@ -91,33 +90,17 @@ class PlayerTable extends Component {
           <TableRow className='player-table-header-row'>
             <TableHeaderColumn><h1>Available Players</h1></TableHeaderColumn>
           </TableRow>
-          <TableRow>
-            <TableHeaderColumn>
-              <RaisedButton 
-                label="By id" 
-                onTouchTap={() => this.props.actions.sortPlayers(SORT_KEY_BY_ID)}
-              />
-            </TableHeaderColumn>
-            <TableHeaderColumn>
-              <RaisedButton 
-                label="By ordinal" 
-                secondary={true} 
-                onTouchTap={() => this.props.actions.sortPlayers(SORT_KEY_BY_ORDINAL)}
-              />
-            </TableHeaderColumn>
-            <TableHeaderColumn>
-              <RaisedButton 
-                label="By name" 
-                primary={true} 
-                onTouchTap={() => this.props.actions.sortPlayers(SORT_KEY_BY_NAME)}
-              />
-            </TableHeaderColumn>
-          </TableRow>
         </TableHeader>
-        <TableBody className='player-table-body' deselectOnClickaway={false}>
+        <TableBody className='player-table-body' deselectOnClickaway={false} displayRowCheckbox={true}>
           {this.props.players.map((player) =>
-            <TableRow key={player.id} className='player-table-row' selected={player.inThisGame ? true : false}>
-              <TableRowColumn>{player.firstName + ' ' + player.lastName}</TableRowColumn>
+            <TableRow key={player.id} 
+              selectable={true}
+              selected={player.inThisGame ? true : false} 
+              >
+                <TableRowColumn 
+                  className={(player.inThisGame === true) ? 'selected-player-row' : 'non-selected-player-row'}>
+                  {player.firstName + ' ' + player.lastName + (player.ordinalPosition !== INVALID_ORDINAL_POSITION ? ' (' + player.ordinalPosition + ')' : '')}
+                </TableRowColumn>
             </TableRow>
           )}
         </TableBody>

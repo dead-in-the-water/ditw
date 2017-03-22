@@ -1,7 +1,7 @@
 // @flow
 
 import { createStructuredSelector } from 'reselect'
-import { assign, _sortBy } from 'lodash'
+import { assign, _sortBy, _slice } from 'lodash'
 import { State } from 'models/players'
 
 // Action Types
@@ -12,15 +12,20 @@ const REMOVE_PLAYER_FROM_GAME = 'redux-app/players/REMOVE_PLAYER_FROM_GAME'
 const REMOVE_ALL_PLAYERS_FROM_GAME = 'redux-app/players/REMOVE_ALL_PLAYERS_FROM_GAME'
 const CHANGE_PLAYER_ORDINAL_POSITION = 'redux-app/players/CHANGE_PLAYER_ORDINAL_POSITION'
 const SORT_PLAYERS = 'redux-app/players/SORT_PLAYERS'
+const SET_DEALER = 'redux-app/players/SET_DEALER'
+const CLEAR_DEALER = 'redux-app/players/CLEAR_DEALER'
+const SET_BIDDER = 'redux-app/players/SET_BIDDER'
+const CLEAR_BIDDER = 'redux-app/players/CLEAR_BIDDER'
 
 export const INVALID_ORDINAL_POSITION = Number.MAX_SAFE_INTEGER
+export const INVALID_ID = Number.MAX_SAFE_INTEGER
 export const SORT_KEY_BY_ID = 0
 export const SORT_KEY_BY_ORDINAL = 1
-export const SORT_KEY_BY_NAME = 2
+export const SORT_KEY_BY_NAME = 2;
 
 // This will be used in our root reducer and selectors
 
-export const NAME = 'players';
+export const NAME = 'players'
 
 // Define the initial state for `players` module
 
@@ -126,7 +131,9 @@ const initialState: State = {
 			inThisGame: false,
 			ordinalPosition: INVALID_ORDINAL_POSITION
 		}
-	]
+	],
+	currentDealer: INVALID_ID,
+	currentBidder: INVALID_ID
 }
 
 // Reducer
@@ -221,16 +228,40 @@ export default function reducer(state: State = initialState, action: any = {}): 
 				}
 
 				if (action.sortKey === SORT_KEY_BY_NAME) {
+					console.log('Sorting by name')
 					return {
 						...state,
-						playersById: _.sortBy(state.playersById, [function(player) { return player.lastName.concat(player.firstName) }])
+						playersById: _.sortBy(state.playersById, [function(player) { return player.firstName.concat(player.lastName) }])
 					}
 				}
 
 				return state
 
+		case SET_DEALER:
+			return {
+				...state,
+				currentDealer: action.id
+			}
+
+		case CLEAR_DEALER:
+			return {
+				...state,
+				currentDealer: INVALID_ID
+			}
+
+		case SET_BIDDER:
+			return {
+				...state,
+				currentBidder: action.id
+			}
+
+		case CLEAR_BIDDER:
+			return {
+				...state,
+				currentBidder: INVALID_ID
+			}
+
 		default:
-		
 			return state
 	}
 }
@@ -284,10 +315,35 @@ function changePlayerOrdinalPosition(id: number, newOrdPos: number) {
 }
 
 function sortPlayers(sortKey) {
-	console.log('====== In sortPlayers, sortKey = ' + sortKey)
 	return {
 		type: SORT_PLAYERS,
 		sortKey
+	}
+}
+
+function setDealer(id) {
+	return {
+		type: SET_DEALER,
+		id
+	}
+}
+
+function clearDealer() {
+	return {
+		type: CLEAR_DEALER
+	}
+}
+
+function setBidder(id) {
+	return {
+		type: SET_BIDDER,
+		id
+	}
+}
+
+function clearBidder() {
+	return {
+		type: CLEAR_BIDDER
 	}
 }
 
@@ -304,5 +360,9 @@ export const actionCreators = {
 	removePlayerFromGame,
 	removeAllPlayersFromGame,
 	changePlayerOrdinalPosition,
-	sortPlayers
+	sortPlayers,
+	setDealer,
+	clearDealer,
+	setBidder,
+	clearBidder
 }
