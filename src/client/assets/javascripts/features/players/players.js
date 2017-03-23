@@ -260,39 +260,19 @@ function getNextOrdinal(players) {
 	return ++nextOrd
 }
 
+/* Update the ordinalPosition values to start at zero and leave no gaps
+** Sort players that are currently tagged as in this game by the updated ordinalPosition
+** Sort players that are NOT (yet) tagged as in this game by their names (currently hard-coded first-then-last)
+*/
+function cleanupOrdinals(players) {
 
-function cleanupOrdinals(playersRO) {
+	// Sort players that are in this game by their ordinalPosition
+	var itgPlayers = _.sortBy(players.filter((player) => (player.inThisGame)).map((player, i) =>  ({...player, ordinalPosition: i})), [function(player) { return (player.ordinalPosition) }])
 
-	console.log('====== In cleanupOrdinals')
+	// Sort players that are not (yet) in this game by their names
+	var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame).map((player) => ({...player, ordinalPosition: INVALID_ORDINAL_POSITION})), [function(player) { return (player.firstName + player.lastName) }])
 
-	// Safety 1st - make a copy
-	console.log('  about to cloneDeep')
-	var safeCopy = _.cloneDeep(playersRO)
-
-
-	console.log('  about to filter itg')
-	var itgPlayers1 = safeCopy.filter((player) => (player.inThisGame))
-	console.log(itgPlayers1)
-	console.log('  about to map itg ')
-	var itgPlayers2 = itgPlayers1.map((player, i) => player.ordinalPosition = (player.inThisGame ? i : player.ordinalPosition))
-	console.log(itgPlayers2)
-	console.log('  about to sort itg')
-	var itgPlayers = _.sortBy(itgPlayers2, [function(player) { return (player.ordinalPosition) }])
-	console.log(itgPlayers)
-
-	console.log('  itgPlayers has ' + itgPlayers.length + ' members')
-	itgPlayers.map((player, i) => console.log('    idx: ' + i + '; id ' + player.id + '; ordinalPosition: ' + player.ordinalPosition))
-
-	console.log('  about to filter nItg')
-	var nItgPlayers1 = safeCopy.filter((player) => !player.inThisGame)
-	console.log('  about to map nItg')
-	var nItgPlayers2 = nItgPlayers1.map((player) => player.ordinalPosition = INVALID_ORDINAL_POSITION)
-	console.log('  about to sort nItg')
-	var nItgPlayers = _.sortBy(nItgPlayers2, [function(player) { return (player.firstName + player.lastName) }])
-
-	console.log('  nItgPlayers has ' + nItgPlayers.length + ' members')
-	nItgPlayers.map((player, i) => console.log('    idx: ' + i + '; id ' + player.id + '; Name: ' + player.firstName + ' ' + player.lastName))
-
+	// And return the concatonated list
 	return itgPlayers.concat(nItgPlayers)
 }
 

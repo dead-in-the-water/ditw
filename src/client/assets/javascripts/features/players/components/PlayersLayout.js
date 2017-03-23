@@ -87,9 +87,17 @@ class PlayerTable extends Component {
 		return (
 			<table>
 				<thead className='player-table-header'>
+					<tr className='player-table-super-header-row'>
+						<th className='player-table-super-header-col'>
+							<h1>Available Players</h1>
+						</th>
+					</tr>
 					<tr className='player-table-header-row'>
 						<th className='player-table-header-col'>
-							<h1>Available Players</h1>
+							Name
+						</th>
+						<th className='player-table-header-col'>
+							Position
 						</th>
 					</tr>
 				</thead>
@@ -97,7 +105,10 @@ class PlayerTable extends Component {
 					{this.props.players.map((player, i) => (
 								<tr key={player.id} className='player-table-body-row' onClick={this._handleClick}>
 									<td data-item={i} className={ (player.inThisGame) ? 'selected-player-row' : 'non-selected-player-row' }>
-											{ player.firstName + ' ' + player.lastName + (player.ordinalPosition !== INVALID_ORDINAL_POSITION ? ' (' + (player.ordinalPosition + 1 ) + ')' : '') }
+											{ player.firstName + ' ' + player.lastName }
+									</td>
+									<td data-item={i} className={ (player.inThisGame) ? 'selected-player-row' : 'non-selected-player-row' }>
+											{ (player.ordinalPosition !== INVALID_ORDINAL_POSITION ? (player.ordinalPosition + 1 )  : '') }
 									</td>
 								</tr>
 							)
