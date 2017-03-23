@@ -1,7 +1,7 @@
 // @flow
 
 import { createStructuredSelector } from 'reselect'
-import { assign, _sortBy, _slice } from 'lodash'
+import { assign, _sortBy, _slice, _cloneDeep, _map } from 'lodash'
 import { State } from 'models/players'
 
 // Action Types
@@ -12,10 +12,6 @@ const REMOVE_PLAYER_FROM_GAME = 'redux-app/players/REMOVE_PLAYER_FROM_GAME'
 const REMOVE_ALL_PLAYERS_FROM_GAME = 'redux-app/players/REMOVE_ALL_PLAYERS_FROM_GAME'
 const CHANGE_PLAYER_ORDINAL_POSITION = 'redux-app/players/CHANGE_PLAYER_ORDINAL_POSITION'
 const SORT_PLAYERS = 'redux-app/players/SORT_PLAYERS'
-const SET_DEALER = 'redux-app/players/SET_DEALER'
-const CLEAR_DEALER = 'redux-app/players/CLEAR_DEALER'
-const SET_BIDDER = 'redux-app/players/SET_BIDDER'
-const CLEAR_BIDDER = 'redux-app/players/CLEAR_BIDDER'
 
 export const INVALID_ORDINAL_POSITION = Number.MAX_SAFE_INTEGER
 export const INVALID_ID = Number.MAX_SAFE_INTEGER
@@ -39,7 +35,9 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Gammy',
+			useGameName: true
 		},
 		{
 			id: 11,
@@ -49,7 +47,9 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Stacy',
+			useGameName: true
 		},
 		{
 			id: 12,
@@ -59,7 +59,9 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Beth',
+			useGameName: true
 		},
 		{
 			id: 13,
@@ -69,7 +71,9 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Gampa',
+			useGameName: true
 		},
 		{
 			id: 14,
@@ -79,7 +83,9 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Rach',
+			useGameName: true
 		},
 		{
 			id: 15,
@@ -89,7 +95,9 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Jer',
+			useGameName: true
 		},
 		{
 			id: 16,
@@ -99,7 +107,9 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Dan',
+			useGameName: true
 		},
 		{
 			id: 17,
@@ -109,7 +119,9 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Mike',
+			useGameName: true
 		},
 		{
 			id: 18,
@@ -119,7 +131,9 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Ron',
+			useGameName: true
 		},
 		{
 			id: 19,
@@ -129,33 +143,20 @@ const initialState: State = {
 			avgPosition: 0,
 			gamesPlayed: 0,
 			inThisGame: false,
-			ordinalPosition: INVALID_ORDINAL_POSITION
+			ordinalPosition: INVALID_ORDINAL_POSITION,
+			gameName: 'Joel',
+			useGameName: true
 		}
-	],
-	currentDealer: INVALID_ID,
-	currentBidder: INVALID_ID
+	]
 }
 
 // Reducer
-
-/**
- * Another clever approach of writing reducers:
- *
- * export default function(state = initialState, action) {
- *   const actions = {
- *      [ACTION_TYPE]: () => [action.payload.data, ...state]
- *   };
- *
- *   return (_.isFunction(actions[action.type])) ? actions[action.type]() : state
- * }
- */
-
 export default function reducer(state: State = initialState, action: any = {}): State {
 	switch (action.type) {
 		case ADD_PLAYER_TO_GAME:
 			return {
 				...state,
-				playersById: state.playersById.map((player) => {
+				playersById: cleanupOrdinals(state.playersById.map((player) => {
 					if (player.id !== action.id) {
 						return player
 					}
@@ -164,13 +165,13 @@ export default function reducer(state: State = initialState, action: any = {}): 
 						inThisGame: true,
 						ordinalPosition: getNextOrdinal(state.playersById)
 					}
-				})
+				}))
 			}
 
 		case REMOVE_PLAYER_FROM_GAME:
 			return {
 				...state,
-				playersById: state.playersById.map((player) => {
+				playersById: cleanupOrdinals(state.playersById.map((player) => {
 					if (player.id !== action.id) {
 						return player
 					}
@@ -179,7 +180,7 @@ export default function reducer(state: State = initialState, action: any = {}): 
 						inThisGame: false,
 						ordinalPosition: INVALID_ORDINAL_POSITION
 					}
-				})
+				}))
 			}
 
 		case REMOVE_ALL_PLAYERS_FROM_GAME:
@@ -228,7 +229,6 @@ export default function reducer(state: State = initialState, action: any = {}): 
 				}
 
 				if (action.sortKey === SORT_KEY_BY_NAME) {
-					console.log('Sorting by name')
 					return {
 						...state,
 						playersById: _.sortBy(state.playersById, [function(player) { return player.firstName.concat(player.lastName) }])
@@ -236,30 +236,6 @@ export default function reducer(state: State = initialState, action: any = {}): 
 				}
 
 				return state
-
-		case SET_DEALER:
-			return {
-				...state,
-				currentDealer: action.id
-			}
-
-		case CLEAR_DEALER:
-			return {
-				...state,
-				currentDealer: INVALID_ID
-			}
-
-		case SET_BIDDER:
-			return {
-				...state,
-				currentBidder: action.id
-			}
-
-		case CLEAR_BIDDER:
-			return {
-				...state,
-				currentBidder: INVALID_ID
-			}
 
 		default:
 			return state
@@ -282,6 +258,42 @@ function getNextOrdinal(players) {
 	}
 	
 	return ++nextOrd
+}
+
+
+function cleanupOrdinals(playersRO) {
+
+	console.log('====== In cleanupOrdinals')
+
+	// Safety 1st - make a copy
+	console.log('  about to cloneDeep')
+	var safeCopy = _.cloneDeep(playersRO)
+
+
+	console.log('  about to filter itg')
+	var itgPlayers1 = safeCopy.filter((player) => (player.inThisGame))
+	console.log(itgPlayers1)
+	console.log('  about to map itg ')
+	var itgPlayers2 = itgPlayers1.map((player, i) => player.ordinalPosition = (player.inThisGame ? i : player.ordinalPosition))
+	console.log(itgPlayers2)
+	console.log('  about to sort itg')
+	var itgPlayers = _.sortBy(itgPlayers2, [function(player) { return (player.ordinalPosition) }])
+	console.log(itgPlayers)
+
+	console.log('  itgPlayers has ' + itgPlayers.length + ' members')
+	itgPlayers.map((player, i) => console.log('    idx: ' + i + '; id ' + player.id + '; ordinalPosition: ' + player.ordinalPosition))
+
+	console.log('  about to filter nItg')
+	var nItgPlayers1 = safeCopy.filter((player) => !player.inThisGame)
+	console.log('  about to map nItg')
+	var nItgPlayers2 = nItgPlayers1.map((player) => player.ordinalPosition = INVALID_ORDINAL_POSITION)
+	console.log('  about to sort nItg')
+	var nItgPlayers = _.sortBy(nItgPlayers2, [function(player) { return (player.firstName + player.lastName) }])
+
+	console.log('  nItgPlayers has ' + nItgPlayers.length + ' members')
+	nItgPlayers.map((player, i) => console.log('    idx: ' + i + '; id ' + player.id + '; Name: ' + player.firstName + ' ' + player.lastName))
+
+	return itgPlayers.concat(nItgPlayers)
 }
 
 // Action Creators
@@ -321,32 +333,6 @@ function sortPlayers(sortKey) {
 	}
 }
 
-function setDealer(id) {
-	return {
-		type: SET_DEALER,
-		id
-	}
-}
-
-function clearDealer() {
-	return {
-		type: CLEAR_DEALER
-	}
-}
-
-function setBidder(id) {
-	return {
-		type: SET_BIDDER,
-		id
-	}
-}
-
-function clearBidder() {
-	return {
-		type: CLEAR_BIDDER
-	}
-}
-
 // Selectors
 
 const players = (state) => state[NAME];
@@ -360,9 +346,5 @@ export const actionCreators = {
 	removePlayerFromGame,
 	removeAllPlayersFromGame,
 	changePlayerOrdinalPosition,
-	sortPlayers,
-	setDealer,
-	clearDealer,
-	setBidder,
-	clearBidder
+	sortPlayers
 }

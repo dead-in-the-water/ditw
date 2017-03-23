@@ -5,12 +5,12 @@ import { Link } from 'react-router'
 import { _nth, _sortBy } from 'lodash'
 import RaisedButton from 'material-ui/RaisedButton'
 
-import { actionCreators as playersActions, selector } from '../players'
+import { actionCreators as playersActions, selector as playersSelector} from '../players'
 import { SORT_KEY_BY_ID, SORT_KEY_BY_ORDINAL, SORT_KEY_BY_NAME } from '../players'
 
 import PlayersLayout from './PlayersLayout';
 
-@connect(selector, (dispatch) => ({
+@connect(playersSelector, (dispatch) => ({
   actions: bindActionCreators(playersActions, dispatch)
 }))
 export default class PlayersView extends Component {
@@ -21,10 +21,10 @@ export default class PlayersView extends Component {
     var activePlayers = _.sortBy(_.slice(this.props.players.playersById).filter((player) => (player.inThisGame)), [function(player) { return player.ordinalPosition }])
 
     // First ordinal player is first bidder
-    this.props.actions.setBidder(_.nth(activePlayers, 0).id)
+    // this.props.actions.setBidder(_.nth(activePlayers, 0).id)
 
     // Player in last ordinal position is first dealer
-    this.props.actions.setDealer(_.nth(activePlayers, -1).id)
+    // this.props.actions.setDealer(_.nth(activePlayers, -1).id)
 
     this.props.history.push('/NewGameView')
   }

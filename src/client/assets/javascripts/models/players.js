@@ -8,13 +8,11 @@ type PlayerById = {
   birthDate: number,
   inThisGame: boolean,
   ordinalPosition: number,
-  dealer: boolean,
-  bidder: boolean
+  gameName: string,
+  useGameName: boolean
 };
 
 // This is the model of our module state
 export type State = {
-  playersById: Array<PlayerById>,
-  currentDealer: number,
-  currentBidder: number
+  playersById: Array<PlayerById>
 };
