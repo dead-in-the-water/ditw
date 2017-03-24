@@ -65,42 +65,40 @@ export default class NewGameView extends Component {
 
 		return (
 			<div className='container text-center'>
-				<Table
-					className='newgame-table'
-					multiSelectable={false}
-					selectable={false}>
-					<TableHeader
-						className='newgame-table-header'
-						displaySelectAll={false}
-						adjustForCheckbox={false}>
-						<TableRow className='newgame-table-header-row' displayBorder={false}>
-							<TableHeaderColumn className='table-super-header'><h1>New Game Setup</h1></TableHeaderColumn>
-						</TableRow>
-						<TableRow className='newgame-table-header-row'>
-							<TableHeaderColumn className='gametable-icon-cell'>Role</TableHeaderColumn>
-							<TableHeaderColumn className='gametable-name-cell'>Player</TableHeaderColumn>
-							<TableHeaderColumn className='gametable-bid-cell'>Tricks bid</TableHeaderColumn>
-							<TableHeaderColumn className='gametable-won-cell'>Tricks won</TableHeaderColumn>
-							<TableHeaderColumn className='gametable-score-cell'>Score</TableHeaderColumn>
-						</TableRow>
-					</TableHeader>
-					<TableBody className='newgame-table-body' displayRowCheckbox={false}>
+				<table className='game-table'>
+					<thead className='game-table-header'>
+						<tr className='game-table-super-header-row'>
+							<th className='game-table-super-header-cell'>
+								<h1>New Game Setup</h1>
+							</th>
+						</tr>
+						<tr className='game-table-header-row'>
+							<th className='text-center'>Role</th>
+							<th className='game-table-header-cell-left'>Player</th>
+							<th className='game-table-header-cell'>Bid</th>
+							<th className='game-table-header-cell'>Won</th>
+							<th className='game-table-header-cell'>Score</th>
+						</tr>
+					</thead>
+					<tbody className='game-table-body'>
 						{ this.props.gameStatus.playerRoster.filter((player) => player.inThisGame).map((player, i) =>
 								(
-									<TableRow key={i} className='gametable-data-row'>
-										<TableRowColumn className='gametable-icon-cell'>
-											Icons
-										</TableRowColumn>
-										<TableRowColumn className='gametable-name-cell'>{player.firstName + ' ' + player.lastName}</TableRowColumn>
-										<TableRowColumn className='gametable-bid-cell'>0</TableRowColumn>
-										<TableRowColumn className='gametable-won-cell'>0</TableRowColumn>
-										<TableRowColumn className='gametable-score-cell'>0</TableRowColumn>
-									</TableRow>
+									<tr key={i} data-item={i} className='game-table-data-row'>
+										<td className='game-table-icon-cell'>
+											{(player.id === this.props.gameStatus.currentDealer ) ? <img src={dealerIcon} height='36px' width='auto'/> : ''}
+											{(player.id === this.props.gameStatus.currentBidder ) ? <img src={bidderIcon} height='36px' width='auto'/> : '' }
+										</td>
+										<td className='game-table-name-cell'>{player.firstName + ' ' + player.lastName}</td>
+										<td className='game-table-bid-cell'>0</td>
+										<td className='game-table-won-cell'>0</td>
+										<td className='game-table-score-cell'>0</td>
+									</tr>
 								)
 							)
 						}
-					</TableBody>
-				</Table>
+					</tbody>
+				</table>
+
 				<RaisedButton
 					label='Cancel'
 					primary={false}
@@ -114,7 +112,7 @@ export default class NewGameView extends Component {
 					onTouchTap={() => this._handleModifyPlayerListButton()}
 					/>
 				<RaisedButton
-					label='Play!'
+					label='Start Bidding'
 					primary
 					style={style}
 					onTouchTap={() => alert('Not implemented (yet)')}

@@ -1,22 +1,70 @@
-.gametable-data-row {
+th, td {
+	padding: 5px;
+	font-size: 1.4rem;
 }
 
-.gametable-icon-cell {
+.game-table {
+	width: 80%;
 	margin: auto;
 }
 
-.gametable-name-cell {
+.game-table-header {
+
+}
+
+.game-table-super-header-row {
+
+}
+
+.game-table-super-header-cell {
+	column-span: 5;
+}
+
+.game-table-header-row {
+	border: 2px solid black;
+	font-size: 1.4rem;
+}
+
+.game-table-header-cell {
+	text-align: center;
+}
+
+.game-table-header-cell-left {
 	text-align: left;
 }
 
-.gametable-bid-cell {
+.game-table-body {
+	border: 2px solid black;
+	font-size: 1.4rem;
+}
+
+.game-table-data-row {
+	border: 1px solid black;
 	text-align: center;
 }
 
-.gametable-won-cell {
+.game-table-icon-cell {
+	width: 10%;
+	margin: auto;
+	align-content: center;
+}
+
+.game-table-name-cell {
+	width: 30%;
+	text-align: left;
+}
+
+.game-table-bid-cell {
+	width: 10%;
 	text-align: center;
 }
 
-.gametable-score-cell {
+.game-table-won-cell {
+	width: 10%;
+	text-align: center;
+}
+
+.game-table-score-cell {
+	width: 10%;
 	text-align: center;
 }

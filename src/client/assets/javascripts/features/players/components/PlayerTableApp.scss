@@ -5,6 +5,12 @@ body {
   justify-content: center;
 }
 
+th, td {
+  padding: 5px;
+  font-size: 1.4rem;
+  text-align: left;
+}
+
 .player-page-top-div {
   text-align: center;
   align-items: right;

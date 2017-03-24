@@ -23,14 +23,13 @@ export default class PlayersView extends Component {
   _handleDoneButton() {
     this.props.actions.sortPlayers(SORT_SPECIAL_1)
 
-    // Work-around for the async execution of previous call
-    // var activePlayers = _.sortBy(_.slice(this.props.players.playerRoster).filter((player) => (player.inThisGame)), [function(player) { return player.ordinalPosition }])
-
+    var activePlayers = this.props.gameStatus.playerRoster.filter((player) => player.inThisGame)
+    
     // First ordinal player is first bidder
-    // this.props.actions.setBidder(_.nth(activePlayers, 0).id)
+    this.props.actions.setBidder(_.nth(activePlayers, 0).id)
 
     // Player in last ordinal position is first dealer
-    // this.props.actions.setDealer(_.nth(activePlayers, -1).id)
+    this.props.actions.setDealer(_.nth(activePlayers, -1).id)
 
     this.props.history.push('/NewGameView')
   }
