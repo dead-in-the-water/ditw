@@ -236,6 +236,7 @@ export default function reducer(gameState: GameState = initialStatus, action: an
           if (player.id !== action.id) {
             return player
           }
+
           return {
             ...player,
             inThisGame: true,
@@ -344,10 +345,10 @@ function getNextOrdinal(players) {
 */
 function cleanupOrdinals(players) {
   // Addressing the array guaranteed to be in ordinalPosition order makes numbering scheme work
-  sortByOrdinal(players).map((player, i) => ({
+  return sortSpecial1(sortByOrdinal(players).map((player, i) => ({
     ...player,
     ordinalPosition: (player.inThisGame ? i : INVALID_ORDINAL_POSITION)
-  }))
+  })))
 }
 
 function sortByOrdinal(players) {
@@ -359,12 +360,11 @@ function sortByOrdinal(players) {
 ** Sort players that are NOT (yet) tagged as in this game by their names (currently hard-coded first-then-last)
 */
 function sortSpecial1(players) {
-
   // Sort players that are in this game by their ordinalPosition
-  var itgPlayers = _.sortBy(players.filter((player) => (player.inThisGame)))
+  var itgPlayers = _.sortBy(players.filter((player) => (player.inThisGame)), [function(player) { return player.ordinalPosition}])
 
   // Sort players that are not (yet) in this game by their names
-  var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame))
+  var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['firstName', 'lastName'])
 
   // And return the concatonated list
   return itgPlayers.concat(nItgPlayers)

@@ -5,14 +5,54 @@ body {
   justify-content: center;
 }
 
-.selected-player-row {
+.player-page-top-div {
+  text-align: center;
+  align-items: right;
+}
+
+.done-button {
+  margin: 12;
+}
+
+.selected-player-cell {
   background-color: DarkSlateGray;
   color: White;
   cursor: pointer;
 }
 
-.non-selected-player-row {
+.non-selected-player-cell {
   background-color: White;
   color: DarkSlateGray;
   cursor: pointer;
+}
+
+.player-table-header {
+}
+
+.player-table-super-header-row {
+}
+
+.player-table-super-header-cell {
+  column-span: 2;
+}
+
+.player-table-header-row {
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+}
+
+.player-table-header-cell {
+
+}
+
+.player-table-body {
+  border-bottom: 2px solid black;
+}
+
+.player-table-position-cell {
+  text-align: center;
+}
+
+.player-table-name-cell {
+
 }

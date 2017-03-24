@@ -28,8 +28,6 @@ export default class NewGameView extends Component {
 
 	_handleModifyPlayerListButton() {
 		this.props.actions.sortPlayers(SORT_SPECIAL_1)
-		console.log('====== in _handleCancelButton. About to dump this.props')
-		console.log(this.props)
 		
 /*		this.props.actions.clearDealer()
 		this.props.actions.clearBidder()
