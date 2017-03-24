@@ -1,4 +1,4 @@
-type PlayerById = {
+type PlayerTopLevel = {
   id?: number,
   lastName: string,
   firstName: string,
@@ -14,5 +14,5 @@ type PlayerById = {
 
 // This is the model of our module state
 export type State = {
-  playersById: Array<PlayerById>
+  playerRoster: Array<PlayerTopLevel>
 };

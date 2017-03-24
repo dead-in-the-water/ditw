@@ -7,26 +7,26 @@ import { State } from 'models/players'
 // Action Types
 
 // Define types in the form of 'npm-module-or-myapp/feature-name/ACTION_TYPE_NAME'
-const ADD_PLAYER_TO_GAME = 'redux-app/players/ADD_PLAYER_TO_GAME'
-const REMOVE_PLAYER_FROM_GAME = 'redux-app/players/REMOVE_PLAYER_FROM_GAME'
-const REMOVE_ALL_PLAYERS_FROM_GAME = 'redux-app/players/REMOVE_ALL_PLAYERS_FROM_GAME'
-const CHANGE_PLAYER_ORDINAL_POSITION = 'redux-app/players/CHANGE_PLAYER_ORDINAL_POSITION'
-const SORT_PLAYERS = 'redux-app/players/SORT_PLAYERS'
+const ADD_PLAYER_TO_GAME = 'redux-app/playerRoster/ADD_PLAYER_TO_GAME'
+const REMOVE_PLAYER_FROM_GAME = 'redux-app/playerRoster/REMOVE_PLAYER_FROM_GAME'
+const REMOVE_ALL_PLAYERS_FROM_GAME = 'redux-app/playerRoster/REMOVE_ALL_PLAYERS_FROM_GAME'
+const CHANGE_PLAYER_ORDINAL_POSITION = 'redux-app/playerRoster/CHANGE_PLAYER_ORDINAL_POSITION'
+const SORT_PLAYERS = 'redux-app/playerRoster/SORT_PLAYERS'
 
-export const INVALID_ORDINAL_POSITION = Number.MAX_SAFE_INTEGER
-export const INVALID_ID = Number.MAX_SAFE_INTEGER
-export const SORT_KEY_BY_ID = 0
-export const SORT_KEY_BY_ORDINAL = 1
-export const SORT_KEY_BY_NAME = 2;
+ const INVALID_ORDINAL_POSITION = Number.MAX_SAFE_INTEGER
+ const INVALID_ID = Number.MAX_SAFE_INTEGER
+ const SORT_BY_ID = 0
+ const SORT_BY_ORDINAL = 1
+ const SORT_BY_NAME = 2;
 
 // This will be used in our root reducer and selectors
 
-export const NAME = 'players'
+export const NAME = 'PlayerRoster'
 
 // Define the initial state for `players` module
 
 const initialState: State = {
-	playersById: [
+	playerRoster: [
 		{
 			id: 10,
 			lastName: 'Finkelstein',
@@ -156,14 +156,14 @@ export default function reducer(state: State = initialState, action: any = {}): 
 		case ADD_PLAYER_TO_GAME:
 			return {
 				...state,
-				playersById: cleanupOrdinals(state.playersById.map((player) => {
+				playerRoster: cleanupOrdinals(state.playerRoster.map((player) => {
 					if (player.id !== action.id) {
 						return player
 					}
 					return {
 						...player,
 						inThisGame: true,
-						ordinalPosition: getNextOrdinal(state.playersById)
+						ordinalPosition: getNextOrdinal(state.playerRoster)
 					}
 				}))
 			}
@@ -171,7 +171,7 @@ export default function reducer(state: State = initialState, action: any = {}): 
 		case REMOVE_PLAYER_FROM_GAME:
 			return {
 				...state,
-				playersById: cleanupOrdinals(state.playersById.map((player) => {
+				playerRoster: cleanupOrdinals(state.playerRoster.map((player) => {
 					if (player.id !== action.id) {
 						return player
 					}
@@ -186,7 +186,7 @@ export default function reducer(state: State = initialState, action: any = {}): 
 		case REMOVE_ALL_PLAYERS_FROM_GAME:
 			return {
 				...state,
-				playersById: state.playersById.map((player) => {
+				playerRoster: state.playerRoster.map((player) => {
 					if (!player.inThisGame) {
 						return player
 					}
@@ -201,7 +201,7 @@ export default function reducer(state: State = initialState, action: any = {}): 
 		case CHANGE_PLAYER_ORDINAL_POSITION:
 			return {
 				...state,
-				playersById: state.playersById.map((player) => {
+				playerRoster: state.playerRoster.map((player) => {
 					if (player.id !== action.id) {
 						return player
 					}
@@ -214,24 +214,24 @@ export default function reducer(state: State = initialState, action: any = {}): 
 
 		case SORT_PLAYERS:
 
-				if (action.sortKey === SORT_KEY_BY_ID) {
+				if (action.sortKey === SORT_BY_ID) {
 					return {
 					...state,
-						playersById: _.sortBy(state.playersById, [function(player) { return player.id }]) 
+						playerRoster: _.sortBy(state.playerRoster, [function(player) { return player.id }]) 
 					}
 				}
 
-				if (action.sortKey === SORT_KEY_BY_ORDINAL) {
+				if (action.sortKey === SORT_BY_ORDINAL) {
 					return {
 						...state,
-						playersById: _.sortBy(state.playersById, [function(player) { return player.ordinalPosition }])
+						playerRoster: _.sortBy(state.playerRoster, [function(player) { return player.ordinalPosition }])
 					}
 				}
 
-				if (action.sortKey === SORT_KEY_BY_NAME) {
+				if (action.sortKey === SORT_BY_NAME) {
 					return {
 						...state,
-						playersById: _.sortBy(state.playersById, [function(player) { return player.firstName.concat(player.lastName) }])
+						playerRoster: _.sortBy(state.playerRoster, [function(player) { return player.firstName.concat(player.lastName) }])
 					}
 				}
 

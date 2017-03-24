@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import {_find, _without, _difference} from 'lodash'
-import {SORT_KEY_BY_ID, SORT_KEY_BY_ORDINAL, SORT_KEY_BY_NAME, INVALID_ORDINAL_POSITION} from '../players'
+import {SORT_BY_ID, SORT_BY_ORDINAL, SORT_BY_FNAME, INVALID_ORDINAL_POSITION} from '../../homePage/homePage'
 
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -9,15 +9,13 @@ import './PlayerTableApp.scss'
 export default class PlayersLayout extends Component {
 	static propTypes = {
 		actions: PropTypes.object.isRequired,
-		players: PropTypes.object.isRequired
+		gameStatus: PropTypes.object.isRequired
 	}
 
 	render() {
-		const { players: { playersById }, actions } = this.props
-
 		return (
 			<div className='container text-center'>
-				<PlayerTable players={playersById} actions={actions} />
+				<PlayerTable players={this.props.gameStatus.playerRoster} actions={this.props.actions} />
 			</div>
 		) 
 	}
@@ -40,7 +38,7 @@ class PlayerTable extends Component {
 		var needToBeAdded = []
 
 		// Scacn whole player table
-		for (var i = 0; i < this.props.players.length; i++) {
+		for (var i = 0; i < players.length; i++) {
 			var found = false
 			// Scan rows selected list
 			for (var j = 0; j < rowsSelected.length; j++) {
@@ -48,18 +46,18 @@ class PlayerTable extends Component {
 				if (i === rowsSelected[j]) {
 					found = true
 					// Check to see if already marked in game
-					if (!this.props.players[i].inThisGame) {
+					if (!players[i].inThisGame) {
 						// if not, mark
-						needToBeAdded.push(this.props.players[i].id)
+						needToBeAdded.push(players[i].id)
 					}
 					// Don't search any further if we already found a match
 					break
 				}
 			}
 			// If current player index wasn't found in rowsSelected, see if previously marked in game
-			if (!found && this.props.players[i].inThisGame) {
+			if (!found && players[i].inThisGame) {
 				// if so, needs to be removed
-				needToBeRemoved.push(this.props.players[i].id)
+				needToBeRemoved.push(players[i].id)
 			}
 		}
 
