@@ -49,7 +49,7 @@ export default class PlayersView extends Component {
           />
         </div>
       </div>
-    );
+    )
   }
 }
 

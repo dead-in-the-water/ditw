@@ -29,9 +29,9 @@ export default class NewGameView extends Component {
 	_handleModifyPlayerListButton() {
 		this.props.actions.sortPlayers(SORT_SPECIAL_1)
 		
-/*		this.props.actions.clearDealer()
+		this.props.actions.clearDealer()
 		this.props.actions.clearBidder()
-*/
+
 		this.props.history.push('/PlayersView')
 	}
 
@@ -39,9 +39,6 @@ export default class NewGameView extends Component {
 		this.props.actions.removeAllPlayersFromGame()
 		this.props.history.push('/HomePageView')
 	}
-
-					// {(player.id === this.props.gameStatus.currentDealer ) ? <img src={dealerIcon} height='36px' width='auto'/> : ''}
-					// {(player.id === this.props.gameStatus.currentBidder ) ? <img src={bidderIcon} height='36px' width='auto'/> : '' }
 
 	renderList () {
 		return this.props.gameStatus.playerRoster.filter((player) => 
@@ -62,6 +59,16 @@ export default class NewGameView extends Component {
 	}
 
 	render () {
+
+		if (!this.props.gameStatus.currentUser.loggedIn) {
+			console.log('Detected not logged in, jumping to signon page')
+			console.log(this.props.gameStatus)
+			this.props.history.replace("/")
+		}
+
+		if (this.props.gameStatus.playerRoster.filter((player) => player.inThisGame).length === 0) {
+			this.props.history.push('/HomePageView')
+		}
 
 		return (
 			<div className='container text-center'>
