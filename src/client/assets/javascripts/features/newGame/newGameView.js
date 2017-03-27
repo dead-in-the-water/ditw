@@ -60,16 +60,6 @@ export default class NewGameView extends Component {
 
 	render () {
 
-		if (!this.props.gameStatus.currentUser.loggedIn) {
-			console.log('Detected not logged in, jumping to signon page')
-			console.log(this.props.gameStatus)
-			this.props.history.replace("/")
-		}
-
-		if (this.props.gameStatus.playerRoster.filter((player) => player.inThisGame).length === 0) {
-			this.props.history.push('/HomePageView')
-		}
-
 		return (
 			<div className='container text-center'>
 				<table className='game-table'>

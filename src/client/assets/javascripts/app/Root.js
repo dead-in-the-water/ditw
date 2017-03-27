@@ -17,9 +17,10 @@ import { SENTRY_URL } from './config'
 window.Raven && Raven.config(SENTRY_URL).install()
 
 const Root = ({ store, history }) => {
+  const myRoutes = routes(store)
   let ComponentEl = (
     <Provider store={store}>
-      <Router history={history} routes={routes} />
+      <Router history={history} routes={myRoutes} />
     </Provider>
   )
 
@@ -29,7 +30,7 @@ const Root = ({ store, history }) => {
     ComponentEl = (
       <Provider store={store}>
         <div>
-          <Router history={history} routes={routes} />
+          <Router history={history} routes={myRoutes} />
           {!window.devToolsExtension ? <DevTools /> : null}
         </div>
       </Provider>

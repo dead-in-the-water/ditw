@@ -20,6 +20,7 @@ const doneButtonStyle = {
   actions: bindActionCreators(gameStateActions, dispatch)
 }))
 export default class PlayersView extends Component {
+
   _handleDoneButton() {
     this.props.actions.sortPlayers(SORT_SPECIAL_1)
 
@@ -34,7 +35,6 @@ export default class PlayersView extends Component {
     this.props.history.push('/NewGameView')
   }
 
-  // TODO: Cancel needs to clear all inThisGame flags
   render() {
     return (
       <div className='container'>

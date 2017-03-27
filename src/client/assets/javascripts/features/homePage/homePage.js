@@ -1,7 +1,7 @@
 // @flow
 
 import { createStructuredSelector } from 'reselect'
-import assign from 'lodash/assign'
+import { _nth, _sortBy, assign } from 'lodash'
 
 import { UserStatus } from 'models/gameState'
 
@@ -361,10 +361,17 @@ function sortByOrdinal(players) {
 */
 function sortSpecial1(players) {
   // Sort players that are in this game by their ordinalPosition
+
+  console.log('****** In sortSpecial1')
+  console.log('       about to do 1st sort')
   var itgPlayers = _.sortBy(players.filter((player) => (player.inThisGame)), [function(player) { return player.ordinalPosition}])
+
+  console.log('       about to do 2nd sort')
 
   // Sort players that are not (yet) in this game by their names
   var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['firstName', 'lastName'])
+
+  console.log('****** About to return out')
 
   // And return the concatonated list
   return itgPlayers.concat(nItgPlayers)
