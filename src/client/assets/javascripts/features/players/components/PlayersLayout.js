@@ -15,7 +15,7 @@ export default class PlayersLayout extends Component {
 	render() {
 		return (
 			<div className='container text-center'>
-				<PlayerTable players={this.props.gameStatus.playerRoster} actions={this.props.actions} />
+				<PlayerTable players={this.props.gameStatus.playerRoster} actions={this.props.actions} rules={this.props.gameStatus.currentRuleSet} />
 			</div>
 		) 
 	}
@@ -28,13 +28,19 @@ class PlayerTable extends Component {
 	}
 
 	_handleClick = (e) => {
-		const row = e.target.getAttribute('data-item')
 
-		if (!this.props.players[row].inThisGame) {
-			this.props.actions.addPlayerToGame(this.props.players[row].id)
-		} else {
-			this.props.actions.removePlayerFromGame(this.props.players[row].id)
-		}
+			const row = e.target.getAttribute('data-item')
+
+			if (!this.props.players[row].inThisGame) {
+				if (this.props.players.filter((player) => player.inThisGame).length < this.props.rules.maxPlayers) {
+					this.props.actions.addPlayerToGame(this.props.players[row].id)
+				} else {
+					// If we have too many players, don't process
+					alert('Too many players! (max = ' + this.props.rules.maxPlayers + ')\n\nDeselect one or more players before adding more.')
+				}
+			} else {
+				this.props.actions.removePlayerFromGame(this.props.players[row].id)
+			}
 	}
 
 	render() {

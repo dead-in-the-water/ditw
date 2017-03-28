@@ -46,6 +46,7 @@ export default class PlayersView extends Component {
             label="Done" 
             primary={true} 
             onTouchTap={() => this._handleDoneButton()}
+            disabled={ this.props.gameStatus.playerRoster.filter((player) => player.inThisGame).length < this.props.gameStatus.currentRuleSet.minPlayers }
           />
         </div>
       </div>

@@ -23,7 +23,8 @@ const style = {
 export default class NewGameView extends Component {
 
 	_handleDoneButton() {
-		this.props.history.push('/NewGameView')
+		this.props.actions.initGameData()
+		alert('Not fully implemented (yet)')
 	}
 
 	_handleModifyPlayerListButton() {
@@ -109,10 +110,10 @@ export default class NewGameView extends Component {
 					onTouchTap={() => this._handleModifyPlayerListButton()}
 					/>
 				<RaisedButton
-					label='Start Bidding'
+					label='Start Game'
 					primary
 					style={style}
-					onTouchTap={() => alert('Not implemented (yet)')}
+					onTouchTap={() => this._handleDoneButton() }
 					/>
 			</div>
 		)
