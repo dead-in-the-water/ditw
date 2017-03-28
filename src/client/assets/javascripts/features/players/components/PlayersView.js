@@ -32,10 +32,6 @@ export default class PlayersView extends Component {
     // Player in last ordinal position is first dealer
     this.props.actions.setDealer(_.nth(activePlayers, -1).id)
 
-    // Build & init the game table 
-    this.props.actions.initializeGameData()
-
-    // And head back to the NewGameView
     this.props.history.push('/NewGameView')
   }
 
@@ -50,8 +46,7 @@ export default class PlayersView extends Component {
             label="Done" 
             primary={true} 
             onTouchTap={() => this._handleDoneButton()}
-            disabled={ this.props.gameStatus.playerRoster.filter((player) => (player.inThisGame)).length < 
-              this.props.gameStatus.currentRuleSet.minPlayers }
+            disabled={ this.props.gameStatus.playerRoster.filter((player) => player.inThisGame).length < this.props.gameStatus.currentRuleSet.minPlayers }
           />
         </div>
       </div>

@@ -25,9 +25,11 @@ export type CurrentUser = {
   isAdmin: boolean
 };
 
-export type CurrentPlayer = {
-  id: number,
-  playerName: string
+export type GameRound = {
+  dealer: number,
+  bidder: number,
+  handSize: number,
+  results: Array<GamePlayerRound>
 };
 
 export type GamePlayerRound = {
