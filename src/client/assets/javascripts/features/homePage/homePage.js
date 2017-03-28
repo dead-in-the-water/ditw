@@ -187,8 +187,13 @@ const initialStatus: GameState = {
 // Reducer
 export default function reducer(gameState: GameState = initialStatus, action: any = {}): GameState {
 
+  console.log('------ In homePage.reducer, about to dump gameState')
+  console.log(gameState)
+  console.log('  dumping initialStatus')
+  console.log(initialStatus)
+
   switch (action.type) {
-    case SET_LOGGED_IN: {
+    case SET_LOGGED_IN: 
       return {
         ...gameState,
         currentUser: {
@@ -198,7 +203,6 @@ export default function reducer(gameState: GameState = initialStatus, action: an
           isAdmin: true
         }
       }
-    }
 
     case CLEAR_LOGGED_IN:
       return {
@@ -387,26 +391,28 @@ export default function reducer(gameState: GameState = initialStatus, action: an
       }
 
     case RECORD_TRICKS_BID:
-      return {
-        ...gameState,
-        gameRounds: gameState.gameRounds.map((round, i) => {
-          if (i !== action.round) {
-            return round
-          }
-          return {
-            ...round,
-            results: round.results.map((result) => (
-              return {
-                id: action.id,
-                tricksBid: action.tricksBid,
-                tricksWon: INVALID_BID_SCORE
-            }))
-          }
-        })
-      }
-
+    
+/*      return {
+      ...gameState,
+      gameRounds: gameState.gameRounds.map((round, i) => {
+        if (i !== action.round) {
+          return round
+        }
+        return {
+          ...round,
+          results: round.results.map((result) => (
+            return {
+              id: action.id,
+              tricksBid: action.tricksBid,
+              tricksWon: INVALID_BID_SCORE
+          }))
+        }
+      })
+    }
+*/
     case RECORD_TRICKS_WON:
       return gameState
+
     default:
       return gameState
   }

@@ -41,6 +41,10 @@ const appBarStyles = {
 export default class HomePageView extends Component {
   
   render () {   
+
+    console.log('====== In HomePageView.render, about to dump this.props')
+    console.log(this.props)
+    
     return (
       <div className='home-page-container'>
         <AppBar
