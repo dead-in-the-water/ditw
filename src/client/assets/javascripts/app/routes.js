@@ -19,9 +19,6 @@ export default (store) => {
     // Now you can access the store object here.
     const state = store.getState()
 
-    console.log('====== In authRequired, about to dump state')
-    console.log(state)
-
     if (!state.gameState.currentUser.loggedIn) {
       // Not authenticated, redirect to login.
       replaceState({ nextPathname: nextState.location.pathname }, '/')
@@ -40,13 +37,13 @@ export default (store) => {
       <IndexRoute component={HomePageView} />
       <Route path='HomePageView' component={HomePageView} />
       <Route path='NewGameView' component={NewGameView} onEnter={authRequired} />
-      <Route path='SaveGameView' component={SaveGameView} />
-      <Route path='LoadGameView' component={LoadGameView} />
-      <Route path='AdminView' component={AdminView} />
-      <Route path='ProfileView' component={ProfileView} />
-      <Route path='ChangeClubView' component={ChangeClubView} />
+      <Route path='SaveGameView' component={SaveGameView} onEnter={authRequired} />
+      <Route path='LoadGameView' component={LoadGameView} onEnter={authRequired} />
+      <Route path='AdminView' component={AdminView} onEnter={authRequired} />
+      <Route path='ProfileView' component={ProfileView} onEnter={authRequired} />
+      <Route path='ChangeClubView' component={ChangeClubView} onEnter={authRequired} />
       <Route path='HelpView' component={HelpView} />
-      <Route path='PlayersView' component={PlayersView} />
+      <Route path='PlayersView' component={PlayersView} onEnter={authRequired} />
       <Route path='404' component={NotFoundView} />
       <Redirect from='*' to='404' />
     </Route>

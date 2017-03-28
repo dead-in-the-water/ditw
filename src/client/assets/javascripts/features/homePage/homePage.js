@@ -1,7 +1,7 @@
 // @flow
 
 import { createStructuredSelector } from 'reselect'
-import { _nth, _sortBy, assign } from 'lodash'
+import { _nth, _sortBy, assign, _floor } from 'lodash'
 
 import { UserStatus } from 'models/gameState'
 
@@ -18,9 +18,13 @@ const ADD_PLAYER_TO_GAME = 'redux-app/gameStatusUpdate/ADD_PLAYER_TO_GAME'
 const REMOVE_PLAYER_FROM_GAME = 'redux-app/gameStatusUpdate/REMOVE_PLAYER_FROM_GAME'
 const REMOVE_ALL_PLAYERS_FROM_GAME = 'redux-app/gameStatusUpdate/REMOVE_ALL_PLAYERS_FROM_GAME'
 const SORT_PLAYERS = 'redux-app/gameStatusUpdate/SORT_PLAYERS'
+const INITIALIZE_GAME_DATA = 'redux-app/gameStatusUpdate/INITIALIZE_GAME_DATA'
+const RECORD_TRICKS_BID = 'redux-app/gameStatusUpdate/RECORD_TRICKS_BID'
+const RECORD_TRICKS_WON = 'redux-app/gameStatusUpdate/RECORD_TRICKS_WON'
 
 export const INVALID_ORDINAL_POSITION = Number.MAX_SAFE_INTEGER
 export const INVALID_ID = Number.MAX_SAFE_INTEGER
+export const INVALID_BID_SCORE = Number.MAX_SAFE_INTEGER
 export const SORT_BY_ID = 0
 export const SORT_BY_ORDINAL = 1
 export const SORT_BY_FNAME = 2
@@ -48,35 +52,13 @@ const initialStatus: GameState = {
   },
   currentDealer: INVALID_ID,
   currentBidder: INVALID_ID,
+  currentRound: INVALID_ID,
   currentRuleSet: {
     minPlayers: 2,
     maxPlayers: 8
   },
+  gameRounds: [],
   playerRoster: [
-    {
-      id: 10,
-      lastName: 'Finkelstein',
-      firstName: 'Elaine',
-      avgScore: 0,
-      avgPosition: 0,
-      gamesPlayed: 0,
-      inThisGame: false,
-      ordinalPosition: INVALID_ORDINAL_POSITION,
-      gameName: 'Gammy',
-      useGameName: true
-    },
-    {
-      id: 11,
-      lastName: 'Leavitt',
-      firstName: 'Stacy',
-      avgScore: 0,
-      avgPosition: 0,
-      gamesPlayed: 0,
-      inThisGame: false,
-      ordinalPosition: INVALID_ORDINAL_POSITION,
-      gameName: 'Stacy',
-      useGameName: true
-    },
     {
       id: 12,
       lastName: 'Elster',
@@ -87,42 +69,6 @@ const initialStatus: GameState = {
       inThisGame: false,
       ordinalPosition: INVALID_ORDINAL_POSITION,
       gameName: 'Beth',
-      useGameName: true
-    },
-    {
-      id: 13,
-      lastName: 'Finkelstein',
-      firstName: 'Jack',
-      avgScore: 0,
-      avgPosition: 0,
-      gamesPlayed: 0,
-      inThisGame: false,
-      ordinalPosition: INVALID_ORDINAL_POSITION,
-      gameName: 'Gampa',
-      useGameName: true
-    },
-    {
-      id: 14,
-      lastName: 'Leavitt',
-      firstName: 'Rachel',
-      avgScore: 0,
-      avgPosition: 0,
-      gamesPlayed: 0,
-      inThisGame: false,
-      ordinalPosition: INVALID_ORDINAL_POSITION,
-      gameName: 'Rach',
-      useGameName: true
-    },
-    {
-      id: 15,
-      lastName: 'Elster',
-      firstName: 'Jeremy',
-      avgScore: 0,
-      avgPosition: 0,
-      gamesPlayed: 0,
-      inThisGame: false,
-      ordinalPosition: INVALID_ORDINAL_POSITION,
-      gameName: 'Jer',
       useGameName: true
     },
     {
@@ -138,6 +84,54 @@ const initialStatus: GameState = {
       useGameName: true
     },
     {
+      id: 10,
+      lastName: 'Finkelstein',
+      firstName: 'Elaine',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0,
+      inThisGame: false,
+      ordinalPosition: INVALID_ORDINAL_POSITION,
+      gameName: 'Gammy',
+      useGameName: true
+    },
+    {
+      id: 13,
+      lastName: 'Finkelstein',
+      firstName: 'Jack',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0,
+      inThisGame: false,
+      ordinalPosition: INVALID_ORDINAL_POSITION,
+      gameName: 'Gampa',
+      useGameName: true
+    },
+    {
+      id: 15,
+      lastName: 'Elster',
+      firstName: 'Jeremy',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0,
+      inThisGame: false,
+      ordinalPosition: INVALID_ORDINAL_POSITION,
+      gameName: 'Jer',
+      useGameName: true
+    },
+    {
+      id: 19,
+      lastName: 'Elster',
+      firstName: 'Joel',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0,
+      inThisGame: false,
+      ordinalPosition: INVALID_ORDINAL_POSITION,
+      gameName: 'Joel',
+      useGameName: true
+    },
+    {
       id: 17,
       lastName: 'Finkelstein',
       firstName: 'Mike',
@@ -147,6 +141,18 @@ const initialStatus: GameState = {
       inThisGame: false,
       ordinalPosition: INVALID_ORDINAL_POSITION,
       gameName: 'Mike',
+      useGameName: true
+    },
+    {
+      id: 14,
+      lastName: 'Leavitt',
+      firstName: 'Rachel',
+      avgScore: 0,
+      avgPosition: 0,
+      gamesPlayed: 0,
+      inThisGame: false,
+      ordinalPosition: INVALID_ORDINAL_POSITION,
+      gameName: 'Rach',
       useGameName: true
     },
     {
@@ -162,15 +168,15 @@ const initialStatus: GameState = {
       useGameName: true
     },
     {
-      id: 19,
-      lastName: 'Elster',
-      firstName: 'Joel',
+      id: 11,
+      lastName: 'Leavitt',
+      firstName: 'Stacy',
       avgScore: 0,
       avgPosition: 0,
       gamesPlayed: 0,
       inThisGame: false,
       ordinalPosition: INVALID_ORDINAL_POSITION,
-      gameName: 'Joel',
+      gameName: 'Stacy',
       useGameName: true
     }
   ],
@@ -317,8 +323,92 @@ export default function reducer(gameState: GameState = initialStatus, action: an
           return gameState
       }
 
+    case INITIALIZE_GAME_DATA:
+
+      // Assumes sorting all clean
+      const players = gameState.playerRoster.filter((player) => player.inThisGame)
+      const isEven = (val) => (val % 2 === 0)
+      const lastPlayer = players.length - 1
+      const maxHandSize = _.floor(52 / players.length)
+      const totalRounds = maxHandSize
+      const maxEvenHandSize = maxHandSize - (maxHandSize % 2)
+      var curBidderIdx = 0
+      var curDealerIdx = lastPlayer
+      var curHandSize = 2
+      var rounds = []
+
+      for (var r = 0; r < totalRounds; r++) {
+        rounds.push({
+          dealer: curDealerIdx,
+          bidder: curBidderIdx,
+          handsize: curHandSize,
+
+          results: players.map((player) => ({
+            id: player.id,
+            tricksBid: INVALID_BID_SCORE,
+            tricksWon: INVALID_BID_SCORE
+          }))
+        })
+
+        // If we've reached last player in list, wrap around to first
+        if (++curDealerIdx > lastPlayer) { curDealerIdx = 0 }
+
+        // Ditto for curBidder
+        if (++curBidderIdx > lastPlayer) { curBidderIdx = 0 }
+
+        // curHandSize a little trickier
+        // If curHandSize is even, we've been on the going up side
+        if (isEven(curHandSize)) {
+          // If we've reach max even hand size
+          if (curHandSize >= maxEvenHandSize) {
+            // If maxHandSize > maxEvenHandSize, it can only be 1 larger
+            if (maxHandSize > maxEvenHandSize) {
+              curHandSize++
+            } 
+            // maxHandSize is even, so decrement to largest odd hand size
+            else {
+              curHandSize--
+            }
+          } 
+          // Not at maxEvenHand size, keep incrementing by 2
+          else {
+            curHandSize = curHandSize + 2
+          }
+        } 
+        // curHandSize is odd, so we're decreasing hand size - just check for end
+        else {
+          if (curHandSize > 1) { curHandSize = curHandSize - 2 }
+        }
+      }
+      return {
+        ...gameState,
+        gameRounds: rounds
+
+      }
+
+    case RECORD_TRICKS_BID:
+      return {
+        ...gameState,
+        gameRounds: gameState.gameRounds.map((round, i) => {
+          if (i !== action.round) {
+            return round
+          }
+          return {
+            ...round,
+            results: round.results.map((result) => (
+              return {
+                id: action.id,
+                tricksBid: action.tricksBid,
+                tricksWon: INVALID_BID_SCORE
+            }))
+          }
+        })
+      }
+
+    case RECORD_TRICKS_WON:
+      return gameState
     default:
-      return gameState;
+      return gameState
   }
 }
 
@@ -362,16 +452,10 @@ function sortByOrdinal(players) {
 function sortSpecial1(players) {
   // Sort players that are in this game by their ordinalPosition
 
-  console.log('****** In sortSpecial1')
-  console.log('       about to do 1st sort')
   var itgPlayers = _.sortBy(players.filter((player) => (player.inThisGame)), [function(player) { return player.ordinalPosition}])
-
-  console.log('       about to do 2nd sort')
 
   // Sort players that are not (yet) in this game by their names
   var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['firstName', 'lastName'])
-
-  console.log('****** About to return out')
 
   // And return the concatonated list
   return itgPlayers.concat(nItgPlayers)
@@ -446,6 +530,30 @@ function sortPlayers(sortKey) {
   }
 }
 
+function initializeGameData() {
+  return {
+    type: INITIALIZE_GAME_DATA
+  }
+}
+
+function recordTricksBid(round: number, id: number) {
+  return {
+    type: RECORD_TRICKS_BID,
+    round,
+    id,
+    tricksBid
+  }
+}
+
+function recordTricksWon(round: number, id: number) {
+  return {
+    type: RECORD_TRICKS_WON,
+    round,
+    id,
+    tricksWon
+  }
+}
+
 // Selectors
 
 const gameStatus = (state) => state[NAME];
@@ -464,6 +572,9 @@ export const actionCreators = {
   addPlayerToGame,
   removePlayerFromGame,
   removeAllPlayersFromGame,
-  sortPlayers
+  sortPlayers,
+  initializeGameData,
+  recordTricksBid,
+  recordTricksWon
 }
 
