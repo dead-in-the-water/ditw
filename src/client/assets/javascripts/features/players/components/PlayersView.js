@@ -22,7 +22,7 @@ const doneButtonStyle = {
 export default class PlayersView extends Component {
 
   _handleDoneButton() {
-    this.props.actions.sortPlayers(SORT_SPECIAL_1)
+    this.props.actions.sortPlayers(this.props.gameStatus.defaultSortOrder)
 
     var activePlayers = this.props.gameStatus.playerRoster.filter((player) => player.inThisGame)
     

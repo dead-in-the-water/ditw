@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 import RaisedButton from 'material-ui/RaisedButton'
 
-import { SORT_SPECIAL_1, INVALID_ORDINAL_POSITION } from '../homePage/homePage'
+import { SORT_SPECIAL_1, SORT_SPECIAL_2, INVALID_NUMERIC_VALUE } from '../homePage/homePage'
 import { actionCreators as gameStateActions, selector as gameStateSelector } from '../homePage/homePage'
 
 import dealerIcon from './images/card_dealer_luigi.png'
@@ -28,7 +28,7 @@ export default class NewGameView extends Component {
 	}
 
 	_handleModifyPlayerListButton() {
-		this.props.actions.sortPlayers(SORT_SPECIAL_1)
+		this.props.actions.sortPlayers(this.props.gameStatus.defaultSortOrder)
 		
 		this.props.actions.clearDealer()
 		this.props.actions.clearBidder()
@@ -86,7 +86,12 @@ export default class NewGameView extends Component {
 											{(player.id === this.props.gameStatus.currentDealer ) ? <img src={dealerIcon} height='36px' width='auto'/> : ''}
 											{(player.id === this.props.gameStatus.currentBidder ) ? <img src={bidderIcon} height='36px' width='auto'/> : '' }
 										</td>
-										<td className='game-table-name-cell'>{player.firstName + ' ' + player.lastName}</td>
+										<td className='game-table-name-cell'>
+											{ (this.props.gameStatus.defaultSortOrder == SORT_SPECIAL_1) ?
+														player.firstName + ' ' + player.lastName :
+														player.nickName
+											}
+										</td>
 										<td className='game-table-bid-cell'>0</td>
 										<td className='game-table-won-cell'>0</td>
 										<td className='game-table-score-cell'>0</td>

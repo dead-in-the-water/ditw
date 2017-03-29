@@ -8,7 +8,7 @@ export type PlayerTopLevel = {
   birthDate: number,
   inThisGame: boolean,
   ordinalPosition: number,
-  gameName: string,
+  nickName: string,
   useGameName: boolean
 };
 

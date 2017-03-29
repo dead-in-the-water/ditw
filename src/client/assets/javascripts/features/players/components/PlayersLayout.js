@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import {_find, _without, _difference} from 'lodash'
-import {SORT_BY_ID, SORT_BY_ORDINAL, SORT_BY_FNAME, INVALID_ORDINAL_POSITION} from '../../homePage/homePage'
+import Toggle from 'material-ui/Toggle'
+import {SORT_BY_ID, SORT_BY_ORDINAL, SORT_BY_FNAME, INVALID_NUMERIC_VALUE, SORT_SPECIAL_1, SORT_SPECIAL_2} from '../../homePage/homePage'
 
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -12,10 +13,25 @@ export default class PlayersLayout extends Component {
 		gameStatus: PropTypes.object.isRequired
 	}
 
+	_handleSortOrderToggle() {
+
+		// Work around for this... not getting refreshed by requesting state change
+		var newSortOrder = (this.props.gameStatus.defaultSortOrder === SORT_SPECIAL_1) ? SORT_SPECIAL_2 : SORT_SPECIAL_1
+		this.props.actions.toggleDefaultSortOrder()
+		this.props.actions.sortPlayers(newSortOrder)
+	}
+
+
 	render() {
 		return (
 			<div className='container text-center'>
-				<PlayerTable players={this.props.gameStatus.playerRoster} actions={this.props.actions} rules={this.props.gameStatus.currentRuleSet} />
+				<Toggle label="Sort by nickname" onToggle={() => this._handleSortOrderToggle()} />
+				<PlayerTable 
+					players={this.props.gameStatus.playerRoster} 
+					actions={this.props.actions} 
+					rules={this.props.gameStatus.currentRuleSet} 
+					sortOrder={this.props.gameStatus.defaultSortOrder} 
+				/>
 			</div>
 		) 
 	}
@@ -80,7 +96,7 @@ class PlayerTable extends Component {
 																	' player-table-name-cell'
 										} 
 									>
-											{ player.firstName + ' ' + player.lastName }
+											{ (this.props.sortOrder === SORT_SPECIAL_1) ? player.firstName + ' ' + player.lastName : player.nickName }
 									</td>
 									<td data-item={i} 
 										className={ ((player.inThisGame) ? 
@@ -89,7 +105,7 @@ class PlayerTable extends Component {
 																	' player-table-position-cell'
 										} 
 									>
-											{ (player.ordinalPosition !== INVALID_ORDINAL_POSITION ? (player.ordinalPosition + 1 )  : '') }
+											{ (player.ordinalPosition !== INVALID_NUMERIC_VALUE ? (player.ordinalPosition + 1 )  : '') }
 									</td>
 								</tr>
 							)
