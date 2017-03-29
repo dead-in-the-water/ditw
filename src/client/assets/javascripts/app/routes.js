@@ -13,6 +13,7 @@ import AdminView from 'features/administration/adminView'
 import ChangeClubView from 'features/changeClub/changeClubView'
 import HelpView from 'features/help/helpView'
 import PlayersView from 'features/players/components/PlayersView'
+import BidEntryView from 'features/newGame/components/bidEntryView'
 
 export default (store) => {
   const authRequired = (nextState, replaceState) => {
@@ -37,6 +38,7 @@ export default (store) => {
       <IndexRoute component={HomePageView} />
       <Route path='HomePageView' component={HomePageView} />
       <Route path='NewGameView' component={NewGameView} onEnter={authRequired} />
+      <Route path='NewGameView/BidEntryView' component={BidEntryView} onEnter={authRequired} />
       <Route path='SaveGameView' component={SaveGameView} onEnter={authRequired} />
       <Route path='LoadGameView' component={LoadGameView} onEnter={authRequired} />
       <Route path='AdminView' component={AdminView} onEnter={authRequired} />

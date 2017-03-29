@@ -24,7 +24,7 @@ export default class NewGameView extends Component {
 
 	_handleDoneButton() {
 		this.props.actions.initGameData()
-		alert('Not fully implemented (yet)')
+		this.props.history.push('/NewGameView/BidEntryView')
 	}
 
 	_handleModifyPlayerListButton() {

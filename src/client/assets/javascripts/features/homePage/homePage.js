@@ -26,14 +26,14 @@ const RECORD_TRICKS_WON = 'redux-app/gameStatusUpdate/RECORD_TRICKS_WON'
 export const INVALID_NUMERIC_VALUE = Number.MAX_SAFE_INTEGER
 
 // Sort options
-export const SORT_DEFAULT = 0			// Sort based on value of gameState.defaultSortOrder (only valid for SORT_SPECIAL_1 or SORT_SPECIAL_2)
+export const SORT_DEFAULT = 0     // Sort based on value of gameState.defaultSortOrder (only valid for SORT_SPECIAL_1 or SORT_SPECIAL_2)
 export const SORT_BY_ID = 1
 export const SORT_BY_ORDINAL = 2
 export const SORT_BY_FNAME = 3
 export const SORT_BY_LNAME = 4
-export const SORT_BY_NNAME = 5		// Sort by nick name
-export const SORT_SPECIAL_1 = 6		// Sort inThisGame players by ordinal and others by first/last
-export const SORT_SPECIAL_2 = 7 	// Use nickName instead of first/last
+export const SORT_BY_NNAME = 5    // Sort by nick name
+export const SORT_SPECIAL_1 = 6   // Sort inThisGame players by ordinal and others by first/last
+export const SORT_SPECIAL_2 = 7   // Use nickName instead of first/last
 
 // This will be used in our root reducer and selectors
 
@@ -295,8 +295,8 @@ export default function reducer(gameState: GameState = initialStatus, action: an
       switch (action.sortKey) {
         case SORT_DEFAULT:
           return {
-	          ...gameState,
-	          playerRoster: sortSpecial1(gameState.playerRoster, gameState.defaultSortOrder)
+            ...gameState,
+            playerRoster: sortSpecial1(gameState.playerRoster, gameState.defaultSortOrder)
           }
 
         case SORT_BY_ID:
@@ -346,10 +346,10 @@ export default function reducer(gameState: GameState = initialStatus, action: an
       }
 
     case TOGGLE_DEFAULT_SORT_ORDER:
-    	return {
-    		...gameState,
-    		defaultSortOrder: (gameState.defaultSortOrder === SORT_SPECIAL_1) ? SORT_SPECIAL_2 : SORT_SPECIAL_1
-    	}
+      return {
+        ...gameState,
+        defaultSortOrder: (gameState.defaultSortOrder === SORT_SPECIAL_1) ? SORT_SPECIAL_2 : SORT_SPECIAL_1
+      }
 
     case INITIALIZE_GAME_DATA:
 
@@ -412,10 +412,27 @@ export default function reducer(gameState: GameState = initialStatus, action: an
         ...gameState,
         gameRounds: rounds
 
-	      }
-		case RECORD_TRICKS_BID:
-		case RECORD_TRICKS_WON:
-		default:
+        }
+    case RECORD_TRICKS_BID:
+      return {
+        ...gameState,
+        gameRounds: gameState.gameRounds.map((round, i) => {
+          if (i !== action.round) {
+            return round
+          }
+          return {
+            ...round,
+            results: round.results.map((result) => ({
+              id: action.id,
+              tricksBid: action.tricksBid,
+              tricksWon: INVALID_BID_SCORE
+            }))
+          }
+        })
+      }
+
+    case RECORD_TRICKS_WON:
+    default:
       return gameState;
   }
 }
@@ -464,9 +481,9 @@ function sortSpecial1(players, sortOrder) {
 
   // Sort players that are not (yet) in this game by their names
   if (sortOrder === SORT_SPECIAL_1) {
-	  var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['firstName', 'lastName'])
+    var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['firstName', 'lastName'])
   } else {
-	  var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['nickName'])
+    var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['nickName'])
   }
 
   // And return the concatonated list
@@ -590,7 +607,7 @@ export const actionCreators = {
   removePlayerFromGame,
   removeAllPlayersFromGame,
   sortPlayers,
-	toggleDefaultSortOrder,
+  toggleDefaultSortOrder,
   initGameData,
   recordTricksBid,
   recordTricksWon
