@@ -22,6 +22,10 @@ const TOGGLE_DEFAULT_SORT_ORDER = 'redux-app/gameStatusUpdate/TOGGLE_DEFAULT_SOR
 const INITIALIZE_GAME_DATA = 'redux-app/gameStatusUpdate/INITIALIZE_GAME_DATA'
 const RECORD_TRICKS_BID = 'redux-app/gameStatusUpdate/RECORD_TRICKS_BID'
 const RECORD_TRICKS_WON = 'redux-app/gameStatusUpdate/RECORD_TRICKS_WON'
+const SET_BIDDING = 'redux-app/gameStatusUpdate/SET_BIDDING'
+const CLEAR_BIDDING = 'redux-app/gameStatusUpdate/CLEAR_BIDDING'
+const SET_PLAYING = 'redux-app/gameStatusUpdate/SET_PLAYING'
+const CLEAR_PLAYING = 'redux-app/gameStatusUpdate/CLEAR_PLAYING'
 
 export const INVALID_NUMERIC_VALUE = Number.MAX_SAFE_INTEGER
 
@@ -51,6 +55,8 @@ const initialStatus: GameState = {
   currentDealer: INVALID_NUMERIC_VALUE,
   currentBidder: INVALID_NUMERIC_VALUE,
   currentRound: INVALID_NUMERIC_VALUE,
+  bidding: false,
+  playing: false,
   currentRuleSet: {
     minPlayers: 3,
     maxPlayers: 10
@@ -432,8 +438,34 @@ export default function reducer(gameState: GameState = initialStatus, action: an
       }
 
     case RECORD_TRICKS_WON:
+      return gameState
+
+    case SET_BIDDING:
+      return {
+        ...gameState,
+        bidding: true
+      }
+
+    case CLEAR_BIDDING:
+      return {
+        ...gameState,
+        bidding: false
+      }
+      
+    case SET_PLAYING:
+      return {
+        ...gameState,
+        playing: true
+      }
+      
+    case CLEAR_PLAYING:
+      return {
+        ...gameState,
+        playing: false
+      }
+      
     default:
-      return gameState;
+      return gameState
   }
 }
 
@@ -587,6 +619,29 @@ function recordTricksWon(round, id, tricksWon) {
   }
 }
 
+function setBidding() {
+  return {
+    type: SET_BIDDING
+  }
+}
+
+function clearBidding() {
+  return {
+    type: CLEAR_BIDDING
+  }
+}
+
+function setPlaying() {
+  return {
+    type: SET_PLAYING
+  }
+}
+
+function clearPlaying() {
+  return {
+    type: CLEAR_PLAYING
+  }
+}
 
 // Selectors
 
@@ -610,6 +665,10 @@ export const actionCreators = {
   toggleDefaultSortOrder,
   initGameData,
   recordTricksBid,
-  recordTricksWon
+  recordTricksWon,
+  setBidding,
+  clearBidding,
+  setPlaying,
+  clearPlaying
 }
 

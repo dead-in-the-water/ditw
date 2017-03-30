@@ -38,7 +38,7 @@ export default (store) => {
       <IndexRoute component={HomePageView} />
       <Route path='HomePageView' component={HomePageView} />
       <Route path='NewGameView' component={NewGameView} onEnter={authRequired} />
-      <Route path='NewGameView/BidEntryView' component={BidEntryView} onEnter={authRequired} />
+      <Route path='BidEntryView' component={BidEntryView} onEnter={authRequired} />
       <Route path='SaveGameView' component={SaveGameView} onEnter={authRequired} />
       <Route path='LoadGameView' component={LoadGameView} onEnter={authRequired} />
       <Route path='AdminView' component={AdminView} onEnter={authRequired} />

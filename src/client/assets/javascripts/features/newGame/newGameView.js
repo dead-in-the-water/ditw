@@ -1,16 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
+import { _head, _words } from 'lodash'
+
+import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 
 import { SORT_SPECIAL_1, SORT_SPECIAL_2, INVALID_NUMERIC_VALUE } from '../homePage/homePage'
 import { actionCreators as gameStateActions, selector as gameStateSelector } from '../homePage/homePage'
+import './gameTable.scss'
 
 import dealerIcon from './images/card_dealer_luigi.png'
 import bidderIcon from './images/three_fingers.png'
-import './gameTable.scss'
 
 const style = {
 	margin: 12
@@ -24,7 +27,7 @@ export default class NewGameView extends Component {
 
 	_handleDoneButton() {
 		this.props.actions.initGameData()
-		this.props.history.push('/NewGameView/BidEntryView')
+		this.props.actions.setBidding()
 	}
 
 	_handleModifyPlayerListButton() {
@@ -39,6 +42,10 @@ export default class NewGameView extends Component {
 	_handleCancelButton() {
 		this.props.actions.removeAllPlayersFromGame()
 		this.props.history.push('/HomePageView')
+	}
+
+	_handleClose() {
+		this.props.actions.clearBidding()
 	}
 
 	renderList () {
@@ -60,6 +67,24 @@ export default class NewGameView extends Component {
 	}
 
 	render () {
+
+		const theMaxBid = () => (this.props.gameStatus.currentRound === INVALID_NUMERIC_VALUE) 
+															? 0
+															: this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handSize
+
+		const dialogActions = [
+			<FlatButton
+				label="Cancel"
+				primary={true}
+				onTouchTap={this.props.actions.clearBidding}
+			/>,
+			<FlatButton
+				label="Submit"
+				primary={true}
+				disabled={true}
+				onTouchTap={this.props.actions.clearBidding}
+			/>
+		]
 
 		return (
 			<div className='container text-center'>
@@ -120,7 +145,87 @@ export default class NewGameView extends Component {
 					style={style}
 					onTouchTap={() => this._handleDoneButton() }
 					/>
+					<div>
+						<Dialog
+							title="Dialog With Actions"
+							actions={dialogActions}
+							modal={true}
+							open={this.props.gameStatus.bidding}
+							autoScrollBodyContent={true}
+						>
+							<gameActionTable 
+								title="Bid Entry"
+								players={this.props.gameStatus.playerRoster} 
+								actions={this.props.actions} 
+								sortOrder={this.props.gameStatus.defaultSortOrder} 
+								currentRound={this.props.gameStatus.currentRound}
+								maxBid={theMaxBid()}
+							/>
+						</Dialog>
+					</div>
 			</div>
 		)
 	}
 }
+
+class gameActionTable extends Component {
+
+	static propTypes = {
+		title: PropTypes.string.isRequired,
+		players: PropTypes.array.isRequired,
+		actions: PropTypes.object.isRequired,
+		sortOrder: PropTypes.number.isRequired,
+		currentRound: PropTypes.number.isRequired,
+		maxBid: PropTypes.number.isRequired
+	}
+
+
+  _handleBidChange() {
+    console.log('@@@@@@ Entered gameActionTable._handleBidChange')
+  }
+
+  render() {
+    console.log('>>>>>> In gameActionTable.render, about to dump props')
+    console.log(props)
+
+    const phaseName = () => _.head(_.words(props.title))
+    
+    return (
+      <table className='game-action-table'>
+        <thead className='game-action-table-header'>
+          <tr className='game-action-table-super-header-row'>
+            <th className='game-action-table-super-header-cell'>
+              <h1>{props.title}</h1>
+            </th>
+          </tr>
+          <tr className='game-action-table-header-row'>
+            <th className='game-action-table-header-cell-left'>Player</th>
+            <th className='game-action-table-header-cell'>Bid</th>
+          </tr>
+        </thead>
+        <tbody className='game-action-table-body'>
+          { players.map((player, i) =>
+							(
+  <tr key={i} data-item={i} className='game-action-table-data-row'>
+    <td className='game-action-table-name-cell'>{
+																						(props.sortOrder === SORT_SPECIAL_1)
+																							? player.firstName + ' ' + player.lastName
+																							: player.nickName
+																					}
+    </td>
+    <td className='game-action-table-bid-cell'>
+      <TextField
+        hintText={phaseName() + ': 0 - ' + props.maxBid}
+        onChange={() => this._handleBidChange()}
+																					/>
+    </td>
+  </tr>
+							)
+						)
+					}
+        </tbody>
+      </table>
+    )
+  }
+}
+

@@ -55,5 +55,7 @@ export type GameState = {
   currentPlayers: Array<CurrentPlayer>,
   gameRounds: Array<GameRound>,
   currentRound: number,
+  bidding: boolean,
+  playing: boolean,
   defaultPlayerSortOrder: number
 };
