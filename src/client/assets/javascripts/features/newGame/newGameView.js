@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { _head, _words } from 'lodash'
 
 import Dialog from 'material-ui/Dialog'
+import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 
@@ -26,16 +27,18 @@ const style = {
 export default class NewGameView extends Component {
 
 	_handleDoneButton() {
-		this.props.actions.initGameData()
 		this.props.actions.setBidding()
 	}
 
 	_handleModifyPlayerListButton() {
+		// Make sure the players are in correct order
 		this.props.actions.sortPlayers(this.props.gameStatus.defaultSortOrder)
 		
+		// Clear the dealer & bidder
 		this.props.actions.clearDealer()
 		this.props.actions.clearBidder()
 
+		// And head over to the add players view
 		this.props.history.push('/PlayersView')
 	}
 
@@ -67,10 +70,6 @@ export default class NewGameView extends Component {
 	}
 
 	render () {
-
-		const theMaxBid = () => (this.props.gameStatus.currentRound === INVALID_NUMERIC_VALUE) 
-															? 0
-															: this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handSize
 
 		const dialogActions = [
 			<FlatButton
@@ -147,19 +146,18 @@ export default class NewGameView extends Component {
 					/>
 					<div>
 						<Dialog
-							title="Dialog With Actions"
+							title="Bid Entry"
 							actions={dialogActions}
 							modal={true}
 							open={this.props.gameStatus.bidding}
 							autoScrollBodyContent={true}
 						>
-							<gameActionTable 
-								title="Bid Entry"
+							<GameActionTable 
 								players={this.props.gameStatus.playerRoster} 
 								actions={this.props.actions} 
 								sortOrder={this.props.gameStatus.defaultSortOrder} 
 								currentRound={this.props.gameStatus.currentRound}
-								maxBid={theMaxBid()}
+								maxBid={this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handsize}
 							/>
 						</Dialog>
 					</div>
@@ -168,10 +166,12 @@ export default class NewGameView extends Component {
 	}
 }
 
-class gameActionTable extends Component {
+
+
+
+class GameActionTable extends Component {
 
 	static propTypes = {
-		title: PropTypes.string.isRequired,
 		players: PropTypes.array.isRequired,
 		actions: PropTypes.object.isRequired,
 		sortOrder: PropTypes.number.isRequired,
@@ -180,52 +180,64 @@ class gameActionTable extends Component {
 	}
 
 
-  _handleBidChange() {
-    console.log('@@@@@@ Entered gameActionTable._handleBidChange')
-  }
+	_handleBidChange = (event) => {
+		console.log('@@@@@@ Entered GameActionTable._handleBidChange')
+		console.log('  event.target.value = \'' + event.target.value + '\'')
+	}
 
-  render() {
-    console.log('>>>>>> In gameActionTable.render, about to dump props')
-    console.log(props)
+	_handleBlur = (event) => {
+		const nv = event.target.value
+		const idx = event.target.getAttribute('data-item')
 
-    const phaseName = () => _.head(_.words(props.title))
-    
-    return (
-      <table className='game-action-table'>
-        <thead className='game-action-table-header'>
-          <tr className='game-action-table-super-header-row'>
-            <th className='game-action-table-super-header-cell'>
-              <h1>{props.title}</h1>
-            </th>
-          </tr>
-          <tr className='game-action-table-header-row'>
-            <th className='game-action-table-header-cell-left'>Player</th>
-            <th className='game-action-table-header-cell'>Bid</th>
-          </tr>
-        </thead>
-        <tbody className='game-action-table-body'>
-          { players.map((player, i) =>
+		console.log('****** Entered GameActionTable._handleBlur')
+		console.log('  player index = \'' + idx + '\'')
+		console.log('  player: ' + this.props.players[idx].id + ' ' + 
+			this.props.players[idx].firstName + ' ' + 
+			this.props.players[idx].lastName)
+		console.log('  value = \'' + nv + '\'')	
+	}
+
+	render() {
+
+		const phaseName = () => _.head(_.words(this.props.title))
+		
+		return (
+			<table className='game-action-table'>
+				<thead className='game-action-table-header'>
+					<tr className='game-action-table-header-row'>
+						<th className='game-action-table-header-cell-left'>Player</th>
+						<th className='game-action-table-header-cell'>Bid</th>
+					</tr>
+				</thead>
+				<tbody className='game-action-table-body'>
+					{ this.props.players.map((player, i) =>
 							(
-  <tr key={i} data-item={i} className='game-action-table-data-row'>
-    <td className='game-action-table-name-cell'>{
-																						(props.sortOrder === SORT_SPECIAL_1)
+	<tr key={i} className='game-action-table-data-row'>
+		<td className='game-action-table-name-cell'>{
+																						(this.props.sortOrder === SORT_SPECIAL_1)
 																							? player.firstName + ' ' + player.lastName
 																							: player.nickName
 																					}
-    </td>
-    <td className='game-action-table-bid-cell'>
-      <TextField
-        hintText={phaseName() + ': 0 - ' + props.maxBid}
-        onChange={() => this._handleBidChange()}
-																					/>
-    </td>
-  </tr>
+		</td>
+		<td className='game-action-table-bid-cell'>
+     <TextField
+				hintText={phaseName() + ': 0 - ' + this.props.maxBid + ' tricks'}
+				onChange={this._handleBidChange}
+				onBlur={this._handleBlur}
+				autoFocus={ (i === 0) ? true : false}
+				data-item={i} 
+			/>
+		</td>
+	</tr>
 							)
 						)
 					}
-        </tbody>
-      </table>
-    )
-  }
+				</tbody>
+			</table>
+		)
+	}
 }
+
+
+
 

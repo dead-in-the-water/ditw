@@ -26,7 +26,7 @@ const SET_BIDDING = 'redux-app/gameStatusUpdate/SET_BIDDING'
 const CLEAR_BIDDING = 'redux-app/gameStatusUpdate/CLEAR_BIDDING'
 const SET_PLAYING = 'redux-app/gameStatusUpdate/SET_PLAYING'
 const CLEAR_PLAYING = 'redux-app/gameStatusUpdate/CLEAR_PLAYING'
-
+const INIT_CURRENT_ROUND = 'redux-app/gameStatusUpdate/INIT_CURRENT_ROUND'
 export const INVALID_NUMERIC_VALUE = Number.MAX_SAFE_INTEGER
 
 // Sort options
@@ -376,7 +376,6 @@ export default function reducer(gameState: GameState = initialStatus, action: an
           dealer: curDealerIdx,
           bidder: curBidderIdx,
           handsize: curHandSize,
-
           results: players.map((player) => ({
             id: player.id,
             tricksBid: INVALID_NUMERIC_VALUE,
@@ -464,6 +463,12 @@ export default function reducer(gameState: GameState = initialStatus, action: an
         playing: false
       }
       
+    case INIT_CURRENT_ROUND:
+      return {
+        ...gameState,
+        currentRound: 0
+      }  
+
     default:
       return gameState
   }
@@ -643,6 +648,12 @@ function clearPlaying() {
   }
 }
 
+function initCurrentRound() {
+  return {
+    type: INIT_CURRENT_ROUND
+  }
+}
+
 // Selectors
 
 const gameStatus = (state) => state[NAME];
@@ -669,6 +680,7 @@ export const actionCreators = {
   setBidding,
   clearBidding,
   setPlaying,
-  clearPlaying
+  clearPlaying,
+  initCurrentRound
 }
 

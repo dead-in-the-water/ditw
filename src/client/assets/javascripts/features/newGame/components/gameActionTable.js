@@ -1,21 +1,21 @@
 import React, { Component, PropTypes } from 'react'
 import TextField from 'material-ui/TextField'
 
-export default class gameActionTable extends Component {
-	static propTypes = {
-		actions: PropTypes.object.isRequired,
-		players: PropTypes.array.isRequired,
-		rules: PropTypes.object.isRequired,
-		tableParms: PropTypes.object.isRequired,
-		round: PropTypes.number.isRequired
-	}
+export default class GameActionTable extends Component {
+  static propTypes = {
+    actions: PropTypes.object.isRequired,
+    players: PropTypes.array.isRequired,
+    rules: PropTypes.object.isRequired,
+    tableParms: PropTypes.object.isRequired,
+    round: PropTypes.number.isRequired
+  }
 
   _handleBidChange () {
-    console.log('@@@@@@ Entered gameActionTable._handleBidChange')
+    console.log('@@@@@@ Entered GameActionTable._handleBidChange')
   }
 
   render () {
-    console.log('>>>>>> In gameActionTable.render, about to dump props')
+    console.log('>>>>>> In GameActionTable.render, about to dump props')
     console.log(props)
 
     return (
@@ -33,24 +33,24 @@ export default class gameActionTable extends Component {
         </thead>
         <tbody className='game-action-table-body'>
           { props.playersRoster.map((player, i) =>
-							(
+              (
   <tr key={i} data-item={i} className='game-action-table-data-row'>
     <td className='game-action-table-name-cell'>{
-																						(tableParms.sortOrder === SORT_SPECIAL_1)
-																							? player.firstName + ' ' + player.lastName
-																							: player.nickName
-																					}
+                                            (tableParms.sortOrder === SORT_SPECIAL_1)
+                                              ? player.firstName + ' ' + player.lastName
+                                              : player.nickName
+                                          }
     </td>
     <td className='game-action-table-bid-cell'>
       <TextField
         hintText={tableParms.actionColHdr + ': 0 - ' + round.handSize}
         onChange={() => this._handleBidChange()}
-																					/>
+                                          />
     </td>
   </tr>
-							)
-						)
-					}
+              )
+            )
+          }
         </tbody>
       </table>
     )
