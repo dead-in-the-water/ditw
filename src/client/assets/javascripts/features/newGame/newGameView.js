@@ -158,6 +158,7 @@ export default class NewGameView extends Component {
 								sortOrder={this.props.gameStatus.defaultSortOrder} 
 								currentRound={this.props.gameStatus.currentRound}
 								maxBid={this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handsize}
+								verb='Bid'
 							/>
 						</Dialog>
 					</div>
@@ -167,8 +168,6 @@ export default class NewGameView extends Component {
 }
 
 
-
-
 class GameActionTable extends Component {
 
 	static propTypes = {
@@ -176,7 +175,8 @@ class GameActionTable extends Component {
 		actions: PropTypes.object.isRequired,
 		sortOrder: PropTypes.number.isRequired,
 		currentRound: PropTypes.number.isRequired,
-		maxBid: PropTypes.number.isRequired
+		maxBid: PropTypes.number.isRequired,
+		verb: PropTypes.string.isRequired
 	}
 
 
@@ -195,22 +195,25 @@ class GameActionTable extends Component {
 			this.props.players[idx].firstName + ' ' + 
 			this.props.players[idx].lastName)
 		console.log('  value = \'' + nv + '\'')	
+		console.log('  id = \'' + event.target.id + '\'')
+		console.log('  probing attributes')
+		console.log(event.target.attributes)
+		console.log('  probing getElement')
+		console.log(event.target.getElement())
 	}
 
 	render() {
-
-		const phaseName = () => _.head(_.words(this.props.title))
 		
 		return (
 			<table className='game-action-table'>
 				<thead className='game-action-table-header'>
 					<tr className='game-action-table-header-row'>
 						<th className='game-action-table-header-cell-left'>Player</th>
-						<th className='game-action-table-header-cell'>Bid</th>
+						<th className='game-action-table-header-cell'>{this.props.verb}</th>
 					</tr>
 				</thead>
 				<tbody className='game-action-table-body'>
-					{ this.props.players.map((player, i) =>
+					{ this.props.players.filter((player) => player.inThisGame).map((player, i) =>
 							(
 	<tr key={i} className='game-action-table-data-row'>
 		<td className='game-action-table-name-cell'>{
@@ -221,11 +224,12 @@ class GameActionTable extends Component {
 		</td>
 		<td className='game-action-table-bid-cell'>
      <TextField
-				hintText={phaseName() + ': 0 - ' + this.props.maxBid + ' tricks'}
+				hintText={this.props.verb + ': 0 - ' + this.props.maxBid + ' tricks'}
 				onChange={this._handleBidChange}
 				onBlur={this._handleBlur}
 				autoFocus={ (i === 0) ? true : false}
 				data-item={i} 
+				errorText={'Must be a number between 0 and ' + this.props.maxBid}
 			/>
 		</td>
 	</tr>
