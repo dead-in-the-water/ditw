@@ -5,9 +5,12 @@ import { bindActionCreators } from 'redux'
 import { _head, _words } from 'lodash'
 
 import Dialog from 'material-ui/Dialog'
-import TextField from 'material-ui/TextField'
+// import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
+
+// Trying out NoHomey's material-ui-number-input
+import { NumberInput, NumberInputChangeHandler, NumberInputError, EventValue, NumberInputErrorHandler, NumberInputValidHandler, NumberInputReqestValueHandller } from 'material-ui-number-input';
 
 import { SORT_SPECIAL_1, SORT_SPECIAL_2, INVALID_NUMERIC_VALUE } from '../homePage/homePage'
 import { actionCreators as gameStateActions, selector as gameStateSelector } from '../homePage/homePage'
@@ -179,31 +182,74 @@ class GameActionTable extends Component {
 		verb: PropTypes.string.isRequired
 	}
 
+		// private onKeyDown: React.KeyboardEventHandler;
+		// private onChange: NumberInputChangeHandler;
+		// private onError: NumberInputErrorHandler;
+		// private onValid: NumberInputValidHandler;
+		// private onRequestValue: NumberInputReqestValueHandller;
 
-	_handleBidChange = (event) => {
-		console.log('@@@@@@ Entered GameActionTable._handleBidChange')
-		console.log('  event.target.value = \'' + event.target.value + '\'')
+	_onKeyDown = (event: React.KeyboardEvent): void => {
+			console.log(`onKeyDown ${event.key}`)
 	}
 
-	_handleBlur = (event) => {
-		const nv = event.target.value
-		const idx = event.target.getAttribute('data-item')
+	_onChange = (event: React.FormEvent, value: string): void => {
+			console.log(' >>>>>> In GameActionTable._onChange')
 
-		console.log('****** Entered GameActionTable._handleBlur')
-		console.log('  player index = \'' + idx + '\'')
-		console.log('  player: ' + this.props.players[idx].id + ' ' + 
-			this.props.players[idx].firstName + ' ' + 
-			this.props.players[idx].lastName)
-		console.log('  value = \'' + nv + '\'')	
-		console.log('  id = \'' + event.target.id + '\'')
-		console.log('  probing attributes')
-		console.log(event.target.attributes)
-		console.log('  probing getElement')
-		console.log(event.target.getElement())
+			const e: EventValue = event
+			console.log(`onChange ${e.target.value}, ${value}`)
+
+			console.log('\n  about to decode the bid')
+			
+			const playerIdx = e.target.getAttribute('data-item')
+
+			console.log('    player index = ' + playerIdx)
+			console.log('    player is id: ' + this.props.players[playerIdx].id + ' - ' + this.props.players[playerIdx].firstName)
+			console.log('    round = ' + this.props.currentRound)
 	}
+
+	_onError = (error: NumberInputError): void => {
+			let errorText: string;
+			switch(error) {
+					case 'required':
+							errorText = 'This field is required'
+							break
+					case 'invalidSymbol':
+							errorText = 'You are tring to enter non-numeric symbol'
+							break
+					case 'incompleteNumber':
+							errorText = 'Number is incomplete'
+							break
+					case 'singleMinus':
+							errorText = 'Bids must be positive'
+							break
+					case 'singleFloatingPoint':
+							errorText = 'There is already a floating point'
+							break
+					case 'singleZero':
+							errorText = 'Floating point is expected'
+							break
+					case 'min':
+							errorText = 'You are tring to enter number less than 0'
+							break
+					case 'max':
+							errorText = 'You are tring to enter number greater than ' + this.props.maxBid
+							break
+			}
+	}
+
+	_onValid = (value: number): void => {
+			console.debug(`${value} is a valid number!`)
+	}
+
+	_onRequestValue = (value: string): void => {
+			console.log(`request ${JSON.stringify(value)}`)
+	}
+
 
 	render() {
 		
+		const myErrorText = ""
+
 		return (
 			<table className='game-action-table'>
 				<thead className='game-action-table-header'>
@@ -215,24 +261,33 @@ class GameActionTable extends Component {
 				<tbody className='game-action-table-body'>
 					{ this.props.players.filter((player) => player.inThisGame).map((player, i) =>
 							(
-	<tr key={i} className='game-action-table-data-row'>
-		<td className='game-action-table-name-cell'>{
-																						(this.props.sortOrder === SORT_SPECIAL_1)
-																							? player.firstName + ' ' + player.lastName
-																							: player.nickName
-																					}
-		</td>
-		<td className='game-action-table-bid-cell'>
-     <TextField
-				hintText={this.props.verb + ': 0 - ' + this.props.maxBid + ' tricks'}
-				onChange={this._handleBidChange}
-				onBlur={this._handleBlur}
-				autoFocus={ (i === 0) ? true : false}
-				data-item={i} 
-				errorText={'Must be a number between 0 and ' + this.props.maxBid}
-			/>
-		</td>
-	</tr>
+							<tr key={i} className='game-action-table-data-row'>
+								<td className='game-action-table-name-cell'>{
+																												(this.props.sortOrder === SORT_SPECIAL_1)
+																													? player.firstName + ' ' + player.lastName
+																													: player.nickName
+																											}
+								</td>
+								<td className='game-action-table-bid-cell'>
+									<NumberInput
+											id="bid"
+											required
+											min={0}
+											max={this.props.maxBid}
+											strategy="warn"
+											errorText={myErrorText}
+											onError={this._onError}
+											onValid={this._onValid}
+											onRequestValue={this._onRequestValue}
+											onChange={this._onChange}
+											onKeyDown={this._onKeyDown} 
+											autoFocus={ (i === 0) ? true : false}
+											hintText={'0 - ' + this.props.maxBid + ' tricks'}
+											defaultValue={0}
+											data-item={i}
+										/>
+								</td>
+							</tr>
 							)
 						)
 					}

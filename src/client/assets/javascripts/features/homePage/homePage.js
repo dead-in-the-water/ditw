@@ -427,11 +427,15 @@ export default function reducer(gameState: GameState = initialStatus, action: an
           }
           return {
             ...round,
-            results: round.results.map((result) => ({
-              id: action.id,
-              tricksBid: action.tricksBid,
-              tricksWon: INVALID_BID_SCORE
-            }))
+            results: round.results.map((result) => {
+              if (action.id !== result.id) {
+                return result
+              }
+              return {
+                ...result,
+                tricksBid: action.tricksBid,
+              }
+            })
           }
         })
       }
@@ -611,6 +615,7 @@ function initGameData() {
 function recordTricksBid(round, id, tricksBid) {
   return {
     type: RECORD_TRICKS_BID,
+    round,
     id,
     tricksBid
   }
@@ -619,6 +624,7 @@ function recordTricksBid(round, id, tricksBid) {
 function recordTricksWon(round, id, tricksWon) {
   return {
     type: RECORD_TRICKS_BID,
+    round,
     id,
     tricksWon
   }
