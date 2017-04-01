@@ -343,6 +343,32 @@ class AddChangePlayersButton extends Component {
 	}
 }
 
+
+THIS ISN'T INTEGRATED
+
+class StartBiddingButton extends Component {
+	static propTypes = {
+		currentRound: PropTypes.object.isRequired,
+		buttonAction: PropTypes.func.isRequired
+	}
+
+	render() {
+		// Only return objects to be rendered if we're ready to play
+		if (this.props.currentRound.results.filter ((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0) {
+			return (
+				<RaisedButton
+					label='xPlay'
+					primary
+					style={btnMarginStyle}
+					onTouchTap={() => this._handleAdvanceButton() }
+					/>
+			)
+		} else {
+			return null
+		}
+	}
+}
+
 class StartPlayingButton extends Component {
 	static propTypes = {
 		currentRound: PropTypes.object.isRequired,
