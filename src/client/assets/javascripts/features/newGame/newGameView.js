@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { _head, _words } from 'lodash'
-
+import findIndex from 'lodash/findIndex'
 import Dialog from 'material-ui/Dialog'
 // import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -19,7 +19,7 @@ import './gameTable.scss'
 import dealerIcon from './images/card_dealer_luigi.png'
 import bidderIcon from './images/three_fingers.png'
 
-const style = {
+const btnMarginStyle = {
 	margin: 12
 }
 
@@ -29,7 +29,7 @@ const style = {
 }))
 export default class NewGameView extends Component {
 
-	_handleDoneButton() {
+	_handleAdvanceButton() {
 		this.props.actions.setBidding()
 	}
 
@@ -50,26 +50,11 @@ export default class NewGameView extends Component {
 		this.props.history.push('/HomePageView')
 	}
 
-	_handleClose() {
-		this.props.actions.clearBidding()
-	}
-
-	renderList () {
-		return this.props.gameStatus.playerRoster.filter((player) => 
-			 player.inThisGame
-		).map((player, i) =>
-			(
-			<TableRow key={i} className='gametable-data-row'>
-				<TableRowColumn className='gametable-icon-cell'>
-					Icons
-				</TableRowColumn>
-				<TableRowColumn className='gametable-name-cell'>{player.firstName + ' ' + player.lastName}</TableRowColumn>
-				<TableRowColumn className='gametable-bid-cell'>0</TableRowColumn>
-				<TableRowColumn className='gametable-won-cell'>0</TableRowColumn>
-				<TableRowColumn className='gametable-score-cell'>0</TableRowColumn>
-			</TableRow>
-			)
-		)
+	_clearBids() {
+			this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.map((result, i) => {
+				this.props.actions.recordTricksBid(this.props.gameStatus.currentRound, result.id, INVALID_NUMERIC_VALUE)
+			})
+			this.props.actions.clearBidding()
 	}
 
 	render () {
@@ -78,25 +63,48 @@ export default class NewGameView extends Component {
 			<FlatButton
 				label="Cancel"
 				primary={true}
-				onTouchTap={this.props.actions.clearBidding}
+				onTouchTap={() => this.props.actions.clearBidding()}
 			/>,
 			<FlatButton
 				label="Submit"
 				primary={true}
 				disabled={true}
-				onTouchTap={this.props.actions.clearBidding}
+				onTouchTap={() => this._clearBids()}
 			/>
 		]
+
+		const playerIndexById = (id) => findIndex(this.props.gameStatus.playerRoster, { 'id': id })
+
+		const theDealerIdx = playerIndexById(this.props.gameStatus.currentDealer)
+
+		const sumOfBids = () => {
+			var bid = 0
+
+			for (var i = 0; i < this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.length; i++) {
+				if (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksBid !== INVALID_NUMERIC_VALUE) {
+					bid = bid + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksBid
+				}
+			}
+
+			return bid
+		}
+
+		const sumOfWon = () => {
+			var won = 0
+
+			for (var i = 0; i < this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.length; i++) {
+				if (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksWon !== INVALID_NUMERIC_VALUE) {
+					won = won + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksWon
+				}
+			}
+
+			return won
+		}
 
 		return (
 			<div className='container text-center'>
 				<table className='game-table'>
 					<thead className='game-table-header'>
-						<tr className='game-table-super-header-row'>
-							<th className='game-table-super-header-cell'>
-								<h1>New Game Setup</h1>
-							</th>
-						</tr>
 						<tr className='game-table-header-row'>
 							<th className='text-center'>Role</th>
 							<th className='game-table-header-cell-left'>Player</th>
@@ -132,24 +140,32 @@ export default class NewGameView extends Component {
 				<RaisedButton
 					label='Cancel'
 					primary={false}
-					style={style}
+					style={btnMarginStyle}
 					onTouchTap={() => this._handleCancelButton()}
 				/>
-				<RaisedButton
-					label={this.props.gameStatus.playerRoster.filter((player) => player.inThisGame).length > 0 ? 'Change players' : 'Add players'}
-					secondary={true}
-					style={style}
-					onTouchTap={() => this._handleModifyPlayerListButton()}
-					/>
+				<AddChangePlayersButton
+					players={this.props.gameStatus.playerRoster}
+					buttonAction={() => this._handleModifyPlayerListButton()}
+				/>
+				<StartPlayingButton
+					currentRound={ this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound] }
+					buttonAction={ () => this._handleAdvanceButton() }
+				/>
 				<RaisedButton
 					label='Start Game'
 					primary
-					style={style}
-					onTouchTap={() => this._handleDoneButton() }
+					style={btnMarginStyle}
+					onTouchTap={() => this._handleAdvanceButton() }
 					/>
 					<div>
 						<Dialog
-							title="Bid Entry"
+							title={
+								'Round ' + this.props.gameStatus.currentRound + ' bidding: ' +
+								((this.props.gameStatus.defaultSortOrder === SORT_SPECIAL_1) ?
+									this.props.gameStatus.playerRoster[theDealerIdx].firstName + ' ' + this.props.gameStatus.playerRoster[theDealerIdx].lastName :
+									this.props.gameStatus.playerRoster[theDealerIdx].nickName) + ' dealing ' +
+									this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handsize + ' cards'
+							}
 							actions={dialogActions}
 							modal={true}
 							open={this.props.gameStatus.bidding}
@@ -159,10 +175,17 @@ export default class NewGameView extends Component {
 								players={this.props.gameStatus.playerRoster} 
 								actions={this.props.actions} 
 								sortOrder={this.props.gameStatus.defaultSortOrder} 
-								currentRound={this.props.gameStatus.currentRound}
+								currentRoundIdx={this.props.gameStatus.currentRound}
+								currentRound={this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound]}
 								maxBid={this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handsize}
 								verb='Bid'
 							/>
+							<span>
+								{ 
+									((this.props.gameStatus.bidding) ? sumOfBids() : sumOfWon()) + '/' + 
+									this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handsize + ' tricks accounted for'
+								}
+							</span>
 						</Dialog>
 					</div>
 			</div>
@@ -177,7 +200,8 @@ class GameActionTable extends Component {
 		players: PropTypes.array.isRequired,
 		actions: PropTypes.object.isRequired,
 		sortOrder: PropTypes.number.isRequired,
-		currentRound: PropTypes.number.isRequired,
+		currentRoundIdx: PropTypes.number.isRequired,
+		currentRound: PropTypes.object.isRequired,
 		maxBid: PropTypes.number.isRequired,
 		verb: PropTypes.string.isRequired
 	}
@@ -188,23 +212,22 @@ class GameActionTable extends Component {
 		// private onValid: NumberInputValidHandler;
 		// private onRequestValue: NumberInputReqestValueHandller;
 
+_onBlur = (event: React.FocusEvent): void => {
+		const e: EventValue = event
+		const playerIdx = e.target.getAttribute('data-item')
+
+		this.props.actions.recordTricksBid(this.props.currentRoundIdx, this.props.players[playerIdx].id, parseInt(e.target.value))
+	}
+
 	_onKeyDown = (event: React.KeyboardEvent): void => {
-			console.log(`onKeyDown ${event.key}`)
+		const e: EventValue = event
+		console.debug(`onKeyDown ${event.key}`)
 	}
 
 	_onChange = (event: React.FormEvent, value: string): void => {
-			console.log(' >>>>>> In GameActionTable._onChange')
+		const e: EventValue = event
+		console.debug(`  onChange ${e.target.value}, ${value}`)	
 
-			const e: EventValue = event
-			console.log(`onChange ${e.target.value}, ${value}`)
-
-			console.log('\n  about to decode the bid')
-			
-			const playerIdx = e.target.getAttribute('data-item')
-
-			console.log('    player index = ' + playerIdx)
-			console.log('    player is id: ' + this.props.players[playerIdx].id + ' - ' + this.props.players[playerIdx].firstName)
-			console.log('    round = ' + this.props.currentRound)
 	}
 
 	_onError = (error: NumberInputError): void => {
@@ -235,6 +258,7 @@ class GameActionTable extends Component {
 							errorText = 'You are tring to enter number greater than ' + this.props.maxBid
 							break
 			}
+			console.debug('In GameActionTable._onError. Error msg = \'' + errorText + '\'')
 	}
 
 	_onValid = (value: number): void => {
@@ -242,7 +266,7 @@ class GameActionTable extends Component {
 	}
 
 	_onRequestValue = (value: string): void => {
-			console.log(`request ${JSON.stringify(value)}`)
+			console.debug(`request ${JSON.stringify(value)}`)
 	}
 
 
@@ -263,14 +287,14 @@ class GameActionTable extends Component {
 							(
 							<tr key={i} className='game-action-table-data-row'>
 								<td className='game-action-table-name-cell'>{
-																												(this.props.sortOrder === SORT_SPECIAL_1)
+																												((this.props.sortOrder === SORT_SPECIAL_1)
 																													? player.firstName + ' ' + player.lastName
-																													: player.nickName
+																													: player.nickName)
 																											}
 								</td>
 								<td className='game-action-table-bid-cell'>
 									<NumberInput
-											id="bid"
+											id={'record-' + this.props.verb + '-' + i}
 											required
 											min={0}
 											max={this.props.maxBid}
@@ -283,8 +307,11 @@ class GameActionTable extends Component {
 											onKeyDown={this._onKeyDown} 
 											autoFocus={ (i === 0) ? true : false}
 											hintText={'0 - ' + this.props.maxBid + ' tricks'}
-											defaultValue={0}
+											defaultValue={
+												((this.props.currentRound.results[i].tricksBid !== INVALID_NUMERIC_VALUE) ?
+													this.props.currentRound.results[i].tricksBid : 0) }
 											data-item={i}
+											onBlur={this._onBlur}
 										/>
 								</td>
 							</tr>
@@ -298,5 +325,43 @@ class GameActionTable extends Component {
 }
 
 
+class AddChangePlayersButton extends Component {
+	static propTypes = {
+		players: PropTypes.array.isRequired,
+		buttonAction: PropTypes.func.isRequired
+	}
 
+	render() {
+		return (
+				<RaisedButton
+					label={this.props.players.filter((player) => player.inThisGame).length > 0 ? 'Change players' : 'Add players'}
+					secondary={true}
+					style={btnMarginStyle}
+					onTouchTap={this.props.buttonAction}
+				/>
+		)
+	}
+}
 
+class StartPlayingButton extends Component {
+	static propTypes = {
+		currentRound: PropTypes.object.isRequired,
+		buttonAction: PropTypes.func.isRequired
+	}
+
+	render() {
+		// Only return objects to be rendered if we're ready to play
+		if (this.props.currentRound.results.filter ((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0) {
+			return (
+				<RaisedButton
+					label='xPlay'
+					primary
+					style={btnMarginStyle}
+					onTouchTap={() => this._handleAdvanceButton() }
+					/>
+			)
+		} else {
+			return null
+		}
+	}
+}
