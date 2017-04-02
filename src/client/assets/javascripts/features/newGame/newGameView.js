@@ -4,11 +4,12 @@ import { bindActionCreators } from 'redux'
 
 import { _head, _words } from 'lodash'
 import findIndex from 'lodash/findIndex'
+
 import Dialog from 'material-ui/Dialog'
-// import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
-
+import PrevRoundIcon from 'material-ui/svg-icons/av/fast-rewind'
+import NextRoundIcon from 'material-ui/svg-icons/av/fast-forward'
 // Trying out NoHomey's material-ui-number-input
 import { NumberInput, NumberInputChangeHandler, NumberInputError, EventValue, NumberInputErrorHandler, NumberInputValidHandler, NumberInputReqestValueHandller } from 'material-ui-number-input';
 
@@ -29,7 +30,7 @@ const btnMarginStyle = {
 }))
 export default class NewGameView extends Component {
 
-	_handleAdvanceButton() {
+	_handleBidButton() {
 		this.props.actions.setBidding()
 	}
 
@@ -59,26 +60,20 @@ export default class NewGameView extends Component {
 
 	render () {
 
-		const dialogActions = [
-			<FlatButton
-				label="Cancel"
-				primary={true}
-				onTouchTap={() => this.props.actions.clearBidding()}
-			/>,
-			<FlatButton
-				label="Submit"
-				primary={true}
-				disabled={true}
-				onTouchTap={() => this._clearBids()}
-			/>
-		]
-
-		console.debug('====== In NewGameView.render')
-
+		// Find the index into playerRoster for passed player id
 		const playerIndexById = (id) => findIndex(this.props.gameStatus.playerRoster, { 'id': id })
 
+		// Find the index into playerRoster for current dealer
 		const theDealerIdx = playerIndexById(this.props.gameStatus.currentDealer)
 
+		// Test if there are valid bids for all players in current round
+		const allBidsIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.filter((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0)
+
+		console.log('****** allBidsIn = \'' + allBidsIn + '\'')
+
+		const allScoresIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.filter((result) => result.tricksWon === INVALID_NUMERIC_VALUE).length === 0)
+
+		// Sum all entered bids (for display of over- / under-subscription + option for implementing 'screw the dealer' rule)
 		const sumOfBids = () => {
 			var bid = 0
 
@@ -87,10 +82,10 @@ export default class NewGameView extends Component {
 					bid = bid + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksBid
 				}
 			}
-
 			return bid
 		}
 
+		// Sum of all tricks won in current round (to support display status)
 		const sumOfWon = () => {
 			var won = 0
 
@@ -99,16 +94,33 @@ export default class NewGameView extends Component {
 					won = won + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksWon
 				}
 			}
-
 			return won
 		}
 
-
+		// Get short handle for the current round object
 		const playerRound = (playerRosterIdx) => this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[playerRosterIdx]
 
+		// Shorthand for dealing with potential INVALID_NUMERIC_VALUE in display
 		const validOrZero = (numericVal) => ((numericVal === INVALID_NUMERIC_VALUE) ? '-' : numericVal)
 
+		// Calculate score for a given player id
 		const calcScore = (playerRosterIdx) => '???'
+
+		// Buttons for bid & score dialogs
+		const dialogActions = [
+			<FlatButton
+				label="Cancel"
+				secondary={true}
+				onTouchTap={() => this._clearBids()}
+			/>,
+			<FlatButton
+				label="Submit"
+				primary={true}
+				disabled={!allBidsIn}
+				onTouchTap={() => this.props.actions.clearBidding()}
+			/>
+		]
+
 
 		return (
 			<div className='container text-center'>
@@ -143,29 +155,47 @@ export default class NewGameView extends Component {
 								)
 							)
 						}
+						<tr>
+							<td colSpan='5'>
+								<RaisedButton
+									label='Prev'
+									primary={false}
+									style={btnMarginStyle}
+									icon={<PrevRoundIcon />}
+									disabled={this.props.gameStatus.currentRound === 0}
+								/>
+								<ChangePlayersButton
+									currentRoundIdx={this.props.gameStatus.currentRoundIdx}
+									bidsComplete={allBidsIn}
+									buttonAction={ () => this._handleModifyPlayerListButton() }
+								/>
+								<RaisedButton
+									label='Bid'
+									primary={!allBidsIn}
+									secondary={allBidsIn}
+									style={btnMarginStyle}
+									onTouchTap={() => this._handleBidButton() }
+									/>
+								<RaisedButton
+									label='Score'
+									primary={!allScoresIn}
+									secondary={allScoresIn}
+									style={btnMarginStyle}
+									disabled={!allBidsIn}
+									/>
+								<RaisedButton
+									label='Next'
+									labelPosition='before'
+									primary={false}
+									style={btnMarginStyle}
+									disabled={!allScoresIn}
+									icon={<NextRoundIcon />}
+								/>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 
-				<RaisedButton
-					label='Cancel'
-					primary={false}
-					style={btnMarginStyle}
-					onTouchTap={() => this._handleCancelButton()}
-				/>
-				<AddChangePlayersButton
-					players={this.props.gameStatus.playerRoster}
-					buttonAction={ () => this._handleModifyPlayerListButton() }
-				/>
-				<RaisedButton
-					label='Bid'
-					primary
-					style={btnMarginStyle}
-					onTouchTap={() => this._handleAdvanceButton() }
-					/>
-				<StartPlayingButton
-					currentRound={ this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound] }
-					buttonAction={ () => this._handleAdvanceButton() }
-				/>
 					<div>
 						<Dialog
 							title={
@@ -333,41 +363,26 @@ _onBlur = (event: React.FocusEvent): void => {
 	}
 }
 
-
-class AddChangePlayersButton extends Component {
-	static propTypes = {
-		players: PropTypes.array.isRequired,
-		buttonAction: PropTypes.func.isRequired
-	}
-
-	render() {
-		return (
-				<RaisedButton
-					label={this.props.players.filter((player) => player.inThisGame).length > 0 ? 'Edit player list' : 'Add players'}
-					secondary={true}
-					style={btnMarginStyle}
-					onTouchTap={this.props.buttonAction}
-				/>
-		)
-	}
-}
-
-class StartPlayingButton extends Component {
-	static propTypes = {
-		currentRound: PropTypes.object.isRequired,
-		buttonAction: PropTypes.func.isRequired
-	}
+class ChangePlayersButton extends Component {
+	// static propTypes = {
+	// 	currentRoundIdx: PropTypes.number.isRequired,
+	// 	bidsComplete: PropTypes.boolean.isRequired,
+	// 	buttonAction: PropTypes.func.isRequired
+	// }
 
 	render() {
-		// Only return objects to be rendered if we're ready to play
-		if (this.props.currentRound.results.filter((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0) {
+		// Only return objects to be rendered if it's still okay to change player list
+		// This takes 2 conditions because I allow player list changes until bidding complete
+		// in round 0
+		if ((this.props.currentRoundIdx === 0) && (!this.props.bidsComplete)) {
 			return (
 				<RaisedButton
-					label='Play'
-					primary
+					label='Players'
+					secondary={true}
 					style={btnMarginStyle}
-					onTouchTap={this.props.buttonAction}
-					/>
+					disabled={false}
+					onTouchTap={() => this.props.buttonAction() }
+				/>
 			)
 		} else {
 			return null
