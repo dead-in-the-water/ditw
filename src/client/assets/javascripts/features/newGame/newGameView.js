@@ -73,6 +73,8 @@ export default class NewGameView extends Component {
 			/>
 		]
 
+		console.debug('====== In NewGameView.render')
+
 		const playerIndexById = (id) => findIndex(this.props.gameStatus.playerRoster, { 'id': id })
 
 		const theDealerIdx = playerIndexById(this.props.gameStatus.currentDealer)
@@ -101,6 +103,13 @@ export default class NewGameView extends Component {
 			return won
 		}
 
+
+		const playerRound = (playerRosterIdx) => this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[playerRosterIdx]
+
+		const validOrZero = (numericVal) => ((numericVal === INVALID_NUMERIC_VALUE) ? '-' : numericVal)
+
+		const calcScore = (playerRosterIdx) => '???'
+
 		return (
 			<div className='container text-center'>
 				<table className='game-table'>
@@ -127,9 +136,9 @@ export default class NewGameView extends Component {
 														player.nickName
 											}
 										</td>
-										<td className='game-table-bid-cell'>0</td>
-										<td className='game-table-won-cell'>0</td>
-										<td className='game-table-score-cell'>0</td>
+										<td className='game-table-bid-cell'>{ validOrZero(playerRound(i).tricksBid) }</td>
+										<td className='game-table-won-cell'>{ validOrZero(playerRound(i).tricksWon) }</td>
+										<td className='game-table-score-cell'>{ calcScore(i) }</td>
 									</tr>
 								)
 							)
@@ -145,18 +154,18 @@ export default class NewGameView extends Component {
 				/>
 				<AddChangePlayersButton
 					players={this.props.gameStatus.playerRoster}
-					buttonAction={() => this._handleModifyPlayerListButton()}
-				/>
-				<StartPlayingButton
-					currentRound={ this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound] }
-					buttonAction={ () => this._handleAdvanceButton() }
+					buttonAction={ () => this._handleModifyPlayerListButton() }
 				/>
 				<RaisedButton
-					label='Start Game'
+					label='Bid'
 					primary
 					style={btnMarginStyle}
 					onTouchTap={() => this._handleAdvanceButton() }
 					/>
+				<StartPlayingButton
+					currentRound={ this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound] }
+					buttonAction={ () => this._handleAdvanceButton() }
+				/>
 					<div>
 						<Dialog
 							title={
@@ -334,38 +343,12 @@ class AddChangePlayersButton extends Component {
 	render() {
 		return (
 				<RaisedButton
-					label={this.props.players.filter((player) => player.inThisGame).length > 0 ? 'Change players' : 'Add players'}
+					label={this.props.players.filter((player) => player.inThisGame).length > 0 ? 'Edit player list' : 'Add players'}
 					secondary={true}
 					style={btnMarginStyle}
 					onTouchTap={this.props.buttonAction}
 				/>
 		)
-	}
-}
-
-
-THIS ISN'T INTEGRATED
-
-class StartBiddingButton extends Component {
-	static propTypes = {
-		currentRound: PropTypes.object.isRequired,
-		buttonAction: PropTypes.func.isRequired
-	}
-
-	render() {
-		// Only return objects to be rendered if we're ready to play
-		if (this.props.currentRound.results.filter ((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0) {
-			return (
-				<RaisedButton
-					label='xPlay'
-					primary
-					style={btnMarginStyle}
-					onTouchTap={() => this._handleAdvanceButton() }
-					/>
-			)
-		} else {
-			return null
-		}
 	}
 }
 
@@ -377,13 +360,13 @@ class StartPlayingButton extends Component {
 
 	render() {
 		// Only return objects to be rendered if we're ready to play
-		if (this.props.currentRound.results.filter ((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0) {
+		if (this.props.currentRound.results.filter((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0) {
 			return (
 				<RaisedButton
-					label='xPlay'
+					label='Play'
 					primary
 					style={btnMarginStyle}
-					onTouchTap={() => this._handleAdvanceButton() }
+					onTouchTap={this.props.buttonAction}
 					/>
 			)
 		} else {
