@@ -13,22 +13,21 @@ import AdminView from 'features/administration/adminView'
 import ChangeClubView from 'features/changeClub/changeClubView'
 import HelpView from 'features/help/helpView'
 import PlayersView from 'features/players/components/PlayersView'
-import BidEntryView from 'features/newGame/components/bidEntryView'
 
 export default (store) => {
   const authRequired = (nextState, replaceState) => {
-    // Now you can access the store object here.
+		// Now you can access the store object here.
     const state = store.getState()
 
     if (!state.gameState.currentUser.loggedIn) {
-      // Not authenticated, redirect to login.
+			// Not authenticated, redirect to login.
       replaceState({ nextPathname: nextState.location.pathname }, '/')
     }
 
-    // Special handling for transitions to NewGameView when no players are yet marked in the game
-    // In that case, go directly to the player selection view
+		// Special handling for transitions to NewGameView when no players are yet marked in the game
+		// In that case, go directly to the player selection view
     if ((state.routing.locationBeforeTransitions.pathname === '/NewGameView') &&
-      (state.gameState.playerRoster.filter((player) => (player.inThisGame)).length === 0)) {
+			(state.gameState.playerRoster.filter((player) => (player.inThisGame)).length === 0)) {
       replaceState({ nextPathname: nextState.location.pathname }, '/PlayersView')
     }
   }
@@ -38,7 +37,6 @@ export default (store) => {
       <IndexRoute component={HomePageView} />
       <Route path='HomePageView' component={HomePageView} />
       <Route path='NewGameView' component={NewGameView} onEnter={authRequired} />
-      <Route path='BidEntryView' component={BidEntryView} onEnter={authRequired} />
       <Route path='SaveGameView' component={SaveGameView} onEnter={authRequired} />
       <Route path='LoadGameView' component={LoadGameView} onEnter={authRequired} />
       <Route path='AdminView' component={AdminView} onEnter={authRequired} />

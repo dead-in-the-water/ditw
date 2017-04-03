@@ -32,7 +32,7 @@ export default class PlayersView extends Component {
     // Player in last ordinal position is first dealer
     this.props.actions.setDealer(_.nth(activePlayers, -1).id)
     this.props.actions.initGameData()
-    this.props.actions.initCurrentRound()
+    this.props.actions.initCurrentRoundIdx()
     this.props.history.push('/NewGameView')
   }
 

@@ -27,6 +27,7 @@ const CLEAR_BIDDING = 'redux-app/gameStatusUpdate/CLEAR_BIDDING'
 const SET_PLAYING = 'redux-app/gameStatusUpdate/SET_PLAYING'
 const CLEAR_PLAYING = 'redux-app/gameStatusUpdate/CLEAR_PLAYING'
 const INIT_CURRENT_ROUND = 'redux-app/gameStatusUpdate/INIT_CURRENT_ROUND'
+const RELATIVE_CHANGE_CURRENT_ROUND = 'redux-app/gameStatusUpdate/RELATIVE_CHANGE_CURRENT_ROUND'
 export const INVALID_NUMERIC_VALUE = Number.MAX_SAFE_INTEGER
 
 // Sort options
@@ -54,7 +55,7 @@ const initialStatus: GameState = {
 	},
 	currentDealer: INVALID_NUMERIC_VALUE,
 	currentBidder: INVALID_NUMERIC_VALUE,
-	currentRound: INVALID_NUMERIC_VALUE,
+	currentRoundIdx: INVALID_NUMERIC_VALUE,
 	bidding: false,
 	playing: false,
 	currentRuleSet: {
@@ -433,7 +434,7 @@ export default function reducer(gameState: GameState = initialStatus, action: an
 							}
 							return {
 								...result,
-								tricksBid: action.tricksBid,
+								tricksBid: action.tricksBid
 							}
 						})
 					}
@@ -441,7 +442,26 @@ export default function reducer(gameState: GameState = initialStatus, action: an
 			}
 
 		case RECORD_TRICKS_WON:
-			return gameState
+			return {
+				...gameState,
+				gameRounds: gameState.gameRounds.map((round, i) => {
+					if (i !== action.round) {
+						return round
+					}
+					return {
+						...round,
+						results: round.results.map((result) => {
+							if (action.id !== result.id) {
+								return result
+							}
+							return {
+								...result,
+								tricksWon: action.tricksWon
+							}
+						})
+					}
+				})
+			}
 
 		case SET_BIDDING:
 			return {
@@ -470,7 +490,13 @@ export default function reducer(gameState: GameState = initialStatus, action: an
 		case INIT_CURRENT_ROUND:
 			return {
 				...gameState,
-				currentRound: 0
+				currentRoundIdx: 0
+			}  
+
+		case RELATIVE_CHANGE_CURRENT_ROUND:
+			return {
+				...gameState,
+				currentRoundIdx: (gameState.currentRoundIdx + action.relativeChange)
 			}  
 
 		default:
@@ -623,7 +649,7 @@ function recordTricksBid(round, id, tricksBid) {
 
 function recordTricksWon(round, id, tricksWon) {
 	return {
-		type: RECORD_TRICKS_BID,
+		type: RECORD_TRICKS_WON,
 		round,
 		id,
 		tricksWon
@@ -654,9 +680,16 @@ function clearPlaying() {
 	}
 }
 
-function initCurrentRound() {
+function initCurrentRoundIdx() {
 	return {
 		type: INIT_CURRENT_ROUND
+	}
+}
+
+function relativeChangeCurrentRoundIdx(relativeChange) {
+	return {
+		type: RELATIVE_CHANGE_CURRENT_ROUND,
+		relativeChange
 	}
 }
 
@@ -687,6 +720,7 @@ export const actionCreators = {
 	clearBidding,
 	setPlaying,
 	clearPlaying,
-	initCurrentRound
+	initCurrentRoundIdx,
+	relativeChangeCurrentRoundIdx
 }
 

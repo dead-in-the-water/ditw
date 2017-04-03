@@ -86,6 +86,7 @@ export default class HomePageView extends Component {
 								primaryText='Quit game'
 								leftIcon={<CloseGameIcon />}
 								disabled={!this.props.gameStatus.currentUser.loggedIn}
+								onTouchTap={() => alert('Not implemented yet')}
 							/>
 						</IconMenu>
 					}

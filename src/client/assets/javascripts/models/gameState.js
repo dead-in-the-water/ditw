@@ -54,7 +54,7 @@ export type GameState = {
   playerRoster: Array<PlayerTopLevel>,
   currentPlayers: Array<CurrentPlayer>,
   gameRounds: Array<GameRound>,
-  currentRound: number,
+  currentRoundIdx: number,
   bidding: boolean,
   playing: boolean,
   defaultPlayerSortOrder: number

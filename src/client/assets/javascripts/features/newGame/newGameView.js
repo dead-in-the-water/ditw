@@ -34,6 +34,10 @@ export default class NewGameView extends Component {
 		this.props.actions.setBidding()
 	}
 
+	_handleScoreButton() {
+		this.props.actions.setPlaying()
+	}
+
 	_handleModifyPlayerListButton() {
 		// Make sure the players are in correct order
 		this.props.actions.sortPlayers(this.props.gameStatus.defaultSortOrder)
@@ -51,13 +55,6 @@ export default class NewGameView extends Component {
 		this.props.history.push('/HomePageView')
 	}
 
-	_clearBids() {
-			this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.map((result, i) => {
-				this.props.actions.recordTricksBid(this.props.gameStatus.currentRound, result.id, INVALID_NUMERIC_VALUE)
-			})
-			this.props.actions.clearBidding()
-	}
-
 	render () {
 
 		// Find the index into playerRoster for passed player id
@@ -67,20 +64,23 @@ export default class NewGameView extends Component {
 		const theDealerIdx = playerIndexById(this.props.gameStatus.currentDealer)
 
 		// Test if there are valid bids for all players in current round
-		const allBidsIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.filter((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0)
+		const allBidsIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results.filter((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0)
 
 		console.log('>>>>>> allBidsIn        = \'' + allBidsIn + '\'')
 		console.log('       typeof allBidsIn = \'' + typeof allBidsIn + '\'')
 
-		const allScoresIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.filter((result) => result.tricksWon === INVALID_NUMERIC_VALUE).length === 0)
+		const allScoresIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results.filter((result) => result.tricksWon === INVALID_NUMERIC_VALUE).length === 0)
+
+		console.log('>>>>>> allScoresIn        = \'' + allScoresIn + '\'')
+		console.log('       typeof allScoresIn = \'' + typeof allScoresIn + '\'')
 
 		// Sum all entered bids (for display of over- / under-subscription + option for implementing 'screw the dealer' rule)
 		const sumOfBids = () => {
 			var bid = 0
 
-			for (var i = 0; i < this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.length; i++) {
-				if (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksBid !== INVALID_NUMERIC_VALUE) {
-					bid = bid + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksBid
+			for (var i = 0; i < this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results.length; i++) {
+				if (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[i].tricksBid !== INVALID_NUMERIC_VALUE) {
+					bid = bid + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[i].tricksBid
 				}
 			}
 			return bid
@@ -90,16 +90,16 @@ export default class NewGameView extends Component {
 		const sumOfWon = () => {
 			var won = 0
 
-			for (var i = 0; i < this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.length; i++) {
-				if (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksWon !== INVALID_NUMERIC_VALUE) {
-					won = won + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[i].tricksWon
+			for (var i = 0; i < this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results.length; i++) {
+				if (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[i].tricksWon !== INVALID_NUMERIC_VALUE) {
+					won = won + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[i].tricksWon
 				}
 			}
 			return won
 		}
 
 		// Get short handle for the current round object
-		const playerRound = (playerRosterIdx) => this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results[playerRosterIdx]
+		const playerRound = (playerRosterIdx) => this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[playerRosterIdx]
 
 		// Shorthand for dealing with potential INVALID_NUMERIC_VALUE in display
 		const validOrZero = (numericVal) => ((numericVal === INVALID_NUMERIC_VALUE) ? '-' : numericVal)
@@ -121,7 +121,6 @@ export default class NewGameView extends Component {
 				onTouchTap={() => this.props.actions.clearBidding()}
 			/>
 		]
-
 
 		return (
 			<div className='container text-center'>
@@ -159,13 +158,15 @@ export default class NewGameView extends Component {
 						<tr>
 							<td colSpan='5'>
 								<ChangeCurrentRoundButton
-									currentRoundIdx={ this.props.gameStatus.currentRound }
+									currentRoundIdx={ this.props.gameStatus.currentRoundIdx }
 									relativeChange={ -1 }
 									actions={ this.props.actions }
+									disabled={ this.props.gameStatus.currentRoundIdx === 0 }
+									primary={ false }
 								/>
 								<ChangePlayersButton 
-									currentRoundIdx={ this.props.gameStatus.currentRound }
-									bidsComplete={ allBidsIn }
+									currentRoundIdx={ this.props.gameStatus.currentRoundIdx }
+									biddingComplete={ allBidsIn }
 									buttonAction={ () => this._handleModifyPlayerListButton() }
 								/>
 								<RaisedButton
@@ -181,47 +182,26 @@ export default class NewGameView extends Component {
 									secondary={ allScoresIn }
 									style={ btnMarginStyle }
 									disabled={ !allBidsIn }
-									/>
+									onTouchTap={ () => this._handleScoreButton() }
+								/>
 								<ChangeCurrentRoundButton
-									currentRoundIdx={ this.props.gameStatus.currentRound }
+									currentRoundIdx={ this.props.gameStatus.currentRoundIdx }
 									relativeChange={ 1 }
 									actions={ this.props.actions }
+									disabled={ !allScoresIn }
+									primary={ allScoresIn }
 								/>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-
 					<div>
-						<Dialog
-							title={
-								'Round ' + this.props.gameStatus.currentRound + ' bidding: ' +
-								((this.props.gameStatus.defaultSortOrder === SORT_SPECIAL_1) ?
-									this.props.gameStatus.playerRoster[theDealerIdx].firstName + ' ' + this.props.gameStatus.playerRoster[theDealerIdx].lastName :
-									this.props.gameStatus.playerRoster[theDealerIdx].nickName) + ' dealing ' +
-									this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handsize + ' cards'
-							}
-							actions={dialogActions}
-							modal={true}
-							open={this.props.gameStatus.bidding}
-							autoScrollBodyContent={true}
-						>
-							<GameActionTable 
-								players={this.props.gameStatus.playerRoster} 
-								actions={this.props.actions} 
-								sortOrder={this.props.gameStatus.defaultSortOrder} 
-								currentRoundIdx={this.props.gameStatus.currentRound}
-								currentRound={this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound]}
-								maxBid={this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handsize}
-								verb='Bid'
-							/>
-							<span>
-								{ 
-									((this.props.gameStatus.bidding) ? sumOfBids() : sumOfWon()) + '/' + 
-									this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].handsize + ' tricks accounted for'
-								}
-							</span>
-						</Dialog>
+						<GameActionDialog
+							{ ...this.props.gameStatus }
+							biddingComplete={ allBidsIn }
+							scoringComplete={ allScoresIn }
+							actions={ this.props.actions }
+						/>
 					</div>
 			</div>
 		)
@@ -238,7 +218,8 @@ class GameActionTable extends Component {
 		currentRoundIdx: PropTypes.number.isRequired,
 		currentRound: PropTypes.object.isRequired,
 		maxBid: PropTypes.number.isRequired,
-		verb: PropTypes.string.isRequired
+		doBidding: PropTypes.bool,
+		doScoring: PropTypes.bool
 	}
 
 		// private onKeyDown: React.KeyboardEventHandler;
@@ -251,7 +232,11 @@ _onBlur = (event: React.FocusEvent): void => {
 		const e: EventValue = event
 		const playerIdx = e.target.getAttribute('data-item')
 
-		this.props.actions.recordTricksBid(this.props.currentRoundIdx, this.props.players[playerIdx].id, parseInt(e.target.value))
+		if (this.props.doBidding) {
+			this.props.actions.recordTricksBid(this.props.currentRoundIdx, this.props.players[playerIdx].id, parseInt(e.target.value))
+		} else {
+			this.props.actions.recordTricksWon(this.props.currentRoundIdx, this.props.players[playerIdx].id, parseInt(e.target.value))
+		}
 	}
 
 	_onKeyDown = (event: React.KeyboardEvent): void => {
@@ -307,14 +292,19 @@ _onBlur = (event: React.FocusEvent): void => {
 
 	render() {
 		
+		console.log('###### In GameActionTable.render, about to dump props')
+		console.log(this.props)
+
 		const myErrorText = ""
+
+		const validOrZero = (numericVal) => ((numericVal === INVALID_NUMERIC_VALUE) ? 0 : numericVal)
 
 		return (
 			<table className='game-action-table'>
 				<thead className='game-action-table-header'>
 					<tr className='game-action-table-header-row'>
 						<th className='game-action-table-header-cell-left'>Player</th>
-						<th className='game-action-table-header-cell'>{this.props.verb}</th>
+						<th className='game-action-table-header-cell'>{ ((this.props.doBidding) ? 'Bidding' : 'Scoring') }</th>
 					</tr>
 				</thead>
 				<tbody className='game-action-table-body'>
@@ -329,7 +319,7 @@ _onBlur = (event: React.FocusEvent): void => {
 								</td>
 								<td className='game-action-table-bid-cell'>
 									<NumberInput
-											id={'record-' + this.props.verb + '-' + i}
+											id={'record-' + ((this.props.doBidding) ? 'bid' : 'score') + '-' + this.props.currentRoundIdx + '-' + player.id}
 											required
 											min={0}
 											max={this.props.maxBid}
@@ -342,9 +332,9 @@ _onBlur = (event: React.FocusEvent): void => {
 											onKeyDown={this._onKeyDown} 
 											autoFocus={ (i === 0) ? true : false}
 											hintText={'0 - ' + this.props.maxBid + ' tricks'}
-											defaultValue={
-												((this.props.currentRound.results[i].tricksBid !== INVALID_NUMERIC_VALUE) ?
-													this.props.currentRound.results[i].tricksBid : 0) }
+											defaultValue={ (this.props.doBidding ?
+												validOrZero(this.props.currentRound.results[i].tricksBid) :
+												validOrZero(this.props.currentRound.results[i].tricksWon))}
 											data-item={i}
 											onBlur={this._onBlur}
 										/>
@@ -359,24 +349,102 @@ _onBlur = (event: React.FocusEvent): void => {
 	}
 }
 
+class GameActionDialog extends Component {
+	static propTypes = {
+		gameRounds: PropTypes.array,
+		currentRoundIdx: PropTypes.number,
+		playing: PropTypes.bool,
+		bidding: PropTypes.bool,
+		biddingComplete: PropTypes.bool,
+		scoringComplete: PropTypes.bool,
+		actions: PropTypes.object
+	}
+
+	_clearBids() {
+			this.props.gameRounds[this.props.currentRoundIdx].results.map((result, i) => {
+				this.props.actions.recordTricksBid(this.props.currentRoundIdx, result.id, INVALID_NUMERIC_VALUE)
+			})
+			this.props.actions.clearBidding()
+	}
+
+	_clearScores() {
+			this.props.gameRounds[this.props.currentRoundIdx].results.map((result, i) => {
+				this.props.actions.recordTricksBid(this.props.currentRoundIdx, result.id, INVALID_NUMERIC_VALUE)
+			})
+			this.props.actions.clearPlaying()
+	}
+
+	render() {
+
+		console.log('%%%%%% In GameActionDialog, dumping props')
+		console.log(this.props)
+
+		const dialogActions = [
+			<FlatButton
+				label="Cancel"
+				secondary={ true }
+				onTouchTap={ ((this.props.bidding) ?
+					() => this._clearBids() :
+					() => this._clearScores())
+				}
+			/>,
+			<FlatButton
+				label="Submit"
+				primary={ true }
+				disabled={ ((this.props.bidding) ?
+					!this.props.biddingComplete :
+					!this.props.scoringComplete)
+				}
+				onTouchTap={ ((this.props.bidding) ?
+					() => this.props.actions.clearBidding() :
+					() => this.props.actions.clearPlaying())
+				}
+			/>
+		]
+
+		const okayToOpen = this.props.bidding || this.props.playing
+
+		return (
+			<Dialog
+				title={ (this.props.bidding ? 'Bidding' : 'Scoring') + ': Round ' + (this.props.currentRoundIdx + 1) }
+				actions={ dialogActions }
+				modal={ true }
+				open={ okayToOpen }
+				autoScrollBodyContent={ true }
+			>
+				<GameActionTable 
+					players={this.props.playerRoster} 
+					actions={this.props.actions} 
+					sortOrder={this.props.defaultSortOrder} 
+					currentRoundIdx={this.props.currentRoundIdx}
+					currentRound={this.props.gameRounds[this.props.currentRoundIdx]}
+					maxBid={this.props.gameRounds[this.props.currentRoundIdx].handsize}
+					doBidding={ this.props.bidding }
+					doScoring={ this.props.scoring }
+				/>
+			</Dialog>		
+		)
+	}
+}
+
 class ChangeCurrentRoundButton extends Component {
 	static propTypes = {
 		currentRoundIdx: PropTypes.number.isRequired,
 		relativeChange: PropTypes.number.isRequired,
+		disabled: PropTypes.bool.isRequired,
+		primary: PropTypes.bool.isRequired,
 		actions: PropTypes.object.isRequired
 	}
 
 	_handleChangeCurrentRoundButtonClick(chg) {
 		console.log('------ In ChangeCurrentRoundButton._handleChangeCurrentRoundButtonClick. Requested change = ' + chg)
+		this.props.actions.relativeChangeCurrentRoundIdx(this.props.relativeChange)
+		console.log('------ Complted ChangeCurrentRoundButton._handleChangeCurrentRoundButtonClick.')
 	}
 
 	render() {
 		console.log('====== In ChangeCurrentRoundButton.render, dumping props')
 		console.log(this.props)
-		console.log('  currentRoundIdx = ' + this.props.currentRoundIdx)
-		console.log('  relativeChange = ' + this.props.relativeChange)
-		console.log('  dumping actions')
-		console.log(this.props.actions)
 
 		// Only return objects to be rendered if it's still okay to change player list
 		// This takes 2 conditions because I allow player list changes until bidding complete
@@ -385,10 +453,10 @@ class ChangeCurrentRoundButton extends Component {
 			<RaisedButton
 				label={ ((this.props.relativeChange < 0) ? 'Prev' : 'Next') }
 				labelPosition={ ((this.props.relativeChange < 0) ? 'after' : 'before') }
-				primary={ false }
+				primary={ this.props.primary }
 				style={ btnMarginStyle }
 				icon={ ((this.props.relativeChange < 0) ? <PrevRoundIcon /> : <NextRoundIcon />) }
-				disabled={ this.props.currentRoundIdx === 0 }
+				disabled={ this.props.disabled }
 				onTouchTap={() => this._handleChangeCurrentRoundButtonClick(this.props.relativeChange) }
 			/>
 		)
@@ -398,7 +466,7 @@ class ChangeCurrentRoundButton extends Component {
 class ChangePlayersButton extends Component {
 	static propTypes = {
 		currentRoundIdx: PropTypes.number.isRequired,
-		bidsComplete: PropTypes.boolean,
+		biddingComplete: PropTypes.bool.isRequired,
 		buttonAction: PropTypes.func.isRequired
 	}
 
@@ -409,9 +477,8 @@ class ChangePlayersButton extends Component {
 
 		console.log('~~~~~~ In ChangePlayersButton.render. Dumping props')
 		console.log(this.props)
-		console.log('  probing typeof boolean')
-		console.log(typeof this.props.bidsComplete)
-		if ((this.props.currentRoundIdx === 0) && (!this.props.bidsComplete)) {
+
+		if ((this.props.currentRoundIdx === 0) && (!this.props.biddingComplete)) {
 			return (
 				<RaisedButton
 					label='Players'
