@@ -69,7 +69,7 @@ export default class NewGameView extends Component {
 		// Test if there are valid bids for all players in current round
 		const allBidsIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.filter((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0)
 
-		console.log('****** allBidsIn = \'' + allBidsIn + '\'')
+		console.log('>>>>>> allBidsIn = \'' + allBidsIn + '\'')
 
 		const allScoresIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.filter((result) => result.tricksWon === INVALID_NUMERIC_VALUE).length === 0)
 
@@ -157,38 +157,36 @@ export default class NewGameView extends Component {
 						}
 						<tr>
 							<td colSpan='5'>
-								<RaisedButton
-									label='Prev'
-									primary={false}
-									style={btnMarginStyle}
-									icon={<PrevRoundIcon />}
-									disabled={this.props.gameStatus.currentRound === 0}
+								<ChangeCurrentRoundButton
+									currentRoundIdx={ this.props.gameStatus.currentRound }
+									relativeChange={ -1 }
+									actions={ this.props.actions }
 								/>
-								<ChangePlayersButton
-									currentRoundIdx={this.props.gameStatus.currentRoundIdx}
-									bidsComplete={allBidsIn}
+								<ChangePlayersButton 
+									currentRoundIdx={ this.props.gameStatus.currentRound }
+									bidsComplete={ allBidsIn }
 									buttonAction={ () => this._handleModifyPlayerListButton() }
 								/>
 								<RaisedButton
 									label='Bid'
-									primary={!allBidsIn}
-									secondary={allBidsIn}
-									style={btnMarginStyle}
-									onTouchTap={() => this._handleBidButton() }
-									/>
+									primary={ !allBidsIn }
+									secondary={ allBidsIn }
+									style={ btnMarginStyle }
+									onTouchTap={ () => this._handleBidButton() }
+								/>
 								<RaisedButton
 									label='Score'
-									primary={!allScoresIn}
-									secondary={allScoresIn}
-									style={btnMarginStyle}
-									disabled={!allBidsIn}
+									primary={ !allScoresIn }
+									secondary={ allScoresIn }
+									style={ btnMarginStyle }
+									disabled={ !allBidsIn }
 									/>
 								<RaisedButton
 									label='Next'
 									labelPosition='before'
-									primary={false}
-									style={btnMarginStyle}
-									disabled={!allScoresIn}
+									primary={ false }
+									style={ btnMarginStyle }
+									disabled={ !allScoresIn }
 									icon={<NextRoundIcon />}
 								/>
 							</td>
@@ -363,12 +361,47 @@ _onBlur = (event: React.FocusEvent): void => {
 	}
 }
 
+class ChangeCurrentRoundButton extends Component {
+	static propTypes = {
+		currentRoundIdx: PropTypes.number.isRequired,
+		relativeChange: PropTypes.number.isRequired,
+		actions: PropTypes.object.isRequired
+	}
+
+	_handleChangeCurrentRoundButtonClick(chg) {
+		console.log('------ In ChangeCurrentRoundButton._handleChangeCurrentRoundButtonClick. Requested change = ' + chg)
+	}
+
+	render() {
+		console.log('====== In ChangeCurrentRoundButton.render, dumping props')
+		console.log(this.props)
+		console.log('  currentRoundIdx = ' + this.props.currentRoundIdx)
+		console.log('  relativeChange = ' + this.props.relativeChange)
+		console.log('  actions array has ' + this.props.actions.length + ' elements, dumping')
+		console.log(this.props.actions)
+
+		// Only return objects to be rendered if it's still okay to change player list
+		// This takes 2 conditions because I allow player list changes until bidding complete
+		// in round 0
+		return (
+			<RaisedButton
+				label='Prev'
+				primary={ false }
+				style={ btnMarginStyle }
+				icon={ ((this.props.relativeChange < 0) ? <PrevRoundIcon /> : <NextRoundIcon />) }
+				disabled={ this.props.currentRoundIdx === 0 }
+				onTouchTap={() => this._handleChangeCurrentRoundButtonClick(this.props.relativeChange) }
+			/>
+		)
+	}
+}
+
 class ChangePlayersButton extends Component {
-	// static propTypes = {
-	// 	currentRoundIdx: PropTypes.number.isRequired,
-	// 	bidsComplete: PropTypes.boolean.isRequired,
-	// 	buttonAction: PropTypes.func.isRequired
-	// }
+	static propTypes = {
+		currentRoundIdx: PropTypes.number.isRequired,
+		bidsComplete: PropTypes.boolean.isRequired,
+		buttonAction: PropTypes.func.isRequired
+	}
 
 	render() {
 		// Only return objects to be rendered if it's still okay to change player list
