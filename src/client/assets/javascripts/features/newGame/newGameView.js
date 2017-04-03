@@ -69,7 +69,8 @@ export default class NewGameView extends Component {
 		// Test if there are valid bids for all players in current round
 		const allBidsIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.filter((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0)
 
-		console.log('>>>>>> allBidsIn = \'' + allBidsIn + '\'')
+		console.log('>>>>>> allBidsIn        = \'' + allBidsIn + '\'')
+		console.log('       typeof allBidsIn = \'' + typeof allBidsIn + '\'')
 
 		const allScoresIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRound].results.filter((result) => result.tricksWon === INVALID_NUMERIC_VALUE).length === 0)
 
@@ -181,13 +182,10 @@ export default class NewGameView extends Component {
 									style={ btnMarginStyle }
 									disabled={ !allBidsIn }
 									/>
-								<RaisedButton
-									label='Next'
-									labelPosition='before'
-									primary={ false }
-									style={ btnMarginStyle }
-									disabled={ !allScoresIn }
-									icon={<NextRoundIcon />}
+								<ChangeCurrentRoundButton
+									currentRoundIdx={ this.props.gameStatus.currentRound }
+									relativeChange={ 1 }
+									actions={ this.props.actions }
 								/>
 							</td>
 						</tr>
@@ -377,7 +375,7 @@ class ChangeCurrentRoundButton extends Component {
 		console.log(this.props)
 		console.log('  currentRoundIdx = ' + this.props.currentRoundIdx)
 		console.log('  relativeChange = ' + this.props.relativeChange)
-		console.log('  actions array has ' + this.props.actions.length + ' elements, dumping')
+		console.log('  dumping actions')
 		console.log(this.props.actions)
 
 		// Only return objects to be rendered if it's still okay to change player list
@@ -385,7 +383,8 @@ class ChangeCurrentRoundButton extends Component {
 		// in round 0
 		return (
 			<RaisedButton
-				label='Prev'
+				label={ ((this.props.relativeChange < 0) ? 'Prev' : 'Next') }
+				labelPosition={ ((this.props.relativeChange < 0) ? 'after' : 'before') }
 				primary={ false }
 				style={ btnMarginStyle }
 				icon={ ((this.props.relativeChange < 0) ? <PrevRoundIcon /> : <NextRoundIcon />) }
@@ -399,7 +398,7 @@ class ChangeCurrentRoundButton extends Component {
 class ChangePlayersButton extends Component {
 	static propTypes = {
 		currentRoundIdx: PropTypes.number.isRequired,
-		bidsComplete: PropTypes.boolean.isRequired,
+		bidsComplete: PropTypes.boolean,
 		buttonAction: PropTypes.func.isRequired
 	}
 
@@ -407,6 +406,11 @@ class ChangePlayersButton extends Component {
 		// Only return objects to be rendered if it's still okay to change player list
 		// This takes 2 conditions because I allow player list changes until bidding complete
 		// in round 0
+
+		console.log('~~~~~~ In ChangePlayersButton.render. Dumping props')
+		console.log(this.props)
+		console.log('  probing typeof boolean')
+		console.log(typeof this.props.bidsComplete)
 		if ((this.props.currentRoundIdx === 0) && (!this.props.bidsComplete)) {
 			return (
 				<RaisedButton
