@@ -15,7 +15,10 @@ export type PlayerTopLevel = {
 export type RuleSet = {
   id: number,
   minPlayers: number,
-  maxPlayers: number
+  maxPlayers: number,
+  contractBonus: number,
+  contractBonusMultiplicative: boolean,
+  trickBonus: number
 };
 
 export type CurrentUser = {

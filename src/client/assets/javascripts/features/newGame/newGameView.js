@@ -66,13 +66,7 @@ export default class NewGameView extends Component {
 		// Test if there are valid bids for all players in current round
 		const allBidsIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results.filter((result) => result.tricksBid === INVALID_NUMERIC_VALUE).length === 0)
 
-		console.log('>>>>>> allBidsIn        = \'' + allBidsIn + '\'')
-		console.log('       typeof allBidsIn = \'' + typeof allBidsIn + '\'')
-
 		const allScoresIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results.filter((result) => result.tricksWon === INVALID_NUMERIC_VALUE).length === 0)
-
-		console.log('>>>>>> allScoresIn        = \'' + allScoresIn + '\'')
-		console.log('       typeof allScoresIn = \'' + typeof allScoresIn + '\'')
 
 		// Sum all entered bids (for display of over- / under-subscription + option for implementing 'screw the dealer' rule)
 		const sumOfBids = () => {
@@ -102,10 +96,32 @@ export default class NewGameView extends Component {
 		const playerRound = (playerRosterIdx) => this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[playerRosterIdx]
 
 		// Shorthand for dealing with potential INVALID_NUMERIC_VALUE in display
-		const validOrZero = (numericVal) => ((numericVal === INVALID_NUMERIC_VALUE) ? '-' : numericVal)
+		const validOrDash = (numericVal) => ((numericVal === INVALID_NUMERIC_VALUE) ? '-' : numericVal)
 
-		// Calculate score for a given player id
-		const calcScore = (playerRosterIdx) => '???'
+		// Calculate score for a given player index -> playerRoster
+		const calcScore = (playerIdx) => {
+			const rules = this.props.gameStatus.currentRuleSet
+			var score = 0
+
+			// Only calculate score to the current round (allows going next/prev round to work w/scores)
+			for (var i = 0; i <= this.props.gameStatus.currentRoundIdx; i++) {
+				const tricksWon = this.props.gameStatus.gameRounds[i].results[playerIdx].tricksWon
+				const tricksBid = this.props.gameStatus.gameRounds[i].results[playerIdx].tricksBid
+
+				if ((tricksBid === INVALID_NUMERIC_VALUE) || (tricksWon === INVALID_NUMERIC_VALUE)) {
+					break
+				}				
+				if (tricksWon === tricksBid) {
+					if (rules.contractBonusMultiplicative) {
+						score += tricksWon * rules.contractBonus
+					} else {
+						score += rules.contractBonus
+					}
+				} 
+				score += (tricksWon * rules.trickBonus)
+			}
+			return score
+		}
 
 		// Buttons for bid & score dialogs
 		const dialogActions = [
@@ -148,9 +164,9 @@ export default class NewGameView extends Component {
 														player.nickName
 											}
 										</td>
-										<td className='game-table-bid-cell'>{ validOrZero(playerRound(i).tricksBid) }</td>
-										<td className='game-table-won-cell'>{ validOrZero(playerRound(i).tricksWon) }</td>
-										<td className='game-table-score-cell'>{ calcScore(i) }</td>
+										<td className='game-table-bid-cell'>{ validOrDash(playerRound(i).tricksBid) }</td>
+										<td className='game-table-won-cell'>{ validOrDash(playerRound(i).tricksWon) }</td>
+										<td className='game-table-score-cell'>{ validOrDash(calcScore(i)) }</td>
 									</tr>
 								)
 							)
@@ -163,6 +179,8 @@ export default class NewGameView extends Component {
 									actions={ this.props.actions }
 									disabled={ this.props.gameStatus.currentRoundIdx === 0 }
 									primary={ false }
+									rounds={ this.props.gameStatus.gameRounds }
+									players={ this.props.gameStatus.playerRoster }
 								/>
 								<ChangePlayersButton 
 									currentRoundIdx={ this.props.gameStatus.currentRoundIdx }
@@ -172,6 +190,7 @@ export default class NewGameView extends Component {
 								<RaisedButton
 									label='Bid'
 									primary={ !allBidsIn }
+									autofocus={ !allBidsIn }
 									secondary={ allBidsIn }
 									style={ btnMarginStyle }
 									onTouchTap={ () => this._handleBidButton() }
@@ -179,6 +198,7 @@ export default class NewGameView extends Component {
 								<RaisedButton
 									label='Score'
 									primary={ !allScoresIn }
+									autofocus={ !allScoresIn }
 									secondary={ allScoresIn }
 									style={ btnMarginStyle }
 									disabled={ !allBidsIn }
@@ -190,6 +210,8 @@ export default class NewGameView extends Component {
 									actions={ this.props.actions }
 									disabled={ !allScoresIn }
 									primary={ allScoresIn }
+									rounds={ this.props.gameStatus.gameRounds }
+									players={ this.props.gameStatus.playerRoster }
 								/>
 							</td>
 						</tr>
@@ -292,9 +314,6 @@ _onBlur = (event: React.FocusEvent): void => {
 
 	render() {
 		
-		console.log('###### In GameActionTable.render, about to dump props')
-		console.log(this.props)
-
 		const myErrorText = ""
 
 		const validOrZero = (numericVal) => ((numericVal === INVALID_NUMERIC_VALUE) ? 0 : numericVal)
@@ -376,9 +395,6 @@ class GameActionDialog extends Component {
 
 	render() {
 
-		console.log('%%%%%% In GameActionDialog, dumping props')
-		console.log(this.props)
-
 		const dialogActions = [
 			<FlatButton
 				label="Cancel"
@@ -433,19 +449,33 @@ class ChangeCurrentRoundButton extends Component {
 		relativeChange: PropTypes.number.isRequired,
 		disabled: PropTypes.bool.isRequired,
 		primary: PropTypes.bool.isRequired,
-		actions: PropTypes.object.isRequired
+		actions: PropTypes.object.isRequired,
+		rounds: PropTypes.array.isRequired,
+		players: PropTypes.array.isRequired
 	}
 
 	_handleChangeCurrentRoundButtonClick(chg) {
-		console.log('------ In ChangeCurrentRoundButton._handleChangeCurrentRoundButtonClick. Requested change = ' + chg)
+
+		console.log('====== In ChangeCurrentRoundButton._handleChangeCurrentRoundButtonClick, chg = \'' + chg + '\'')
+		console.log('  dumping this.props just to cover bases')
+		console.log(this.props)
+
+		var tgtDealerIdx = this.props.rounds[this.props.currentRoundIdx + chg].dealer
+		var tgtBidderIdx = this.props.rounds[this.props.currentRoundIdx + chg].bidder
+		console.log('  target dealer idx = \'' + tgtDealerIdx + '\'')
+		console.log('  target bidder idx = \'' + tgtBidderIdx + '\'')
+
+		var tgtDealerId = this.props.players[tgtDealerIdx].id
+		var tgtBidderId = this.props.players[tgtBidderIdx].id
+		console.log('  target dealer id = \'' + tgtDealerId + '\'')
+		console.log('  target bidder id = \'' + tgtBidderId + '\'')
+
+		this.props.actions.setDealer(tgtDealerId)
+		this.props.actions.setBidder(tgtBidderId)
 		this.props.actions.relativeChangeCurrentRoundIdx(this.props.relativeChange)
-		console.log('------ Complted ChangeCurrentRoundButton._handleChangeCurrentRoundButtonClick.')
 	}
 
 	render() {
-		console.log('====== In ChangeCurrentRoundButton.render, dumping props')
-		console.log(this.props)
-
 		// Only return objects to be rendered if it's still okay to change player list
 		// This takes 2 conditions because I allow player list changes until bidding complete
 		// in round 0
@@ -458,6 +488,7 @@ class ChangeCurrentRoundButton extends Component {
 				icon={ ((this.props.relativeChange < 0) ? <PrevRoundIcon /> : <NextRoundIcon />) }
 				disabled={ this.props.disabled }
 				onTouchTap={() => this._handleChangeCurrentRoundButtonClick(this.props.relativeChange) }
+				autofocus={ this.props.primary }
 			/>
 		)
 	}
@@ -474,9 +505,6 @@ class ChangePlayersButton extends Component {
 		// Only return objects to be rendered if it's still okay to change player list
 		// This takes 2 conditions because I allow player list changes until bidding complete
 		// in round 0
-
-		console.log('~~~~~~ In ChangePlayersButton.render. Dumping props')
-		console.log(this.props)
 
 		if ((this.props.currentRoundIdx === 0) && (!this.props.biddingComplete)) {
 			return (

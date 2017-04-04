@@ -60,7 +60,10 @@ const initialStatus: GameState = {
 	playing: false,
 	currentRuleSet: {
 		minPlayers: 3,
-		maxPlayers: 10
+		maxPlayers: 10,
+		contractBonus: 10,
+		contractBonusMultiplicative: false,
+		trickBonus: 1
 	},
 	gameRounds: [],
 	defaultSortOrder: SORT_SPECIAL_1,
