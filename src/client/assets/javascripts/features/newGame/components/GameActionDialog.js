@@ -4,6 +4,8 @@ import FlatButton from 'material-ui/FlatButton'
 
 import GameActionTable from './GameActionTable'
 
+import { SORT_SPECIAL_1, SORT_SPECIAL_2, INVALID_NUMERIC_VALUE } from '../../homePage/homePage'
+
 export default class GameActionDialog extends Component {
 	static propTypes = {
 		gameRounds: PropTypes.array,
@@ -24,7 +26,7 @@ export default class GameActionDialog extends Component {
 
 	_clearScores() {
 			this.props.gameRounds[this.props.currentRoundIdx].results.map((result, i) => {
-				this.props.actions.recordTricksBid(this.props.currentRoundIdx, result.id, INVALID_NUMERIC_VALUE)
+				this.props.actions.recordTricksWon(this.props.currentRoundIdx, result.id, INVALID_NUMERIC_VALUE)
 			})
 			this.props.actions.clearPlaying()
 	}
