@@ -177,7 +177,7 @@ export default class NewGameView extends Component {
 									currentRoundIdx={ this.props.gameStatus.currentRoundIdx }
 									relativeChange={ 1 }
 									actions={ this.props.actions }
-									disabled={ !allScoresIn }
+									disabled={ !allScoresIn || (this.props.gameStatus.currentRoundIdx >= this.props.gameStatus.gameRounds.length) }
 									primary={ allScoresIn }
 									rounds={ this.props.gameStatus.gameRounds }
 									players={ this.props.gameStatus.playerRoster }
