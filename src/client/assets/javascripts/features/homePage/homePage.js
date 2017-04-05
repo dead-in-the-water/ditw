@@ -268,7 +268,7 @@ export default function reducer(gameState: GameState = initialStatus, action: an
 						inThisGame: true,
 						ordinalPosition: getNextOrdinal(gameState.playerRoster)
 					}
-				}))
+				}), gameState.defaultSortOrder)
 			}
 
 		case REMOVE_PLAYER_FROM_GAME:
@@ -283,7 +283,7 @@ export default function reducer(gameState: GameState = initialStatus, action: an
 						inThisGame: false,
 						ordinalPosition: INVALID_NUMERIC_VALUE
 					}
-				}))
+				}), gameState.defaultSortOrder)
 			}
 
 		case REMOVE_ALL_PLAYERS_FROM_GAME:
@@ -528,16 +528,12 @@ function getNextOrdinal(players) {
 /* 
 ** Reset ordinalPosition for each inThisGame player to leave no gaps
 */
-function cleanupOrdinals(players) {
+function cleanupOrdinals(players, sortOrder) {
 	// Addressing the array guaranteed to be in ordinalPosition order makes numbering scheme work
-	return sortSpecial1(sortByOrdinal(players).map((player, i) => ({
+	return sortSpecial1(_.sortBy(players, ['ordinalPosition']).map((player, i) => ({
 		...player,
 		ordinalPosition: (player.inThisGame ? i : INVALID_NUMERIC_VALUE)
-	})))
-}
-
-function sortByOrdinal(players) {
-	return _.sortBy(players, [function(player) { return player.ordinalPosition }])
+	})), sortOrder)
 }
 
 /* Special sort to support player selection table
@@ -546,11 +542,10 @@ function sortByOrdinal(players) {
 */
 function sortSpecial1(players, sortOrder) {
 	// Sort players that are in this game by their ordinalPosition
-
-	var itgPlayers = _.sortBy(players.filter((player) => (player.inThisGame)), [function(player) { return player.ordinalPosition}])
+	var itgPlayers = _.sortBy(players.filter((player) => (player.inThisGame)), ['ordinalPosition'])
 
 	// Sort players that are not (yet) in this game by their names
-	if (sortOrder === SORT_SPECIAL_1) {
+	if (sortOrder == SORT_SPECIAL_1) {
 		var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['firstName', 'lastName'])
 	} else {
 		var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['nickName'])
