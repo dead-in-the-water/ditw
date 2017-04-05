@@ -58,9 +58,38 @@ export default class GameActionDialog extends Component {
 
 		const okayToOpen = this.props.bidding || this.props.playing
 
+		// Sum all entered bids (for display of over- / under-subscription + option for implementing 'screw the dealer' rule)
+		const sumOfBids = () => {
+			var bid = 0
+
+			for (var i = 0; i < this.props.gameRounds[this.props.currentRoundIdx].results.length; i++) {
+				if (this.props.gameRounds[this.props.currentRoundIdx].results[i].tricksBid !== INVALID_NUMERIC_VALUE) {
+					bid = bid + this.props.gameRounds[this.props.currentRoundIdx].results[i].tricksBid
+				}
+			}
+			return bid
+		}
+
+		// Sum of all tricks won in current round (to support display status)
+		const sumOfWon = () => {
+			var won = 0
+
+			for (var i = 0; i < this.props.gameRounds[this.props.currentRoundIdx].results.length; i++) {
+				if (this.props.gameRounds[this.props.currentRoundIdx].results[i].tricksWon !== INVALID_NUMERIC_VALUE) {
+					won = won + this.props.gameRounds[this.props.currentRoundIdx].results[i].tricksWon
+				}
+			}
+			return won
+		}
+
 		return (
 			<Dialog
-				title={ (this.props.bidding ? 'Bidding' : 'Scoring') + ': Round ' + (this.props.currentRoundIdx + 1) }
+				title={ (this.props.bidding ? 'Bidding' : 'Scoring') + ' round ' + 
+					(this.props.currentRoundIdx + 1) + ': ' +
+					((this.props.bidding) ? sumOfBids() : sumOfWon()) + ' of ' + 
+					this.props.gameRounds[this.props.currentRoundIdx].handsize +
+					' tricks accounted for' 
+				}
 				actions={ dialogActions }
 				modal={ true }
 				open={ okayToOpen }

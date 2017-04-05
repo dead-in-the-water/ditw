@@ -72,29 +72,8 @@ export default class NewGameView extends Component {
 
 		const allScoresIn = (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results.filter((result) => result.tricksWon === INVALID_NUMERIC_VALUE).length === 0)
 
-		// Sum all entered bids (for display of over- / under-subscription + option for implementing 'screw the dealer' rule)
-		const sumOfBids = () => {
-			var bid = 0
-
-			for (var i = 0; i < this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results.length; i++) {
-				if (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[i].tricksBid !== INVALID_NUMERIC_VALUE) {
-					bid = bid + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[i].tricksBid
-				}
-			}
-			return bid
-		}
-
-		// Sum of all tricks won in current round (to support display status)
-		const sumOfWon = () => {
-			var won = 0
-
-			for (var i = 0; i < this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results.length; i++) {
-				if (this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[i].tricksWon !== INVALID_NUMERIC_VALUE) {
-					won = won + this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[i].tricksWon
-				}
-			}
-			return won
-		}
+		// Get short handle for gameStatus
+		const gs = this.props.gameStatus
 
 		// Get short handle for the current round object
 		const playerRound = (playerRosterIdx) => this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[playerRosterIdx]
@@ -130,6 +109,7 @@ export default class NewGameView extends Component {
 		return (
 			<div className='container text-center'>
 				<table className='game-table'>
+					<caption className='game-table-caption'>Round { gs.currentRoundIdx + 1 } of { gs.gameRounds.length }: { gs.gameRounds[gs.currentRoundIdx].handsize } tricks</caption>
 					<thead className='game-table-header'>
 						<tr className='game-table-header-row'>
 							<th className='text-center'>Role</th>
