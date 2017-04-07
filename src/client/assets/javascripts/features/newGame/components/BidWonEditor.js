@@ -5,15 +5,28 @@ import { INVALID_NUMERIC_VALUE } from '../../homePage/homePage'
 import { NumberInput, NumberInputChangeHandler, NumberInputError, EventValue, NumberInputErrorHandler, NumberInputValidHandler, NumberInputReqestValueHandller } from 'material-ui-number-input';
 
 export default class BidWonEditor extends Component {
-
-public constructor(props: void) {
-	super(props)
-
-	this.state = {
-		value: { INVALID_NUMERIC_VALUE },
-		errorText: ""
+	static propTypes = {
+			componentId: PropTypes.string.isRequired,
+			minEntry: PropTypes.number.isRequired,
+			maxEntry: PropTypes.number.isRequired,
+			defaultEntry: PropTypes.number.isRequired,
+			player: PropTypes.object.isRequired,
+			playerIdx: PropTypes.number.isRequired,
+			actions: PropTypes.object.isRequired,
+			currentRound: PropTypes.object.isRequired,
+			currentRoundIdx: PropTypes.number.isRequired,
+			doBidding: PropTypes.bool,
+			doScoring: PropTypes.bool
 	}
-}
+
+	constructor(props: void) {
+		super(props)
+
+		this.state = {
+			value: { INVALID_NUMERIC_VALUE },
+			errorText: ""
+		}
+	}
 
 _onBlur = (event: React.FocusEvent): void => {
 		const e: EventValue = event
@@ -70,7 +83,7 @@ _onBlur = (event: React.FocusEvent): void => {
 							errorText = 'You are tring to enter number less than 0'
 							break
 					case 'max':
-							errorText = 'You are tring to enter number greater than ' + this.props.maxBid
+							errorText = 'You are tring to enter number greater than ' + this.props.maxEntry
 							break
 			}
 			console.debug('In GameActionTable._onError. Error msg = \'' + errorText + '\'')
@@ -96,7 +109,7 @@ _onBlur = (event: React.FocusEvent): void => {
 						validOrZero(this.props.currentRound.results[this.props.playerIdx].tricksBid))}
 					data-item={ this.props.playerIdx }
 					onBlur={ this._onBlur }
-					onError={ this.onError }
+					onError={ this._onError }
 				/>
 		)
 	}
