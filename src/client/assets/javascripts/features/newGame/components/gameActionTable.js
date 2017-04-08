@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
-import BidWonEditor from './BidWonEditor'
+import BidWonEditor from './BidWonEditorSelectField'
+// import BidWonEditor from './BidWonEditorNumericInput'
 import { SORT_SPECIAL_1, SORT_SPECIAL_2, INVALID_NUMERIC_VALUE } from '../../homePage/homePage'
 
 export default class GameActionTable extends Component {
