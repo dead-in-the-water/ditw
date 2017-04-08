@@ -24,8 +24,8 @@ const RECORD_TRICKS_BID = 'redux-app/gameStatusUpdate/RECORD_TRICKS_BID'
 const RECORD_TRICKS_WON = 'redux-app/gameStatusUpdate/RECORD_TRICKS_WON'
 const SET_BIDDING = 'redux-app/gameStatusUpdate/SET_BIDDING'
 const CLEAR_BIDDING = 'redux-app/gameStatusUpdate/CLEAR_BIDDING'
-const SET_PLAYING = 'redux-app/gameStatusUpdate/SET_PLAYING'
-const CLEAR_PLAYING = 'redux-app/gameStatusUpdate/CLEAR_PLAYING'
+const SET_SCORING = 'redux-app/gameStatusUpdate/SET_SCORING'
+const CLEAR_SCORING = 'redux-app/gameStatusUpdate/CLEAR_SCORING'
 const INIT_CURRENT_ROUND = 'redux-app/gameStatusUpdate/INIT_CURRENT_ROUND'
 const RELATIVE_CHANGE_CURRENT_ROUND = 'redux-app/gameStatusUpdate/RELATIVE_CHANGE_CURRENT_ROUND'
 export const INVALID_NUMERIC_VALUE = Number.MAX_SAFE_INTEGER
@@ -57,7 +57,7 @@ const initialStatus: GameState = {
 	currentBidder: INVALID_NUMERIC_VALUE,
 	currentRoundIdx: INVALID_NUMERIC_VALUE,
 	bidding: false,
-	playing: false,
+	scoring: false,
 	currentRuleSet: {
 		minPlayers: 3,
 		maxPlayers: 10,
@@ -478,16 +478,16 @@ export default function reducer(gameState: GameState = initialStatus, action: an
 				bidding: false
 			}
 			
-		case SET_PLAYING:
+		case SET_SCORING:
 			return {
 				...gameState,
-				playing: true
+				scoring: true
 			}
 			
-		case CLEAR_PLAYING:
+		case CLEAR_SCORING:
 			return {
 				...gameState,
-				playing: false
+				scoring: false
 			}
 			
 		case INIT_CURRENT_ROUND:
@@ -666,15 +666,15 @@ function clearBidding() {
 	}
 }
 
-function setPlaying() {
+function setScoring() {
 	return {
-		type: SET_PLAYING
+		type: SET_SCORING
 	}
 }
 
-function clearPlaying() {
+function clearScoring() {
 	return {
-		type: CLEAR_PLAYING
+		type: CLEAR_SCORING
 	}
 }
 
@@ -716,8 +716,8 @@ export const actionCreators = {
 	recordTricksWon,
 	setBidding,
 	clearBidding,
-	setPlaying,
-	clearPlaying,
+	setScoring,
+	clearScoring,
 	initCurrentRoundIdx,
 	relativeChangeCurrentRoundIdx
 }

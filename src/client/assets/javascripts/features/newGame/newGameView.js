@@ -35,11 +35,26 @@ export const btnMarginStyle = {
 export default class NewGameView extends Component {
 
 	_handleBidButton() {
+		// Short handle to reduce typing
+		const gs = this.props.gameStatus
+
+		gs.playerRoster.filter((player) => player.inThisGame).map((player, i) => {
+				if (gs.gameRounds[gs.currentRoundIdx].results[i].tricksBid === INVALID_NUMERIC_VALUE) {
+					this.props.actions.recordTricksBid(gs.currentRoundIdx, player.id, 0)
+				}
+			})
 		this.props.actions.setBidding()
 	}
 
 	_handleScoreButton() {
-		this.props.actions.setPlaying()
+		const gs = this.props.gameStatus
+
+		gs.playerRoster.filter((player) => player.inThisGame).map((player, i) => {
+				if (gs.gameRounds[gs.currentRoundIdx].results[i].tricksWon === INVALID_NUMERIC_VALUE) {
+					this.props.actions.recordTricksWon(gs.currentRoundIdx, player.id, gs.gameRounds[gs.currentRoundIdx].results[i].tricksBid)
+				}
+			})
+		this.props.actions.setScoring()
 	}
 
 	_handleModifyPlayerListButton() {
@@ -54,6 +69,7 @@ export default class NewGameView extends Component {
 		this.props.history.push('/PlayersView')
 	}
 
+// TODO: Removing players from game doesn't clear out scores & bids or re-init gameRounds
 	_handleCancelButton() {
 		this.props.actions.removeAllPlayersFromGame()
 		this.props.history.push('/HomePageView')

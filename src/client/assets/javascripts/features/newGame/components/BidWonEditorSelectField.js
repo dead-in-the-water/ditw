@@ -34,13 +34,28 @@ export default class BidWonEditor extends Component {
 
 		const legalEntries = Array(this.props.maxEntry + 1).fill().map((x, i) => i)
 
+		/*
+		** Default value depends on whether we're bidding or scoring. 
+		**   If bidding, then the value is either 0, if previously uninitialized, else the previously entered bid value.
+		**   If scoring, the default is either the previuosly bid value if score is uninitialized, else the previously entered 
+		**   score value.
+		*/
+		const defVal = ((this.props.doScoring && (this.props.currentRound.results[this.props.playerIdx].tricksWon !== INVALID_NUMERIC_VALUE)) ? 
+											this.props.currentRound.results[this.props.playerIdx].tricksWon :
+											validOrZero(this.props.currentRound.results[this.props.playerIdx].tricksBid)
+										)
+		console.log('------ In BidWonEditor.render')
+		console.log('  this.props.doScoring = ' + this.props.doScoring)
+		console.log('  this.props.currentRound.results[this.props.playerIdx].tricksWon = ' + this.props.currentRound.results[this.props.playerIdx].tricksWon)
+		
+
 		return (
 			<SelectField
 					id={this.props.componentId}
 					autoFocus={ (this.props.playerIdx === 0) ? true : false}
 					autoWidth={ true }
 					errorText={ this.state.errorText }
-					value={ this.props.currentRound.results[this.props.playerIdx].tricksBid }
+					value={ defVal }
 					onChange={ this.handleChange }
 			>
 			{ legalEntries.map((entry, i) => (
@@ -55,14 +70,4 @@ export default class BidWonEditor extends Component {
 		)
 	}
 }
-
-			// {
-			// 	legalEntries.map((entry, i) => (
-			// 			<MenuItem 
-			// 				key={ i }
-			// 				value={ i } 
-			// 				primaryText={entry + ' trick' + ((entry === 1) ? '' : 's')}
-			// 			/>
-			// 		))
-			// }
 

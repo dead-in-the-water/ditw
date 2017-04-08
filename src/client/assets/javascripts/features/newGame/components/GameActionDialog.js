@@ -10,7 +10,7 @@ export default class GameActionDialog extends Component {
 	static propTypes = {
 		gameRounds: PropTypes.array,
 		currentRoundIdx: PropTypes.number,
-		playing: PropTypes.bool,
+		scoring: PropTypes.bool,
 		bidding: PropTypes.bool,
 		biddingComplete: PropTypes.bool,
 		scoringComplete: PropTypes.bool,
@@ -28,7 +28,7 @@ export default class GameActionDialog extends Component {
 			this.props.gameRounds[this.props.currentRoundIdx].results.map((result, i) => {
 				this.props.actions.recordTricksWon(this.props.currentRoundIdx, result.id, INVALID_NUMERIC_VALUE)
 			})
-			this.props.actions.clearPlaying()
+			this.props.actions.clearScoring()
 	}
 
 	render() {
@@ -51,12 +51,12 @@ export default class GameActionDialog extends Component {
 				}
 				onTouchTap={ ((this.props.bidding) ?
 					() => this.props.actions.clearBidding() :
-					() => this.props.actions.clearPlaying())
+					() => this.props.actions.clearScoring())
 				}
 			/>
 		]
 
-		const okayToOpen = this.props.bidding || this.props.playing
+		const okayToOpen = this.props.bidding || this.props.scoring
 
 		// Sum all entered bids (for display of over- / under-subscription + option for implementing 'screw the dealer' rule)
 		const sumOfBids = () => {
