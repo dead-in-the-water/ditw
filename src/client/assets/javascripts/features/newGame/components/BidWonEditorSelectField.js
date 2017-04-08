@@ -43,18 +43,14 @@ export default class BidWonEditor extends Component {
 					value={ this.props.currentRound.results[this.props.playerIdx].tricksBid }
 					onChange={ this.handleChange }
 			>
+			{ legalEntries.map((entry, i) => (
 						<MenuItem 
-							value={ 0 } 
-							primaryText='0 tricks'
+							key={i}
+							value={ entry } 
+							primaryText={ entry + ((entry === 1) ? ' trick' : ' tricks') }
 						/>
-						<MenuItem 
-							value={ 1 } 
-							primaryText='1 trick'
-						/>
-						<MenuItem 
-							value={ 2 } 
-							primaryText='2 tricks'
-						/>
+				))
+			}
 			</SelectField>
 		)
 	}
