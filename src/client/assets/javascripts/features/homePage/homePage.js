@@ -46,13 +46,19 @@ export const NAME = 'gameState'
 
 // Define the initial state for `friends` module
 
+const testClub: CardClub = {
+	id: "0000-0000-0000",
+	name: "Extended Finkelstein Clan",
+	members: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+}
+
 const initialStatus: GameState = {
 	currentUser: {
 		loggedIn: false,
 		id: INVALID_NUMERIC_VALUE,
-		activeClubId: INVALID_NUMERIC_VALUE,
 		isAdmin: false
 	},
+	currentClub: {},
 	currentDealer: INVALID_NUMERIC_VALUE,
 	currentBidder: INVALID_NUMERIC_VALUE,
 	currentRoundIdx: INVALID_NUMERIC_VALUE,
@@ -63,11 +69,45 @@ const initialStatus: GameState = {
 		maxPlayers: 10,
 		contractBonus: 10,
 		contractBonusMultiplicative: false,
-		trickBonus: 1
+		trickBonus: 1,
+		screwTheDealer: false
 	},
 	gameRounds: [],
 	defaultSortOrder: SORT_SPECIAL_1,
 	playerRoster: [
+		{
+			id: 22,
+			lastName: 'Walker',
+			firstName: 'Alexandria',
+			avgScore: 0,
+			avgPosition: 0,
+			gamesPlayed: 0,
+			inThisGame: false,
+			ordinalPosition: INVALID_NUMERIC_VALUE,
+			nickName: 'Alex'
+		},
+		{
+			id: 24,
+			lastName: 'Elster',
+			firstName: 'Andrew',
+			avgScore: 0,
+			avgPosition: 0,
+			gamesPlayed: 0,
+			inThisGame: false,
+			ordinalPosition: INVALID_NUMERIC_VALUE,
+			nickName: 'Andy'
+		},
+		{
+			id: 21,
+			lastName: 'Clements',
+			firstName: 'Benjamin',
+			avgScore: 0,
+			avgPosition: 0,
+			gamesPlayed: 0,
+			inThisGame: false,
+			ordinalPosition: INVALID_NUMERIC_VALUE,
+			nickName: 'Ben'
+		},
 		{
 			id: 12,
 			lastName: 'Elster',
@@ -77,8 +117,7 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Beth',
-			useGameName: true
+			nickName: 'Beth'
 		},
 		{
 			id: 16,
@@ -89,8 +128,7 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Dan',
-			useGameName: true
+			nickName: 'Dan'
 		},
 		{
 			id: 10,
@@ -101,8 +139,7 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Gammy',
-			useGameName: true
+			nickName: 'Gammy'
 		},
 		{
 			id: 13,
@@ -113,8 +150,7 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Gampa',
-			useGameName: true
+			nickName: 'Gampa'
 		},
 		{
 			id: 15,
@@ -125,8 +161,7 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Jer',
-			useGameName: true
+			nickName: 'Jer'
 		},
 		{
 			id: 19,
@@ -137,8 +172,7 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Joel',
-			useGameName: true
+			nickName: 'Joel'
 		},
 		{
 			id: 20,
@@ -149,8 +183,18 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Care Bear',
-			useGameName: true
+			nickName: 'Care Bear'
+		},
+		{
+			id: 23,
+			lastName: 'Leavitt',
+			firstName: 'Marc',
+			avgScore: 0,
+			avgPosition: 0,
+			gamesPlayed: 0,
+			inThisGame: false,
+			ordinalPosition: INVALID_NUMERIC_VALUE,
+			nickName: 'Marc'
 		},
 		{
 			id: 17,
@@ -161,8 +205,7 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Mike',
-			useGameName: true
+			nickName: 'Mike'
 		},
 		{
 			id: 14,
@@ -173,8 +216,7 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Rach',
-			useGameName: true
+			nickName: 'Rach'
 		},
 		{
 			id: 18,
@@ -185,8 +227,7 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Ron',
-			useGameName: true
+			nickName: 'Ron'
 		},
 		{
 			id: 11,
@@ -197,11 +238,9 @@ const initialStatus: GameState = {
 			gamesPlayed: 0,
 			inThisGame: false,
 			ordinalPosition: INVALID_NUMERIC_VALUE,
-			nickName: 'Stacy',
-			useGameName: true
+			nickName: 'Stacy'
 		}
 	],
-	currentPlayers: []
 }
 
 // Reducer
@@ -214,9 +253,9 @@ export default function reducer(gameState: GameState = initialStatus, action: an
 				currentUser: {
 					loggedIn: true,
 					id: 0xffff,
-					activeClubId: 0xffff,
 					isAdmin: true
-				}
+				},
+				currentClub: testClub
 			}
 		}
 
@@ -226,9 +265,9 @@ export default function reducer(gameState: GameState = initialStatus, action: an
 				currentUser: {
 					loggedIn: false,
 					id: INVALID_NUMERIC_VALUE,
-					activeClubId: INVALID_NUMERIC_VALUE,
 					isAdmin: false
-				}
+				},
+				currentClub: {}
 			}
 
 		case SET_DEALER:

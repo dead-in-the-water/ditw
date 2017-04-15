@@ -1,5 +1,11 @@
+export type CardClub = {
+  id: number,
+  name: string,
+  members: Array<number>
+};
+
 export type PlayerTopLevel = {
-  id?: number,
+  id: number,
   lastName: string,
   firstName: string,
   avgScore: number,
@@ -9,7 +15,7 @@ export type PlayerTopLevel = {
   inThisGame: boolean,
   ordinalPosition: number,
   nickName: string,
-  useGameName: boolean
+  clubs: Array<CardClub>
 };
 
 export type RuleSet = {
@@ -18,13 +24,13 @@ export type RuleSet = {
   maxPlayers: number,
   contractBonus: number,
   contractBonusMultiplicative: boolean,
-  trickBonus: number
+  trickBonus: number,
+  screwTheDealer: boolean
 };
 
 export type CurrentUser = {
-  loggedIn: boolean,
   id: number,
-  activeClubId: number,
+  loggedIn: boolean,
   isAdmin: boolean
 };
 
@@ -49,13 +55,14 @@ export type GameRound = {
 };
 
 export type GameState = {
+  persistedGameId: string,
   currentUser: CurrentUser,
+  currentClub: CardClub,
   currentRound: numbrer,
   currentDealer: number,
   currentBidder: number,
   currentRuleSet: RuleSet,
   playerRoster: Array<PlayerTopLevel>,
-  currentPlayers: Array<CurrentPlayer>,
   gameRounds: Array<GameRound>,
   currentRoundIdx: number,
   bidding: boolean,
