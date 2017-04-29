@@ -1,40 +1,34 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionCreators as userStatusActions, selector } from './homePage';
 
-import { Link } from 'react-router'
-import { Navigation } from 'react-router'
+import AppBar from 'material-ui/AppBar';
+import IconMenu from 'material-ui/IconMenu';
+import Divider from 'material-ui/Divider';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
 
-import AppBar from 'material-ui/AppBar'
-import IconMenu from 'material-ui/IconMenu'
-import Divider from 'material-ui/Divider'
-import MenuItem from 'material-ui/MenuItem'
-import IconButton from 'material-ui/IconButton'
-import RaisedButton from 'material-ui/RaisedButton'
+import HamburgerMenuIcon from 'material-ui/svg-icons/navigation/menu';
+import ProfileIcon from 'material-ui/svg-icons/social/person';
+import ClubIcon from 'material-ui/svg-icons/social/people';
+import HelpIcon from 'material-ui/svg-icons/action/help';
+import EditIcon from 'material-ui/svg-icons/image/edit';
+import SignoutIcon from 'material-ui/svg-icons/action/exit-to-app';
+import SaveGameIcon from 'material-ui/svg-icons/file/cloud-upload';
+import RestoreGameIcon from 'material-ui/svg-icons/file/cloud-download';
+import AdministrationIcon from 'material-ui/svg-icons/action/supervisor-account';
+import NewGameIcon from 'material-ui/svg-icons/content/add-box';
+import CloseGameIcon from 'material-ui/svg-icons/navigation/close';
+import './homePageView.scss';
 
-import HamburgerMenuIcon from 'material-ui/svg-icons/navigation/menu'
-import ProfileIcon from 'material-ui/svg-icons/social/person'
-import ClubIcon from 'material-ui/svg-icons/social/people'
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
-import HelpIcon from 'material-ui/svg-icons/action/help'
-import EditIcon from 'material-ui/svg-icons/image/edit'
-import SignoutIcon from 'material-ui/svg-icons/action/exit-to-app'
-import SaveGameIcon from 'material-ui/svg-icons/file/cloud-upload'
-import RestoreGameIcon from 'material-ui/svg-icons/file/cloud-download'
-import AdministrationIcon from 'material-ui/svg-icons/action/supervisor-account'
-import NewGameIcon from 'material-ui/svg-icons/content/add-box'
-import CloseGameIcon from 'material-ui/svg-icons/navigation/close'
-import './homePageView.scss'
-
-import imgDeadInTheWater from './images/dead-in-the-water.jpg'
-import googleSignOnButton from './images/btn_google_signin_dark_pressed_web.png'
+import googleSignOnButton from './images/btn_google_signin_dark_pressed_web.png';
 
 const appBarStyles = {
 	title: {
 		cursor: 'pointer'
 	}
-}
+};
 
 @connect(selector, (dispatch) => ({
 	actions: bindActionCreators(userStatusActions, dispatch)
@@ -134,6 +128,6 @@ export default class HomePageView extends Component {
 					/>
 				</div>
 			</div>
-		)
+		);
 	}
 }

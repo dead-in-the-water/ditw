@@ -55,6 +55,59 @@ function listGamesByPlayer(playerKey) {
 	})
 }
 
+function chgToRoundNumberInRounds() {
+	roundsRef.once('value', (roundsSnap) => {
+		roundsSnap.forEach((round) => {
+			var tempRound = round.val()
+			tempRound.roundNumber = tempRound.round
+			delete tempRound.round
+			roundsRef.child(round.key).set(tempRound)
+				.then(() => {
+					console.log('Update complete for roundKey = \'' + round.key + '\'') 
+				})
+				.catch((error) => {
+					console.error('ERROR: Update complete for roundKey = \'' + round.key + '\' failed!')
+					console.error('Code: ' + error.code + ' - ' + error.message)
+				})
+		})
+	})
+}
+
+function addOrdinalToResultsInRounds() {
+	console.log('In addOrdinalToResultsInRounds')
+	roundsRef.once('value', (roundsSnap) => {
+		roundsSnap.forEach((round) => {
+			console.log('..looking at round \'' + round.key + '\'')
+			var ordinal = 0
+			round.child('results').forEach((playerResult) => {
+				console.log('....looking at results for player key = \'' + playerResult.key + '\', attempting update/' + ordinal)
+				playerResult.ref.update({ 'ordinal' : ordinal++ })
+					.then(() => {
+						console.log('......update complete for round \'' + round.key + '\' player key \'' + playerResult.key)
+					})
+				.catch((err) => {
+					console.error('ERROR: On update for round \'' + round.key + '\' player key \'' + playerResult.key)
+					console.error('  err.code: \'' + err.code + '\' - ' + err.message)
+				})
+			})
+		})
+	})
+}
+
+function addDirectionToRounds() {
+	roundsRef.once('value', (roundsSnap) => {
+		roundsSnap.forEach((round) => {
+			roundsRef.child(round.key).update({ 'handSizeGoingUp' : true })
+			.then(() => {
+				console.log('Update complete for roundKey = \'' + round.key + '\'')
+			})
+			.catch((error) => {
+				console.log('ERROR: Update failed for roundKey = \'' + round.key + '\'! Code: ' + error.code + ' - ' + error.message)
+			})
+		})
+	})
+}
+
 function addTimestampsToRounds() {
 	roundsRef.once('value', (roundsSnap) => {
 		roundsSnap.forEach((round) => {
@@ -193,4 +246,7 @@ console.log('Starting up...')
 // listPlayersByRound('-KhiR1N0Xw4c0i4i1akt')
 // listRoundsByPlayer('-KhVrsiz8rq-xwQHlsj2')
 // addTimestampsToRounds()
-addTimestampsToGames()
+// addTimestampsToGames()
+// addDirectionToRounds()
+// chgToRoundNumberInRounds()
+addOrdinalToResultsInRounds()
