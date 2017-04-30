@@ -3,6 +3,9 @@ import { persistState } from 'redux-devtools'
 import promiseMiddleware from 'redux-promise'
 import createLogger from 'redux-logger'
 
+// firebase
+import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
+
 import rootReducer from '../reducer'
 import DevTools from '../DevTools'
 
@@ -22,14 +25,26 @@ const getDebugSessionKey = function () {
   return (matches && matches.length) ? matches[1] : null
 }
 
+// Firebase app config
+const firebaseConfig = {
+  apiKey: 'AIzaSyBZ613zFKwFCSpiyRPJYOGBBJd4uOqKsp0',
+  authDomain: 'ditw-5e8ff.firebaseapp.com',
+  databaseURL: 'https://ditw-5e8ff.firebaseio.com',
+  projectId: 'ditw-5e8ff',
+  storageBucket: 'ditw-5e8ff.appspot.com',
+  messagingSenderId: '666669973769'
+}
+
 const enhancer = compose(
   applyMiddleware(...middlewares),
+  // firebase
+  reactReduxFirebase(firebaseConfig, { userProfile: 'users' }),
   window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
   // Optional. Lets you write ?debug_session=<key> in address bar to persist debug sessions
   persistState(getDebugSessionKey())
 )
 
-export default function configureStore(initialState) {
+export default function configureStore (initialState) {
   const store = createStore(rootReducer, initialState, enhancer)
 
   // Enable hot module replacement for reducers (requires Webpack or Browserify HMR to be enabled)

@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
 import { routerReducer as routing } from 'react-router-redux'
+import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
 
-// import players, { NAME as playersName } from 'features/players'
 import homePage, { NAME as gameStateName } from 'features/homePage'
 
 export default combineReducers({
   routing,
-  // [playersName]: players,
-  [gameStateName]: homePage
+  [gameStateName]: homePage,
+  firebase: firebaseStateReducer
 })
