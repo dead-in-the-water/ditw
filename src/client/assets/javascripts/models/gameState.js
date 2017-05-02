@@ -34,13 +34,6 @@ export type CurrentUser = {
   isAdmin: boolean
 };
 
-export type GameRound = {
-  dealer: number,
-  bidder: number,
-  handSize: number,
-  results: Array<GamePlayerRound>
-};
-
 export type GamePlayerRound = {
   id: number,
   tricksBid: Array<number>,
@@ -58,7 +51,7 @@ export type GameState = {
   persistedGameId: string,
   currentUser: CurrentUser,
   currentClub: CardClub,
-  currentRound: numbrer,
+  currentRound: number,
   currentDealer: number,
   currentBidder: number,
   currentRuleSet: RuleSet,

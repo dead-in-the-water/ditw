@@ -7,6 +7,6 @@ const enhancer = compose(
   applyMiddleware(promiseMiddleware)
 )(createStore)
 
-export default function configureStore(initialState) {
+export default function configureStore (initialState) {
   return enhancer(rootReducer, initialState)
 }

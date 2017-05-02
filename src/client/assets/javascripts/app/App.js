@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 const App = (props) => (
-	<MuiThemeProvider>
-	 	<div className="page-container">
-	    {React.cloneElement({...props}.children, {...props})}
-	  </div>
-	</MuiThemeProvider>
+  <MuiThemeProvider>
+    <div className='page-container'>
+      {React.cloneElement({...props}.children, {...props})}
+    </div>
+  </MuiThemeProvider>
 )
 
 App.propTypes = {

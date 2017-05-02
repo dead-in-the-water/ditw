@@ -8,7 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import { actionCreators as gameStateActions, selector as gameStateSelector} from '../../homePage/homePage'
 import { SORT_BY_ID, SORT_BY_ORDINAL, SORT_BY_NAME, SORT_SPECIAL_1 } from '../../homePage/homePage'
 
-import PlayersLayout from './PlayersLayout';
+  import PlayersLayout from './PlayersLayout';
 
 import './PlayerTableApp.scss'
 

@@ -92,7 +92,7 @@ export default class NewGameView extends Component {
 		const gs = this.props.gameStatus
 
 		// Get short handle for the current round object
-		const playerRound = (playerRosterIdx) => this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[playerRosterIdx]
+			const playerRound = (playerRosterIdx) => this.props.gameStatus.gameRounds[this.props.gameStatus.currentRoundIdx].results[playerRosterIdx]
 
 		// Shorthand for dealing with potential INVALID_NUMERIC_VALUE in display
 		const validOrDash = (numericVal) => ((numericVal === INVALID_NUMERIC_VALUE) ? '-' : numericVal)

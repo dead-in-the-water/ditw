@@ -34,24 +34,24 @@ const styles = {
   ({ firebase }) => ({
     // Connect todos prop to firebase todos
     players: dataToJS(firebase, '/players'),
-    clubs: dataToJS(firebase, '/clubs'),
+    clubs: dataToJS(firebase, '/clubs')
   })
 )
 export default class AdminView extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
-      value: 'a',
+      value: 'a'
     }
   }
 
   handleChange = (value) => {
     this.setState({
-      value: value,
+      value: value
     })
   }
 
-/*eslint no-console: "off" */
+/* eslint no-console: "off" */
   render () {
     console.log('In AdminView.render(), dumping this')
     console.log(this)
@@ -63,7 +63,7 @@ export default class AdminView extends Component {
         ? 'Players list is empty'
         : Object.keys(players).map(
             (key, id) => (
-              <li key={key} id={id} todo={players[key]}/>
+              <li key={key} id={id} todo={players[key]} />
             )
           )
 
