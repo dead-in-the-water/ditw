@@ -4,7 +4,7 @@ import promiseMiddleware from 'redux-promise'
 import createLogger from 'redux-logger'
 
 // firebase
-import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
+import { reactReduxFirebase } from 'react-redux-firebase'
 
 import rootReducer from '../reducer'
 import DevTools from '../DevTools'

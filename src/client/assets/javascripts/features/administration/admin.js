@@ -20,7 +20,7 @@ import { createStructuredSelector } from 'reselect'
 export const NAME = 'gameState'
 
 // Reducer
-export default function reducer(gameState: GameState = initialStatus, action: any = {}): GameState {
+  export default function reducer(gameState: GameState = initialStatus, action: any = {}): GameState {
 
   switch (action.type) {
     default:

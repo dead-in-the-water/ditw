@@ -1,8 +1,20 @@
+// react-redux stuff
 import React, { Component } from 'react'
 import { Link } from 'react-router'
+import { connect } from 'react-redux'
 
+// firebase
+import {
+  firebaseConnect,
+  isLoaded,
+  isEmpty,
+  dataToJS
+} from 'react-redux-firebase'
+
+// material-ui
 import { Tabs, Tab } from 'material-ui/Tabs'
 
+// project includes
 import PlayersTabView from './components/PlayersTabView'
 
 const styles = {
@@ -14,21 +26,50 @@ const styles = {
   }
 }
 
+@firebaseConnect([
+  '/players',
+  '/clubs'
+])
+@connect(
+  ({ firebase }) => ({
+    // Connect todos prop to firebase todos
+    players: dataToJS(firebase, '/players'),
+    clubs: dataToJS(firebase, '/clubs'),
+  })
+)
 export default class AdminView extends Component {
- constructor(props) {
-    super(props);
+  constructor(props) {
+    super(props)
     this.state = {
       value: 'a',
-    };
+    }
   }
 
   handleChange = (value) => {
     this.setState({
       value: value,
-    });
-  };
+    })
+  }
 
+/*eslint no-console: "off" */
   render () {
+    console.log('In AdminView.render(), dumping this')
+    console.log(this)
+
+    const { firebase, players, clubs } = this.props
+    const playersList = !isLoaded(players)
+      ? 'Loading'
+      : isEmpty(players)
+        ? 'Players list is empty'
+        : Object.keys(players).map(
+            (key, id) => (
+              <li key={key} id={id} todo={players[key]}/>
+            )
+          )
+
+    console.log('..dumping playersList')
+    console.log(playersList)
+
     return (
       <div className='container text-center'>
         <h1>Administration stuff</h1>
