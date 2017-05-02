@@ -1,9 +1,12 @@
 // @flow
 
 import { createStructuredSelector } from 'reselect'
-import { _nth, _sortBy, assign, _floor } from 'lodash'
+// import { _nth, _sortBy, assign, _floor } from 'lodash'
 
-import { UserStatus } from 'models/gameState'
+import sortBy from 'lodash/sortBy'
+import floor from 'lodash/floor'
+
+import { GameState } from 'models/gameState'
 
 // Action Types
 
@@ -311,31 +314,31 @@ export default function reducer (gameState: GameState = initialStatus, action: a
         case SORT_BY_ID:
           return {
             ...gameState,
-            playerRoster: _.sortBy(gameState.playerRoster, [function (player) { return player.id }])
+            playerRoster: sortBy(gameState.playerRoster, [function (player) { return player.id }])
           }
 
         case SORT_BY_ORDINAL:
           return {
             ...gameState,
-            playerRoster: _.sortBy(gameState.playerRoster, [function (player) { return player.ordinalPosition }])
+            playerRoster: sortBy(gameState.playerRoster, [function (player) { return player.ordinalPosition }])
           }
 
         case SORT_BY_FNAME:
           return {
             ...gameState,
-            playerRoster: _.sortBy(gameState.playerRoster, [function (player) { return player.firstName.concat(player.lastName) }])
+            playerRoster: sortBy(gameState.playerRoster, [function (player) { return player.firstName.concat(player.lastName) }])
           }
 
         case SORT_BY_LNAME:
           return {
             ...gameState,
-            playerRoster: _.sortBy(gameState.playerRoster, [function (player) { return player.lastName.concat(player.firstName) }])
+            playerRoster: sortBy(gameState.playerRoster, [function (player) { return player.lastName.concat(player.firstName) }])
           }
 
         case SORT_BY_NNAME:
           return {
             ...gameState,
-            playerRoster: _.sortBy(gameState.playerRoster, [function (player) { return player.lastName.concat(player.firstName) }])
+            playerRoster: sortBy(gameState.playerRoster, [function (player) { return player.lastName.concat(player.firstName) }])
           }
 
         case SORT_SPECIAL_1:
@@ -366,7 +369,7 @@ export default function reducer (gameState: GameState = initialStatus, action: a
       const players = gameState.playerRoster.filter((player) => player.inThisGame)
       const isEven = (val) => (val % 2 === 0)
       const lastPlayer = players.length - 1
-      const maxHandSize = _.floor(52 / players.length)
+      const maxHandSize = floor(52 / players.length)
       const totalRounds = maxHandSize
       const maxEvenHandSize = maxHandSize - (maxHandSize % 2)
       var curBidderIdx = 0
@@ -400,19 +403,13 @@ export default function reducer (gameState: GameState = initialStatus, action: a
             // If maxHandSize > maxEvenHandSize, it can only be 1 larger
             if (maxHandSize > maxEvenHandSize) {
               curHandSize++
-            }
-            // maxHandSize is even, so decrement to largest odd hand size
-            else {
+            } else { // maxHandSize is even, so decrement to largest odd hand size
               curHandSize--
             }
-          }
-          // Not at maxEvenHand size, keep incrementing by 2
-          else {
+          } else { // Not at maxEvenHand size, keep incrementing by 2
             curHandSize = curHandSize + 2
           }
-        }
-        // curHandSize is odd, so we're decreasing hand size - just check for end
-        else {
+        } else { // curHandSize is odd, so we're decreasing hand size - just check for end
           if (curHandSize > 1) { curHandSize = curHandSize - 2 }
         }
       }
@@ -529,7 +526,7 @@ function getNextOrdinal (players) {
 */
 function cleanupOrdinals (players, sortOrder) {
   // Addressing the array guaranteed to be in ordinalPosition order makes numbering scheme work
-  return sortSpecial1(_.sortBy(players, ['ordinalPosition']).map((player, i) => ({
+  return sortSpecial1(sortBy(players, ['ordinalPosition']).map((player, i) => ({
     ...player,
     ordinalPosition: (player.inThisGame ? i : INVALID_NUMERIC_VALUE)
   })), sortOrder)
@@ -541,13 +538,14 @@ function cleanupOrdinals (players, sortOrder) {
 */
 function sortSpecial1 (players, sortOrder) {
   // Sort players that are in this game by their ordinalPosition
-  var itgPlayers = _.sortBy(players.filter((player) => (player.inThisGame)), ['ordinalPosition'])
+  var itgPlayers = sortBy(players.filter((player) => (player.inThisGame)), ['ordinalPosition'])
+  var nItgPlayers
 
   // Sort players that are not (yet) in this game by their names
-  if (sortOrder == SORT_SPECIAL_1) {
-    var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['firstName', 'lastName'])
+  if (sortOrder === SORT_SPECIAL_1) {
+    nItgPlayers = sortBy(players.filter((player) => !player.inThisGame), ['firstName', 'lastName'])
   } else {
-    var nItgPlayers = _.sortBy(players.filter((player) => !player.inThisGame), ['nickName'])
+    nItgPlayers = sortBy(players.filter((player) => !player.inThisGame), ['nickName'])
   }
 
   // And return the concatonated list

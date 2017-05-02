@@ -3,4 +3,4 @@
 
 export {
   default
-} from './helpView';
+} from './helpView'

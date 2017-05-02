@@ -3,4 +3,4 @@
 
 export {
   default
-} from './changeClubView';
+} from './changeClubView'

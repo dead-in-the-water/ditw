@@ -6,14 +6,12 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import { AppContainer } from 'react-hot-loader'
 import Redbox from 'redbox-react'
 
-import injectTapEventPlugin from 'react-tap-event-plugin'
-injectTapEventPlugin()
-
 import Root from './Root'
 import configureStore from './store/configureStore'
-
+import injectTapEventPlugin from 'react-tap-event-plugin'
 import 'styles/bootstrap.min.css'
 import 'styles/styles.scss'
+injectTapEventPlugin()
 
 const store = configureStore()
 const history = syncHistoryWithStore(browserHistory, store)

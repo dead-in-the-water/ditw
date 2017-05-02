@@ -16,18 +16,18 @@ import PlayersView from 'features/players/components/PlayersView'
 
 export default (store) => {
   const authRequired = (nextState, replaceState) => {
-		// Now you can access the store object here.
+    // Now you can access the store object here.
     const state = store.getState()
 
     if (!state.gameState.currentUser.loggedIn) {
-			// Not authenticated, redirect to login.
+      // Not authenticated, redirect to login.
       replaceState({ nextPathname: nextState.location.pathname }, '/')
     }
 
-		// Special handling for transitions to NewGameView when no players are yet marked in the game
-		// In that case, go directly to the player selection view
+    // Special handling for transitions to NewGameView when no players are yet marked in the game
+    // In that case, go directly to the player selection view
     if ((state.routing.locationBeforeTransitions.pathname === '/NewGameView') &&
-			(state.gameState.playerRoster.filter((player) => (player.inThisGame)).length === 0)) {
+      (state.gameState.playerRoster.filter((player) => (player.inThisGame)).length === 0)) {
       replaceState({ nextPathname: nextState.location.pathname }, '/PlayersView')
     }
   }
