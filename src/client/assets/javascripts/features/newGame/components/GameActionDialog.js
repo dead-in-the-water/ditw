@@ -14,7 +14,9 @@ export default class GameActionDialog extends Component {
     bidding: PropTypes.bool,
     biddingComplete: PropTypes.bool,
     scoringComplete: PropTypes.bool,
-    actions: PropTypes.object
+    actions: PropTypes.object,
+    playerRoster: PropTypes.array,
+    defaultSortOrder: PropTypes.number
   }
 
   _clearBids () {

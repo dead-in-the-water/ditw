@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-
+import NumberInput from 'material-ui-number-input'
 import { INVALID_NUMERIC_VALUE } from '../../homePage/homePage'
 
 export default class BidWonEditor extends Component {
@@ -27,7 +27,7 @@ export default class BidWonEditor extends Component {
   }
 
   _onBlur = (event: React.FocusEvent): void => {
-    const e: EventValue = event
+    const e = event
 
     if (this.props.doBidding) {
       this.props.actions.recordTricksBid(this.props.currentRoundIdx, this.props.player.id, parseInt(e.target.value))
@@ -37,23 +37,23 @@ export default class BidWonEditor extends Component {
   }
 
   _onKeyDown = (event: React.KeyboardEvent): void => {
-    console.debug(`onKeyDown ${event.key}`)
+    // console.debug(`onKeyDown ${event.key}`)
   }
 
   _onChange = (event: React.FormEvent, value: string): void => {
-    const e: EventValue = event
+    const e = event
     console.debug(`  onChange ${e.target.value}, ${value}`)
   }
 
   _onValid = (value: number): void => {
-    console.debug(`${value} is a valid number!`)
+    // console.debug(`${value} is a valid number!`)
   }
 
   _onRequestValue = (value: string): void => {
-    console.debug(`request ${JSON.stringify(value)}`)
+    // console.debug(`request ${JSON.stringify(value)}`)
   }
 
-  _onError = (error: NumberInputError): void => {
+  _onError = (error): void => {
     let errorText: string
     switch (error) {
       case 'required':
@@ -81,7 +81,7 @@ export default class BidWonEditor extends Component {
         errorText = 'You are tring to enter number greater than ' + this.props.maxEntry
         break
     }
-    console.debug('In GameActionTable._onError. Error msg = \'' + errorText + '\'')
+    // console.debug('In GameActionTable._onError. Error msg = \'' + errorText + '\'')
     this.setState({ errorText: errorText })
   }
 

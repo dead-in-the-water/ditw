@@ -366,12 +366,12 @@ export default function reducer (gameState: GameState = initialStatus, action: a
     case INITIALIZE_GAME_DATA:
 
       // Assumes sorting all clean
-      const players = gameState.playerRoster.filter((player) => player.inThisGame)
-      const isEven = (val) => (val % 2 === 0)
-      const lastPlayer = players.length - 1
-      const maxHandSize = floor(52 / players.length)
-      const totalRounds = maxHandSize
-      const maxEvenHandSize = maxHandSize - (maxHandSize % 2)
+      var players = gameState.playerRoster.filter((player) => player.inThisGame)
+      var isEven = (val) => (val % 2 === 0)
+      var lastPlayer = players.length - 1
+      var maxHandSize = floor(52 / players.length)
+      var totalRounds = maxHandSize
+      var maxEvenHandSize = maxHandSize - (maxHandSize % 2)
       var curBidderIdx = 0
       var curDealerIdx = lastPlayer
       var curHandSize = 2

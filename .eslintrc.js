@@ -1,12 +1,15 @@
 module.exports = {
-  'extends': 'standard',
+  'extends': ['standard', 'eslint:recommended', 'plugin:react/recommended'],
   'plugins': [
     'standard',
-    'promise'
+    'promise',
+    'react',
+    'babel'
   ],
   'parser': 'babel-eslint',
   'parserOptions': {
     'sourceType': 'module',
     'allowImportExportEverywhere': false,
     'codeFrame': false
-  }}
+  }
+}

@@ -43,10 +43,10 @@ export default class BidWonEditor extends Component {
                       ? this.props.currentRound.results[this.props.playerIdx].tricksWon
                       : validOrZero(this.props.currentRound.results[this.props.playerIdx].tricksBid)
                     )
+
     console.log('------ In BidWonEditor.render')
     console.log('  this.props.doScoring = ' + this.props.doScoring)
     console.log('  this.props.currentRound.results[this.props.playerIdx].tricksWon = ' + this.props.currentRound.results[this.props.playerIdx].tricksWon)
-
     return (
       <SelectField
           id={this.props.componentId}

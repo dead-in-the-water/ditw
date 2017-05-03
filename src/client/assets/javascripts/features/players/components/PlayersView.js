@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Link } from 'react-router'
+
 import nth from 'lodash/nth'
+
 import RaisedButton from 'material-ui/RaisedButton'
 
-import { actionCreators as gameStateActions, selector as gameStateSelector} from '../../homePage/homePage'
+import { actionCreators as gameStateActions, selector as gameStateSelector } from '../../homePage/homePage'
 
 import PlayersLayout from './PlayersLayout'
 
@@ -19,6 +20,12 @@ const doneButtonStyle = {
   actions: bindActionCreators(gameStateActions, dispatch)
 }))
 export default class PlayersView extends Component {
+  static propTypes = {
+    gameStatus: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
+
   _handleDoneButton () {
     this.props.actions.sortPlayers(this.props.gameStatus.defaultSortOrder)
 

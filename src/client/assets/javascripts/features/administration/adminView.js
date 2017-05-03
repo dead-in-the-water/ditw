@@ -1,5 +1,5 @@
 // react-redux stuff
-import React, { Component } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 
@@ -38,6 +38,12 @@ const styles = {
   })
 )
 export default class AdminView extends Component {
+  static propTypes = {
+    firebase: PropTypes.object.isRequired,
+    players: PropTypes.object.isRequired,
+    clubs: PropTypes.object.isRequired
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -57,6 +63,7 @@ export default class AdminView extends Component {
     console.log(this)
 
     const { firebase, players, clubs } = this.props
+    
     const playersList = !isLoaded(players)
       ? 'Loading'
       : isEmpty(players)

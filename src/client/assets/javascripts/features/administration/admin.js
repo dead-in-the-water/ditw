@@ -1,15 +1,8 @@
 // @flow
 
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-  dataToJS
-} from 'react-redux-firebase'
-
 import { createStructuredSelector } from 'reselect'
+
+import GameState from '../../models/gameState'
 
 // Action Types
 
@@ -18,6 +11,8 @@ import { createStructuredSelector } from 'reselect'
 // This will be used in our root reducer and selectors
 
 export const NAME = 'gameState'
+
+const initialStatus = {}
 
 // Reducer
 export default function reducer (gameState: GameState = initialStatus, action: any = {}): GameState {
