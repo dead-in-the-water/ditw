@@ -7,7 +7,6 @@ import { connect } from 'react-redux'
 import {
   firebaseConnect,
   isLoaded,
-  isEmpty,
   dataToJS
 } from 'react-redux-firebase'
 
@@ -40,8 +39,8 @@ const styles = {
 export default class AdminView extends Component {
   static propTypes = {
     firebase: PropTypes.object.isRequired,
-    players: PropTypes.object.isRequired,
-    clubs: PropTypes.object.isRequired
+    players: PropTypes.object,
+    clubs: PropTypes.object
   }
 
   constructor (props) {
@@ -57,43 +56,35 @@ export default class AdminView extends Component {
     })
   }
 
-/* eslint no-console: "off" */
+// TODO: Remove this eslint override 
   render () {
-    console.log('In AdminView.render(), dumping this')
-    console.log(this)
-
-    const { firebase, players, clubs } = this.props
-    
-    const playersList = !isLoaded(players)
-      ? 'Loading'
-      : isEmpty(players)
-        ? 'Players list is empty'
-        : Object.keys(players).map(
-            (key, id) => (
-              <li key={key} id={id} todo={players[key]} />
-            )
-          )
-
-    console.log('..dumping playersList')
-    console.log(playersList)
+    const { firebase, players } = this.props
 
     return (
       <div className='container text-center'>
-        <h1>Administration stuff</h1>
         <Tabs
           value={this.state.value}
           onChange={this.handleChange}
         >
           <Tab label='Players' value='a'>
-            <PlayersTabView />
+            {isLoaded(players) 
+              ? <PlayersTabView firebase={firebase} players={players}/>
+              : <p>loading...</p>
+            }
           </Tab>
           <Tab label='Clubs' value='b'>
             <div>
               <h2 style={styles.headline}>Controllable Tab B</h2>
               <p>
-                This is another example of a controllable tab. Remember, if you
-                use controllable Tabs, you need to give all of your tabs values or else
-                you wont be able to select them.
+                Not yet implemented.
+              </p>
+            </div>
+          </Tab>
+          <Tab label='Rules' value='c'>
+            <div>
+              <h2 style={styles.headline}>Controllable Tab C</h2>
+              <p>
+                Not yet implemented.
               </p>
             </div>
           </Tab>
