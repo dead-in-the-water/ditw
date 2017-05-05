@@ -33,6 +33,12 @@ export const btnMarginStyle = {
     bindActionCreators(gameStateActions, dispatch)
 }))
 export default class NewGameView extends Component {
+  static propTypes = {
+    gameStatus: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
+
   _handleBidButton () {
     // Short handle to reduce typing
     const gs = this.props.gameStatus

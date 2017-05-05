@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { actionCreators as userStatusActions, selector } from './homePage'
@@ -34,6 +34,12 @@ const appBarStyles = {
   actions: bindActionCreators(userStatusActions, dispatch)
 }))
 export default class HomePageView extends Component {
+  static propTypes = {
+    gameStatus: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
+
   render () {
     return (
       <div className='home-page-container'>
@@ -44,8 +50,8 @@ export default class HomePageView extends Component {
               iconButtonElement={<IconButton>
                 <HamburgerMenuIcon color='white' />
               </IconButton>}
-              anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-              targetOrigin={{horizontal: 'left', vertical: 'top'}}
+              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
             >
               <MenuItem
                 primaryText='New game'
@@ -85,8 +91,8 @@ export default class HomePageView extends Component {
           iconElementRight={
             <IconMenu
               iconButtonElement={<IconButton><ProfileIcon /></IconButton>}
-              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-              targetOrigin={{horizontal: 'right', vertical: 'top'}}
+              anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+              targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
               <MenuItem
                 primaryText='Edit profile'

@@ -52,8 +52,8 @@ export const NAME = 'gameState'
 const initialStatus: GameState = {
   currentUser: {
     loggedIn: false,
-    id: INVALID_NUMERIC_VALUE,
-    activeClubId: INVALID_NUMERIC_VALUE,
+    key: '',
+    activeClubKey: '',
     isAdmin: false
   },
   currentDealer: INVALID_NUMERIC_VALUE,
@@ -215,8 +215,8 @@ export default function reducer (gameState: GameState = initialStatus, action: a
         ...gameState,
         currentUser: {
           loggedIn: true,
-          id: 0xffff,
-          activeClubId: 0xffff,
+          key: action.userKey,
+          activeClubKey: action.clubKey,
           isAdmin: true
         }
       }
@@ -227,8 +227,8 @@ export default function reducer (gameState: GameState = initialStatus, action: a
         ...gameState,
         currentUser: {
           loggedIn: false,
-          id: INVALID_NUMERIC_VALUE,
-          activeClubId: INVALID_NUMERIC_VALUE,
+          key: '',
+          activeClubKey: '',
           isAdmin: false
         }
       }
@@ -554,11 +554,14 @@ function sortSpecial1 (players, sortOrder) {
 
 // Action Creators
 
-function setLoggedIn (userId = 0, clubId = 0) {
+// Hard-code the club key to the one club currently existant in fb
+// Hard-code the player key to the current entry for Marc Leavitt
+//TODO: Fix this!
+function setLoggedIn (userKey = "-KhVs1mtDNgOtipXKn-Z", clubKey = '-KhXlyh5ldSzy29_ZdrQ') {
   return {
     type: SET_LOGGED_IN,
-    userId,
-    clubId
+    userKey,
+    clubKey
   }
 }
 

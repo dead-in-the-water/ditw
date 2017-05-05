@@ -1,5 +1,5 @@
 export type CardClub = {
-  id: number,
+  key: string,
   name: string,
   members: Array<number>
 };
@@ -29,8 +29,9 @@ export type RuleSet = {
 };
 
 export type CurrentUser = {
-  id: number,
+  key: string,
   loggedIn: boolean,
+  activeClubKey: string,
   isAdmin: boolean
 };
 

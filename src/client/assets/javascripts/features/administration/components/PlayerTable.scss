@@ -1,0 +1,45 @@
+.box-container-table {
+    position: relative;
+    border: 1px solid #000;
+    padding-top: 37px;
+    background: #5f5f5f;
+}
+.container-table {
+    overflow-y: auto;
+    height: 300px;
+}
+.table-scroll {
+    border-spacing: 0;
+    width:100%;
+}
+.table-scroll td + td {
+    border-left:1px solid #eee;
+}
+.table-scroll td, th {
+    border-bottom:1px solid #eee;
+    background: #fff;
+    color: #000;
+    padding: 10px 25px;
+}
+.table-scroll th {
+    height: 0;
+    line-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: transparent;
+    border: none;
+    white-space: nowrap;
+}
+.table-scroll th div{
+    position: absolute;
+    background: transparent;
+    color: #fff;
+    padding: 9px 25px;
+    top: 0;
+    margin-left: 0px;
+    line-height: normal;
+    border-left: 1px solid #000;
+}
+.table-scroll th:first-child div{
+    border: none;
+}
