@@ -1,6 +1,12 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+
+// firebase
+import {
+  firebaseConnect
+} from 'react-redux-firebase'
+
 import { actionCreators as userStatusActions, selector } from './homePage'
 
 import AppBar from 'material-ui/AppBar'
@@ -30,6 +36,7 @@ const appBarStyles = {
   }
 }
 
+@firebaseConnect()
 @connect(selector, (dispatch) => ({
   actions: bindActionCreators(userStatusActions, dispatch)
 }))
@@ -37,8 +44,20 @@ export default class HomePageView extends Component {
   static propTypes = {
     gameStatus: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    firebase: PropTypes.object.isRequired
   }
+
+  handleLoginButtonClick () {
+    this.props.firebase.logout()
+    this.props.firebase.login({
+      provider: 'google',
+      type: 'popup'
+    })
+    .then(() => this.props.actions.setLoggedIn())
+    .catch((err) => window.console.log('err', err))
+  }
+
 
   render () {
     return (
@@ -84,7 +103,7 @@ export default class HomePageView extends Component {
                 primaryText='Quit game'
                 leftIcon={<CloseGameIcon />}
                 disabled={!this.props.gameStatus.currentUser.loggedIn}
-                onTouchTap={() => alert('Not implemented yet')}
+                onTouchTap={() => window.alert('Not implemented yet')}
               />
             </IconMenu>
           }
@@ -127,7 +146,7 @@ export default class HomePageView extends Component {
             className={this.props.gameStatus.currentUser.loggedIn ? 'home-page-signon-button-invisible' : 'home-page-signon-button-visible'}
             src={googleSignOnButton}
             alt='Google signin buttom'
-            onTouchTap={() => this.props.actions.setLoggedIn()}
+            onTouchTap={() => this.handleLoginButtonClick()}
             display={this.props.gameStatus.currentUser.loggedIn ? 'none' : 'block'}
           />
         </div>

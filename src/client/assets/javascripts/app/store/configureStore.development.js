@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import { persistState } from 'redux-devtools'
 import promiseMiddleware from 'redux-promise'
+import reduxImmutableState from 'redux-immutable-state-invariant'
 import createLogger from 'redux-logger'
 
 // firebase
@@ -17,7 +18,12 @@ import DevTools from '../DevTools'
  */
 const logger = createLogger()
 
-const middlewares = [promiseMiddleware, logger, require('redux-immutable-state-invariant')()]
+const middlewares = [
+  // reactReduxFirebase(firebaseConfig, { userProfile: 'users' }),
+  promiseMiddleware,
+  logger,
+  reduxImmutableState({ ignore: ['firebase'] })
+]
 
 // By default we try to read the key from ?debug_session=<key> in the address bar
 const getDebugSessionKey = function () {

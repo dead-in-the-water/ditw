@@ -2,6 +2,13 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
+// firebase
+import {
+  firebaseConnect,
+  dataToJS,
+  pathToJS
+} from 'react-redux-firebase'
+
 // import { _head, _words } from 'lodash'
 // import findIndex from 'lodash/findIndex'
 
@@ -28,10 +35,29 @@ export const btnMarginStyle = {
   margin: 12
 }
 
+@connect(
+({ firebase }) => ({
+    auth: pathToJS(firebase, 'auth')
+  }))
 @connect(gameStateSelector, (dispatch) => ({
   actions:
     bindActionCreators(gameStateActions, dispatch)
 }))
+@firebaseConnect(
+  ({ auth, gameStatus }) => ([
+    {
+      path: '/players',
+      queryParams: ['orderByChild=firstName', `equalTo=${gameStatus.bidding ? 'Marc' : ''}`]
+    }
+  ])
+)
+@connect(
+  ({ firebase }) => ({
+    // Connect todos prop to firebase todos
+    players: dataToJS(firebase, '/players'),
+    clubs: dataToJS(firebase, '/clubs')
+  })
+)
 export default class NewGameView extends Component {
   static propTypes = {
     gameStatus: PropTypes.object.isRequired,
