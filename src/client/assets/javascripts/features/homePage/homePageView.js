@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux'
 
 // firebase
 import {
-  firebaseConnect
+  firebaseConnect,
+  pathToJS
 } from 'react-redux-firebase'
 
 import { actionCreators as userStatusActions, selector } from './homePage'
@@ -37,6 +38,10 @@ const appBarStyles = {
 }
 
 @firebaseConnect()
+@connect(
+({ firebase }) => ({
+    auth: pathToJS(firebase, 'auth')
+}))
 @connect(selector, (dispatch) => ({
   actions: bindActionCreators(userStatusActions, dispatch)
 }))
@@ -45,21 +50,23 @@ export default class HomePageView extends Component {
     gameStatus: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    firebase: PropTypes.object.isRequired
+    firebase: PropTypes.object.isRequired,
+    auth: PropTypes.object
   }
 
   handleLoginButtonClick () {
-    this.props.firebase.logout()
     this.props.firebase.login({
       provider: 'google',
       type: 'popup'
     })
-    .then(() => this.props.actions.setLoggedIn())
     .catch((err) => window.console.log('err', err))
   }
 
 
   render () {
+
+    const { auth, history, firebase } = this.props
+
     return (
       <div className='home-page-container'>
         <AppBar
@@ -75,34 +82,34 @@ export default class HomePageView extends Component {
               <MenuItem
                 primaryText='New game'
                 leftIcon={<NewGameIcon />}
-                onTouchTap={() => this.props.history.push('/NewGameView')}
-                disabled={!this.props.gameStatus.currentUser.loggedIn}
+                onTouchTap={() => history.push('/NewGameView')}
+                disabled={!auth}
               />
               <MenuItem
                 primaryText='Save game'
                 leftIcon={<SaveGameIcon />}
                 onTouchTap={() => this.props.history.push('/SaveGameView')}
-                disabled={!this.props.gameStatus.currentUser.loggedIn}
+                disabled={!auth}
               />
               <Divider />
               <MenuItem
                 primaryText='Load saved game'
                 leftIcon={<RestoreGameIcon />}
                 onTouchTap={() => this.props.history.push('/LoadGameView')}
-                disabled={!this.props.gameStatus.currentUser.loggedIn}
+                disabled={!auth}
               />
               <Divider />
               <MenuItem
                 primaryText='Administration'
                 leftIcon={<AdministrationIcon />}
                 onTouchTap={() => this.props.history.push('/AdminView')}
-                disabled={!this.props.gameStatus.currentUser.loggedIn}
+                disabled={!auth}
               />
               <Divider />
               <MenuItem
                 primaryText='Quit game'
                 leftIcon={<CloseGameIcon />}
-                disabled={!this.props.gameStatus.currentUser.loggedIn}
+                disabled={!auth}
                 onTouchTap={() => window.alert('Not implemented yet')}
               />
             </IconMenu>
@@ -116,38 +123,38 @@ export default class HomePageView extends Component {
               <MenuItem
                 primaryText='Edit profile'
                 leftIcon={<EditIcon />}
-                onTouchTap={() => this.props.history.push('/ProfileView')}
-                disabled={!this.props.gameStatus.currentUser.loggedIn}
+                onTouchTap={() => history.push('/ProfileView')}
+                disabled={!auth}
               />
               <MenuItem
                 primaryText='Change current club'
                 leftIcon={<ClubIcon />}
-                onTouchTap={() => this.props.history.push('/ChangeClubView')}
-                disabled={!this.props.gameStatus.currentUser.loggedIn}
+                onTouchTap={() => history.push('/ChangeClubView')}
+                disabled={!auth}
               />
               <Divider />
               <MenuItem
                 primaryText='Help'
                 leftIcon={<HelpIcon />}
-                onTouchTap={() => this.props.history.push('/HelpView')}
+                onTouchTap={() => history.push('/HelpView')}
               />
               <Divider />
               <MenuItem
                 primaryText='Sign out'
                 leftIcon={<SignoutIcon />}
-                onTouchTap={() => this.props.actions.clearLoggedIn()}
-                disabled={!this.props.gameStatus.currentUser.loggedIn}
+                onTouchTap={() => firebase.logout()}
+                disabled={!auth}
               />
             </IconMenu>
           }
         />
         <div className='image'>
           <img
-            className={this.props.gameStatus.currentUser.loggedIn ? 'home-page-signon-button-invisible' : 'home-page-signon-button-visible'}
+            className={auth ? 'home-page-signon-button-invisible' : 'home-page-signon-button-visible'}
             src={googleSignOnButton}
             alt='Google signin buttom'
             onTouchTap={() => this.handleLoginButtonClick()}
-            display={this.props.gameStatus.currentUser.loggedIn ? 'none' : 'block'}
+            display={auth ? 'none' : 'block' }
           />
         </div>
       </div>

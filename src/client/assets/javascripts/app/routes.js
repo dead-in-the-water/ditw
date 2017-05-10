@@ -14,12 +14,14 @@ import ChangeClubView from 'features/changeClub/changeClubView'
 import HelpView from 'features/help/helpView'
 import PlayersView from 'features/players/components/PlayersView'
 
+// TODO: Fix lint issue here
 export default (store) => {
   const authRequired = (nextState, replaceState) => {
     // Now you can access the store object here.
     const state = store.getState()
 
-    if (!state.gameState.currentUser.loggedIn) {
+    // TODO: Should be cleaner way to access
+    if (!state.firebase._root.entries[0][1]) {
       // Not authenticated, redirect to login.
       replaceState({ nextPathname: nextState.location.pathname }, '/')
     }

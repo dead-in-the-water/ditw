@@ -11,8 +11,6 @@ import { GameState } from 'models/gameState'
 // Action Types
 
 // Define types in the form of 'npm-module-or-myapp/feature-name/ACTION_TYPE_NAME'
-const SET_LOGGED_IN = 'redux-app/gameStatusUpdate/SET_LOGGED_IN'
-const CLEAR_LOGGED_IN = 'redux-app/gameStatusUpdate/CLEAR_LOGGED_IN'
 const SET_DEALER = 'redux-app/gameStatusUpdate/SET_DEALER'
 const CLEAR_DEALER = 'redux-app/gameStatusUpdate/CLEAR_DEALER'
 const SET_BIDDER = 'redux-app/gameStatusUpdate/SET_BIDDER'
@@ -210,29 +208,6 @@ const initialStatus: GameState = {
 // Reducer
 export default function reducer (gameState: GameState = initialStatus, action: any = {}): GameState {
   switch (action.type) {
-    case SET_LOGGED_IN: {
-      return {
-        ...gameState,
-        currentUser: {
-          loggedIn: true,
-          key: action.userKey,
-          activeClubKey: action.clubKey,
-          isAdmin: true
-        }
-      }
-    }
-
-    case CLEAR_LOGGED_IN:
-      return {
-        ...gameState,
-        currentUser: {
-          loggedIn: false,
-          key: '',
-          activeClubKey: '',
-          isAdmin: false
-        }
-      }
-
     case SET_DEALER:
       return {
         ...gameState,
@@ -557,19 +532,6 @@ function sortSpecial1 (players, sortOrder) {
 // Hard-code the club key to the one club currently existant in fb
 // Hard-code the player key to the current entry for Marc Leavitt
 //TODO: Fix this!
-function setLoggedIn (userKey = "-KhVs1mtDNgOtipXKn-Z", clubKey = '-KhXlyh5ldSzy29_ZdrQ') {
-  return {
-    type: SET_LOGGED_IN,
-    userKey,
-    clubKey
-  }
-}
-
-function clearLoggedIn () {
-  return {
-    type: CLEAR_LOGGED_IN
-  }
-}
 
 function setDealer (id: number) {
   return {
@@ -700,8 +662,6 @@ export const selector = createStructuredSelector({
 })
 
 export const actionCreators = {
-  setLoggedIn,
-  clearLoggedIn,
   setDealer,
   clearDealer,
   setBidder,
